@@ -89,46 +89,46 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHM-01 | TBD | Pending |
-| SCHM-02 | TBD | Pending |
-| SCHM-03 | TBD | Pending |
-| SCHM-04 | TBD | Pending |
-| SCHM-05 | TBD | Pending |
-| SCHM-06 | TBD | Pending |
-| SCHM-07 | TBD | Pending |
-| SCHM-08 | TBD | Pending |
-| SCHM-09 | TBD | Pending |
-| SCHM-10 | TBD | Pending |
-| SCHM-11 | TBD | Pending |
-| SCHM-12 | TBD | Pending |
-| SCHM-13 | TBD | Pending |
-| SCHM-14 | TBD | Pending |
-| SCHM-15 | TBD | Pending |
-| CLI-01 | TBD | Pending |
-| CLI-02 | TBD | Pending |
-| CLI-03 | TBD | Pending |
-| CLI-04 | TBD | Pending |
-| CLI-05 | TBD | Pending |
-| CLI-06 | TBD | Pending |
-| CLI-07 | TBD | Pending |
-| CLI-08 | TBD | Pending |
-| CLI-09 | TBD | Pending |
-| CLI-10 | TBD | Pending |
-| CLI-11 | TBD | Pending |
-| CLI-12 | TBD | Pending |
-| PTCH-01 | TBD | Pending |
-| PTCH-02 | TBD | Pending |
-| PTCH-03 | TBD | Pending |
-| PTCH-04 | TBD | Pending |
-| PTCH-05 | TBD | Pending |
-| PTCH-06 | TBD | Pending |
-| PTCH-07 | TBD | Pending |
+| SCHM-01 | Phase 1 | Pending |
+| SCHM-02 | Phase 1 | Pending |
+| SCHM-03 | Phase 1 | Pending |
+| SCHM-04 | Phase 1 | Pending |
+| SCHM-05 | Phase 1 | Pending |
+| SCHM-06 | Phase 1 | Pending |
+| SCHM-07 | Phase 1 | Pending |
+| SCHM-08 | Phase 1 | Pending |
+| SCHM-09 | Phase 1 | Pending |
+| SCHM-10 | Phase 1 | Pending |
+| SCHM-11 | Phase 1 | Pending |
+| SCHM-12 | Phase 1 | Pending |
+| SCHM-13 | Phase 1 | Pending |
+| SCHM-14 | Phase 1 | Pending |
+| SCHM-15 | Phase 1 | Pending |
+| CLI-01 | Phase 3 | Pending |
+| CLI-02 | Phase 3 | Pending |
+| CLI-03 | Phase 4 | Pending |
+| CLI-04 | Phase 4 | Pending |
+| CLI-05 | Phase 4 | Pending |
+| CLI-06 | Phase 3 | Pending |
+| CLI-07 | Phase 4 | Pending |
+| CLI-08 | Phase 3 | Pending |
+| CLI-09 | Phase 3 | Pending |
+| CLI-10 | Phase 2 | Pending |
+| CLI-11 | Phase 2 | Pending |
+| CLI-12 | Phase 2 | Pending |
+| PTCH-01 | Phase 5 | Pending |
+| PTCH-02 | Phase 5 | Pending |
+| PTCH-03 | Phase 5 | Pending |
+| PTCH-04 | Phase 5 | Pending |
+| PTCH-05 | Phase 5 | Pending |
+| PTCH-06 | Phase 5 | Pending |
+| PTCH-07 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 34 total
-- Mapped to phases: 0
-- Unmapped: 34
+- Mapped to phases: 34
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-02*
-*Last updated: 2026-03-02 after initial definition*
+*Last updated: 2026-03-02 after roadmap creation*
