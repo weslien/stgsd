@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-02T18:59:53.888Z"
+status: in-progress
+last_updated: "2026-03-02T23:43:44.796Z"
 progress:
-  total_phases: 1
+  total_phases: 2
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
 ---
 
 # Project State
@@ -18,32 +18,33 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** GSD's planning state becomes structured, queryable data instead of flat files
-**Current focus:** Phase 2: CLI Foundation (Phase 1 complete)
+**Current focus:** Phase 2: CLI Foundation (Plan 01 complete, Plan 02 next)
 
 ## Current Position
 
-Phase: 1 of 5 (Schema & Module) -- COMPLETE
-Plan: 2 of 2 in current phase -- COMPLETE
-Status: Phase 1 complete, ready for Phase 2 planning
-Last activity: 2026-03-02 -- Completed plan 01-02 (CRUD reducers)
+Phase: 2 of 5 (CLI Foundation)
+Plan: 1 of 2 in current phase -- COMPLETE
+Status: Plan 02-01 complete, ready for Plan 02-02 (default command)
+Last activity: 2026-03-02 -- Completed plan 02-01 (CLI skeleton + helpers)
 
-Progress: [##........] 20%
+Progress: [###.......] 30%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 3.5min
-- Total execution time: 0.12 hours
+- Total plans completed: 3
+- Average duration: 3.7min
+- Total execution time: 0.18 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 Schema & Module | 2 | 7min | 3.5min |
+| 02 CLI Foundation | 1 | 4min | 4min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01(2min), 01-02(5min)
+- Last 5 plans: 01-01(2min), 01-02(5min), 02-01(4min)
 - Trend: Steady
 
 *Updated after each plan completion*
@@ -66,6 +67,9 @@ Recent decisions affecting current work:
 - Cloud publish skipped per user decision -- development stays local-only for now
 - Upsert pattern for single-row-per-project tables (project_state, continue_here, config)
 - JSON string params for seed_project to avoid nested type definitions
+- subscribeToAllTables() for CLI simplicity (data volume is small)
+- 15-second connection timeout for CLI commands
+- SDK v2.0.2 uses single-arg ErrorContext for onError callbacks
 
 ### Pending Todos
 
@@ -78,5 +82,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 01-02-PLAN.md (CRUD reducers, Phase 1 complete)
+Stopped at: Completed 02-01-PLAN.md (CLI skeleton + helpers)
 Resume file: None

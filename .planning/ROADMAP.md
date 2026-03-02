@@ -42,7 +42,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. Running `stclaude` from any git repo auto-connects to SpacetimeDB maincloud and resolves the project from the repo's git remote URL
   2. All command output supports `--json` flag that returns machine-parseable JSON for agent consumption
   3. Running `~/.claude/bin/stclaude` works after install (binary is on Claude Code's PATH)
-**Plans**: TBD
+**Plans**: 2 plans
+- [x] 02-01-PLAN.md -- CLI skeleton with module bindings, Commander.js, and connection/output/git helpers
+- [ ] 02-02-PLAN.md -- Default command (get-state) and install script
 
 ### Phase 3: State & Query Commands
 **Goal**: Agents can read and mutate project state, query phases, read plans, and get roadmap overview through CLI commands
@@ -87,7 +89,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Schema & Module | 2/2 | Complete | 2026-03-02 |
-| 2. CLI Foundation | 0/? | Not started | - |
+| 2. CLI Foundation | 1/2 | In Progress | - |
 | 3. State & Query Commands | 0/? | Not started | - |
 | 4. Workflow Assembly | 0/? | Not started | - |
 | 5. Agent Patches | 0/? | Not started | - |
