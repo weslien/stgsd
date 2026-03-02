@@ -30,7 +30,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A phase with linked plans, tasks, requirements, and success criteria can be inserted and queried back with all relationships intact
   4. Supporting tables (verification, research, phase context, config, continue-here, plan summary, must-have) accept and return data through reducers
   5. Project state table stores current position, velocity data, and session continuity and can be updated through reducers
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 01-01-PLAN.md -- Define all 13 table definitions in schema.ts
+- [ ] 01-02-PLAN.md -- Create all CRUD reducers, seed_project, cascade delete, and publish to maincloud
 
 ### Phase 2: CLI Foundation
 **Goal**: The `stclaude` CLI binary exists, connects to SpacetimeDB, identifies the current project from git remote, and supports JSON output
@@ -84,7 +86,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Schema & Module | 0/? | Not started | - |
+| 1. Schema & Module | 0/2 | Planning complete | - |
 | 2. CLI Foundation | 0/? | Not started | - |
 | 3. State & Query Commands | 0/? | Not started | - |
 | 4. Workflow Assembly | 0/? | Not started | - |
