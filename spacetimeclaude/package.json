@@ -9,7 +9,9 @@
     "build": "esbuild src/main.ts --bundle --platform=node --outfile=dist/main.js --format=esm",
     "spacetime:generate": "spacetime generate --lang typescript --out-dir src/module_bindings --module-path spacetimedb",
     "spacetime:publish:local": "spacetime publish --module-path spacetimedb --server local",
-    "spacetime:publish": "spacetime publish --module-path spacetimedb --server maincloud"
+    "spacetime:publish": "spacetime publish --module-path spacetimedb --server maincloud",
+    "build:cli": "esbuild src/cli/index.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/stclaude.mjs --banner:js='#!/usr/bin/env node\nimport { createRequire } from \"node:module\"; const require = createRequire(import.meta.url);' && chmod +x dist/stclaude.mjs",
+    "install:cli": "bun run build:cli && mkdir -p ~/.claude/bin && cp dist/stclaude.mjs ~/.claude/bin/stclaude.mjs && chmod +x ~/.claude/bin/stclaude.mjs"
   },
   "dependencies": {
     "commander": "^14.0.3",
