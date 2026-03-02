@@ -1,6 +1,9 @@
 import spacetimedb from './schema';
 import { t, SenderError } from 'spacetimedb/server';
 
+// Re-export schema as default so the bundler finds it in the entrypoint
+export default spacetimedb;
+
 // --- Lifecycle Hooks ---
 
 export const init = spacetimedb.init(_ctx => {
