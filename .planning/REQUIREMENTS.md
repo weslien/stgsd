@@ -9,21 +9,21 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Schema
 
-- [ ] **SCHM-01**: Project table with name, description, core_value, constraints, context, key_decisions (text), timestamps
-- [ ] **SCHM-02**: Phase table with project_id, number (string for decimals), name, slug, goal, status, depends_on, success_criteria
-- [ ] **SCHM-03**: Plan table with phase_id, plan_number, type, wave, depends_on, objective, autonomous, requirements, status
-- [ ] **SCHM-04**: Plan task table with plan_id, task_number, type, description, status, commit_hash
-- [ ] **SCHM-05**: Requirement table with project_id, category, number, description, status, phase_number, milestone_version
-- [ ] **SCHM-06**: Project state table replacing STATE.md (current phase, current plan, last activity, velocity data, session continuity)
-- [ ] **SCHM-07**: Continue-here table for resume state (phase_id, task_number, current_state, next_action, context)
-- [ ] **SCHM-08**: Plan summary table with subsystem, tags, headline, accomplishments, deviations, files, decisions, dependency graph metadata
-- [ ] **SCHM-09**: Verification table with phase_id, status, score, content (prose), recommended fixes
-- [ ] **SCHM-10**: Research table with phase_id, domain, confidence, content (prose)
-- [ ] **SCHM-11**: Phase context table with phase_id, content (user decisions prose)
-- [ ] **SCHM-12**: Config table with project_id, config as JSON string
-- [ ] **SCHM-13**: Must-have table (truths, artifacts, key_links) linked to plans
+- [x] **SCHM-01**: Project table with name, description, core_value, constraints, context, key_decisions (text), timestamps
+- [x] **SCHM-02**: Phase table with project_id, number (string for decimals), name, slug, goal, status, depends_on, success_criteria
+- [x] **SCHM-03**: Plan table with phase_id, plan_number, type, wave, depends_on, objective, autonomous, requirements, status
+- [x] **SCHM-04**: Plan task table with plan_id, task_number, type, description, status, commit_hash
+- [x] **SCHM-05**: Requirement table with project_id, category, number, description, status, phase_number, milestone_version
+- [x] **SCHM-06**: Project state table replacing STATE.md (current phase, current plan, last activity, velocity data, session continuity)
+- [x] **SCHM-07**: Continue-here table for resume state (phase_id, task_number, current_state, next_action, context)
+- [x] **SCHM-08**: Plan summary table with subsystem, tags, headline, accomplishments, deviations, files, decisions, dependency graph metadata
+- [x] **SCHM-09**: Verification table with phase_id, status, score, content (prose), recommended fixes
+- [x] **SCHM-10**: Research table with phase_id, domain, confidence, content (prose)
+- [x] **SCHM-11**: Phase context table with phase_id, content (user decisions prose)
+- [x] **SCHM-12**: Config table with project_id, config as JSON string
+- [x] **SCHM-13**: Must-have table (truths, artifacts, key_links) linked to plans
 - [ ] **SCHM-14**: Reducers for all CRUD operations on each table
-- [ ] **SCHM-15**: Project identity derived from git remote URL, stored as unique field on project table
+- [x] **SCHM-15**: Project identity derived from git remote URL, stored as unique field on project table
 
 ### CLI
 
@@ -89,21 +89,21 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHM-01 | Phase 1 | Pending |
-| SCHM-02 | Phase 1 | Pending |
-| SCHM-03 | Phase 1 | Pending |
-| SCHM-04 | Phase 1 | Pending |
-| SCHM-05 | Phase 1 | Pending |
-| SCHM-06 | Phase 1 | Pending |
-| SCHM-07 | Phase 1 | Pending |
-| SCHM-08 | Phase 1 | Pending |
-| SCHM-09 | Phase 1 | Pending |
-| SCHM-10 | Phase 1 | Pending |
-| SCHM-11 | Phase 1 | Pending |
-| SCHM-12 | Phase 1 | Pending |
-| SCHM-13 | Phase 1 | Pending |
+| SCHM-01 | Phase 1 | Complete |
+| SCHM-02 | Phase 1 | Complete |
+| SCHM-03 | Phase 1 | Complete |
+| SCHM-04 | Phase 1 | Complete |
+| SCHM-05 | Phase 1 | Complete |
+| SCHM-06 | Phase 1 | Complete |
+| SCHM-07 | Phase 1 | Complete |
+| SCHM-08 | Phase 1 | Complete |
+| SCHM-09 | Phase 1 | Complete |
+| SCHM-10 | Phase 1 | Complete |
+| SCHM-11 | Phase 1 | Complete |
+| SCHM-12 | Phase 1 | Complete |
+| SCHM-13 | Phase 1 | Complete |
 | SCHM-14 | Phase 1 | Pending |
-| SCHM-15 | Phase 1 | Pending |
+| SCHM-15 | Phase 1 | Complete |
 | CLI-01 | Phase 3 | Pending |
 | CLI-02 | Phase 3 | Pending |
 | CLI-03 | Phase 4 | Pending |
