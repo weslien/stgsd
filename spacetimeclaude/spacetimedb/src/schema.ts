@@ -22,7 +22,7 @@ const phase = table({
   name: 'phase',
   public: true,
   indexes: [
-    { name: 'phase_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'phase_project_id', accessor: 'phase_project_id', algorithm: 'btree', columns: ['project_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -42,7 +42,7 @@ const plan = table({
   name: 'plan',
   public: true,
   indexes: [
-    { name: 'plan_phase_id', algorithm: 'btree', columns: ['phase_id'] },
+    { name: 'plan_phase_id', accessor: 'plan_phase_id', algorithm: 'btree', columns: ['phase_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -64,7 +64,7 @@ const planTask = table({
   name: 'plan_task',
   public: true,
   indexes: [
-    { name: 'plan_task_plan_id', algorithm: 'btree', columns: ['plan_id'] },
+    { name: 'plan_task_plan_id', accessor: 'plan_task_plan_id', algorithm: 'btree', columns: ['plan_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -82,7 +82,7 @@ const requirement = table({
   name: 'requirement',
   public: true,
   indexes: [
-    { name: 'requirement_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'requirement_project_id', accessor: 'requirement_project_id', algorithm: 'btree', columns: ['project_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -103,7 +103,7 @@ const projectState = table({
   name: 'project_state',
   public: true,
   indexes: [
-    { name: 'project_state_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'project_state_project_id', accessor: 'project_state_project_id', algorithm: 'btree', columns: ['project_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -124,7 +124,7 @@ const continueHere = table({
   name: 'continue_here',
   public: true,
   indexes: [
-    { name: 'continue_here_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'continue_here_project_id', accessor: 'continue_here_project_id', algorithm: 'btree', columns: ['project_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -142,7 +142,7 @@ const planSummary = table({
   name: 'plan_summary',
   public: true,
   indexes: [
-    { name: 'plan_summary_plan_id', algorithm: 'btree', columns: ['plan_id'] },
+    { name: 'plan_summary_plan_id', accessor: 'plan_summary_plan_id', algorithm: 'btree', columns: ['plan_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -163,7 +163,7 @@ const verification = table({
   name: 'verification',
   public: true,
   indexes: [
-    { name: 'verification_phase_id', algorithm: 'btree', columns: ['phase_id'] },
+    { name: 'verification_phase_id', accessor: 'verification_phase_id', algorithm: 'btree', columns: ['phase_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -180,7 +180,7 @@ const research = table({
   name: 'research',
   public: true,
   indexes: [
-    { name: 'research_phase_id', algorithm: 'btree', columns: ['phase_id'] },
+    { name: 'research_phase_id', accessor: 'research_phase_id', algorithm: 'btree', columns: ['phase_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -196,7 +196,7 @@ const phaseContext = table({
   name: 'phase_context',
   public: true,
   indexes: [
-    { name: 'phase_context_phase_id', algorithm: 'btree', columns: ['phase_id'] },
+    { name: 'phase_context_phase_id', accessor: 'phase_context_phase_id', algorithm: 'btree', columns: ['phase_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -210,7 +210,7 @@ const config = table({
   name: 'config',
   public: true,
   indexes: [
-    { name: 'config_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'config_project_id', accessor: 'config_project_id', algorithm: 'btree', columns: ['project_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
@@ -224,7 +224,7 @@ const mustHave = table({
   name: 'must_have',
   public: true,
   indexes: [
-    { name: 'must_have_plan_id', algorithm: 'btree', columns: ['plan_id'] },
+    { name: 'must_have_plan_id', accessor: 'must_have_plan_id', algorithm: 'btree', columns: ['plan_id'] },
   ],
 }, {
   id: t.u64().primaryKey().autoInc(),
