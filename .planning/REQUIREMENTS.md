@@ -22,7 +22,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SCHM-11**: Phase context table with phase_id, content (user decisions prose)
 - [x] **SCHM-12**: Config table with project_id, config as JSON string
 - [x] **SCHM-13**: Must-have table (truths, artifacts, key_links) linked to plans
-- [ ] **SCHM-14**: Reducers for all CRUD operations on each table
+- [x] **SCHM-14**: Reducers for all CRUD operations on each table
 - [x] **SCHM-15**: Project identity derived from git remote URL, stored as unique field on project table
 
 ### CLI
@@ -102,7 +102,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHM-11 | Phase 1 | Complete |
 | SCHM-12 | Phase 1 | Complete |
 | SCHM-13 | Phase 1 | Complete |
-| SCHM-14 | Phase 1 | Pending |
+| SCHM-14 | Phase 1 | Complete |
 | SCHM-15 | Phase 1 | Complete |
 | CLI-01 | Phase 3 | Pending |
 | CLI-02 | Phase 3 | Pending |

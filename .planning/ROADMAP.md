@@ -12,7 +12,7 @@ SpacetimeClaude replaces GSD's file-based `.planning/` state with a SpacetimeDB-
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Schema & Module** - All SpacetimeDB tables, reducers, and module deployed to maincloud
+- [x] **Phase 1: Schema & Module** - All SpacetimeDB tables, reducers, and module deployed to maincloud
 - [ ] **Phase 2: CLI Foundation** - CLI skeleton with connection management, project identity, JSON output, and install
 - [ ] **Phase 3: State & Query Commands** - CLI commands for reading/writing project state, phases, plans, and roadmap overview
 - [ ] **Phase 4: Workflow Assembly** - CLI commands that assemble rich context for GSD workflow entry points
@@ -31,8 +31,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Supporting tables (verification, research, phase context, config, continue-here, plan summary, must-have) accept and return data through reducers
   5. Project state table stores current position, velocity data, and session continuity and can be updated through reducers
 **Plans**: 2 plans
-- [ ] 01-01-PLAN.md -- Define all 13 table definitions in schema.ts
-- [ ] 01-02-PLAN.md -- Create all CRUD reducers, seed_project, cascade delete, and publish to maincloud
+- [x] 01-01-PLAN.md -- Define all 13 table definitions in schema.ts
+- [x] 01-02-PLAN.md -- Create all CRUD reducers, seed_project, cascade delete, and publish to maincloud
 
 ### Phase 2: CLI Foundation
 **Goal**: The `stclaude` CLI binary exists, connects to SpacetimeDB, identifies the current project from git remote, and supports JSON output
@@ -86,7 +86,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Schema & Module | 0/2 | Planning complete | - |
+| 1. Schema & Module | 2/2 | Complete | 2026-03-02 |
 | 2. CLI Foundation | 0/? | Not started | - |
 | 3. State & Query Commands | 0/? | Not started | - |
 | 4. Workflow Assembly | 0/? | Not started | - |
