@@ -10,7 +10,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Schema
 
 - [ ] **SCHM-01**: Project table with name, description, core_value, constraints, context, key_decisions (text), timestamps
-- [ ] **SCHM-02**: Phase table with milestone_id, number (string for decimals), name, slug, goal, status, depends_on, success_criteria
+- [ ] **SCHM-02**: Phase table with project_id, number (string for decimals), name, slug, goal, status, depends_on, success_criteria
 - [ ] **SCHM-03**: Plan table with phase_id, plan_number, type, wave, depends_on, objective, autonomous, requirements, status
 - [ ] **SCHM-04**: Plan task table with plan_id, task_number, type, description, status, commit_hash
 - [ ] **SCHM-05**: Requirement table with project_id, category, number, description, status, phase_number, milestone_version
