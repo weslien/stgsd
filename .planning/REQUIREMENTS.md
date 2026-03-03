@@ -32,10 +32,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CLI-03**: `stclaude init progress` assembles context for progress workflow
 - [ ] **CLI-04**: `stclaude init execute-phase <phase>` assembles context for execution
 - [ ] **CLI-05**: `stclaude init plan-phase <phase>` assembles context for planning
-- [ ] **CLI-06**: `stclaude read-plan <phase> <plan>` returns plan content
+- [x] **CLI-06**: `stclaude read-plan <phase> <plan>` returns plan content
 - [ ] **CLI-07**: `stclaude write-summary` / `write-verification` / `write-research` stores artifacts
 - [x] **CLI-08**: `stclaude get-phase <number>` returns phase details
-- [ ] **CLI-09**: `stclaude roadmap analyze` returns phase overview with status
+- [x] **CLI-09**: `stclaude roadmap analyze` returns phase overview with status
 - [x] **CLI-10**: Connection management (auto-connect to maincloud, project identity from git remote)
 - [x] **CLI-11**: JSON output mode for machine consumption by agents
 - [x] **CLI-12**: Installable to `~/.claude/bin/stclaude`
@@ -109,10 +109,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLI-03 | Phase 4 | Pending |
 | CLI-04 | Phase 4 | Pending |
 | CLI-05 | Phase 4 | Pending |
-| CLI-06 | Phase 3 | Pending |
+| CLI-06 | Phase 3 | Complete |
 | CLI-07 | Phase 4 | Pending |
 | CLI-08 | Phase 3 | Complete |
-| CLI-09 | Phase 3 | Pending |
+| CLI-09 | Phase 3 | Complete |
 | CLI-10 | Phase 2 | Complete |
 | CLI-11 | Phase 2 | Complete |
 | CLI-12 | Phase 2 | Complete |
