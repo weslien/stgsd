@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
+milestone_name: Gap Closure & Tech Debt
 status: unknown
-last_updated: "2026-03-03T00:27:27.612Z"
+last_updated: "2026-03-03T09:45:56.272Z"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 9
+  completed_plans: 8
 ---
 
 # Project State
@@ -18,23 +18,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** GSD's planning state becomes structured, queryable data instead of flat files
-**Current focus:** Phase 3: State Query Commands -- COMPLETE (3 of 3 plans)
+**Current focus:** Phase 6: v1.0 Gap Closure & Tech Debt -- IN PROGRESS (1 of 2 plans)
 
 ## Current Position
 
-Phase: 3 of 5 (State Query Commands) -- COMPLETE
-Plan: 3 of 3 in current phase -- COMPLETE
-Status: Completed plan 03-03 (state mutation commands: advance-plan, update-progress, record-metric)
-Last activity: 2026-03-03 -- Completed plan 03-03 (state mutation commands)
+Phase: 6 of 6 (v1.0 Gap Closure & Tech Debt) -- IN PROGRESS
+Plan: 1 of 2 in current phase -- COMPLETE
+Status: Completed plan 06-01 (CLI-12 symlink and ROADMAP checkbox fix)
+Last activity: 2026-03-03 -- Completed plan 06-01 (CLI-12 symlink fix)
 
-Progress: [##########] 100%
+Progress: [########--] 89%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 3.0min
-- Total execution time: 0.35 hours
+- Total plans completed: 8
+- Average duration: 2.75min
+- Total execution time: 0.37 hours
 
 **By Phase:**
 
@@ -43,9 +43,10 @@ Progress: [##########] 100%
 | 01 Schema & Module | 2 | 7min | 3.5min |
 | 02 CLI Foundation | 2 | 8min | 4min |
 | 03 State Query Commands | 3 | 6min | 2min |
+| 06 Gap Closure & Tech Debt | 1 | 1min | 1min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02(4min), 03-01(2min), 03-02(2min), 03-03(2min)
+- Last 5 plans: 03-01(2min), 03-02(2min), 03-03(2min), 06-01(1min)
 - Trend: Steady/improving
 
 *Updated after each plan completion*
@@ -80,6 +81,7 @@ Recent decisions affecting current work:
 - waitForStateUpdate helper duplicated in each mutation command file (acceptable for 3 small files)
 - Read-merge-upsert pattern for all mutation commands to preserve unchanged fields
 - 5-second timeout for reducer confirmation via subscription callbacks
+- [Phase 06]: Relative symlink target (stclaude.mjs not absolute path) for portability
 
 ### Pending Todos
 
@@ -92,5 +94,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 03-03-PLAN.md (state mutation commands: advance-plan, update-progress, record-metric)
+Stopped at: Completed 06-01-PLAN.md (CLI-12 symlink and ROADMAP checkbox fix)
 Resume file: None

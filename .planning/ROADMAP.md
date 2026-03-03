@@ -106,4 +106,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 3. State & Query Commands | 0/? | Not started | - |
 | 4. Workflow Assembly | 0/? | Not started | - |
 | 5. Agent Patches | 0/? | Not started | - |
-| 6. v1.0 Gap Closure & Tech Debt | 0/? | Not started | - |
+| 6. v1.0 Gap Closure & Tech Debt | 1/2 | In Progress | - |
