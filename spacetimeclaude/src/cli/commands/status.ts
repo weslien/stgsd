@@ -2,6 +2,7 @@ import type { Command } from 'commander';
 import type { DbConnection } from '../../module_bindings/index.js';
 import { withConnection } from '../lib/connection.js';
 import { getGitRemoteUrl } from '../lib/git.js';
+import { findProjectByGitRemote, findProjectState } from '../lib/project.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
 
@@ -71,30 +72,9 @@ export function registerStatusCommand(program: Command): void {
       const gitRemoteUrl = getGitRemoteUrl();
 
       const statusData = await withConnection((conn: DbConnection) => {
-        // Find project by git remote URL
-        let foundProject = null;
-        for (const row of conn.db.project.iter()) {
-          if (row.gitRemoteUrl === gitRemoteUrl) {
-            foundProject = row;
-            break;
-          }
-        }
+        const foundProject = findProjectByGitRemote(conn, gitRemoteUrl);
 
-        if (!foundProject) {
-          throw new CliError(
-            ErrorCodes.PROJECT_NOT_FOUND,
-            `No project found for git remote: ${gitRemoteUrl}`,
-          );
-        }
-
-        // Find project state
-        let foundState = null;
-        for (const row of conn.db.projectState.iter()) {
-          if (row.projectId === foundProject.id) {
-            foundState = row;
-            break;
-          }
-        }
+        const foundState = findProjectState(conn, foundProject.id);
 
         // Find all phases for this project
         const projectPhases = [];
