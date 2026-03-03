@@ -1,5 +1,7 @@
 import { Command } from 'commander';
 import { registerStatusCommand } from './commands/status.js';
+import { registerGetStateCommand } from './commands/get-state.js';
+import { registerGetPhaseCommand } from './commands/get-phase.js';
 
 const program = new Command()
   .name('stclaude')
@@ -8,5 +10,7 @@ const program = new Command()
   .option('--json', 'Output machine-readable JSON envelope', false);
 
 registerStatusCommand(program);
+registerGetStateCommand(program);
+registerGetPhaseCommand(program);
 
 program.parseAsync();
