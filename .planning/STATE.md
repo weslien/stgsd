@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-last_updated: "2026-03-03T00:21:11Z"
+last_updated: "2026-03-03T00:22:06Z"
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -18,23 +18,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** GSD's planning state becomes structured, queryable data instead of flat files
-**Current focus:** Phase 3: State Query Commands -- IN PROGRESS (plan 2 of 3 complete)
+**Current focus:** Phase 3: State Query Commands -- COMPLETE (3 of 3 plans)
 
 ## Current Position
 
-Phase: 3 of 5 (State Query Commands) -- IN PROGRESS
-Plan: 2 of 3 in current phase -- COMPLETE
-Status: Completed plan 03-02 (read-plan + roadmap analyze commands)
-Last activity: 2026-03-03 -- Completed plan 03-02 (read-plan, roadmap analyze)
+Phase: 3 of 5 (State Query Commands) -- COMPLETE
+Plan: 3 of 3 in current phase -- COMPLETE
+Status: Completed plan 03-03 (state mutation commands: advance-plan, update-progress, record-metric)
+Last activity: 2026-03-03 -- Completed plan 03-03 (state mutation commands)
 
-Progress: [######....] 60%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 3.2min
-- Total execution time: 0.32 hours
+- Total plans completed: 7
+- Average duration: 3.0min
+- Total execution time: 0.35 hours
 
 **By Phase:**
 
@@ -42,10 +42,10 @@ Progress: [######....] 60%
 |-------|-------|-------|----------|
 | 01 Schema & Module | 2 | 7min | 3.5min |
 | 02 CLI Foundation | 2 | 8min | 4min |
-| 03 State Query Commands | 2 | 4min | 2min |
+| 03 State Query Commands | 3 | 6min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01(4min), 02-02(4min), 03-01(2min), 03-02(2min)
+- Last 5 plans: 02-02(4min), 03-01(2min), 03-02(2min), 03-03(2min)
 - Trend: Steady/improving
 
 *Updated after each plan completion*
@@ -77,6 +77,9 @@ Recent decisions affecting current work:
 - Phase numbers compared as strings to support decimal phase numbering
 - Case-insensitive completion status matching for plan/requirement status checks
 - Nested Commander.js subcommand pattern for roadmap operations extensibility
+- waitForStateUpdate helper duplicated in each mutation command file (acceptable for 3 small files)
+- Read-merge-upsert pattern for all mutation commands to preserve unchanged fields
+- 5-second timeout for reducer confirmation via subscription callbacks
 
 ### Pending Todos
 
@@ -89,5 +92,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 03-02-PLAN.md (read-plan + roadmap analyze commands)
+Stopped at: Completed 03-03-PLAN.md (state mutation commands: advance-plan, update-progress, record-metric)
 Resume file: None
