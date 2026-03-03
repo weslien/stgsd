@@ -7,6 +7,11 @@ import { registerRoadmapCommand } from './commands/roadmap.js';
 import { registerAdvancePlanCommand } from './commands/advance-plan.js';
 import { registerUpdateProgressCommand } from './commands/update-progress.js';
 import { registerRecordMetricCommand } from './commands/record-metric.js';
+import { registerWriteSummaryCommand } from './commands/write-summary.js';
+import { registerWriteVerificationCommand } from './commands/write-verification.js';
+import { registerWriteResearchCommand } from './commands/write-research.js';
+import { registerInitCommand } from './commands/init.js';
+import { registerSeedCommand } from './commands/seed.js';
 
 const program = new Command()
   .name('stclaude')
@@ -22,5 +27,10 @@ registerRoadmapCommand(program);
 registerAdvancePlanCommand(program);
 registerUpdateProgressCommand(program);
 registerRecordMetricCommand(program);
+registerWriteSummaryCommand(program);
+registerWriteVerificationCommand(program);
+registerWriteResearchCommand(program);
+registerInitCommand(program);
+registerSeedCommand(program);
 
 program.parseAsync();
