@@ -45,7 +45,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Running `~/.claude/bin/stclaude` works after install (binary is on Claude Code's PATH)
 **Plans**: 2 plans
 - [x] 02-01-PLAN.md -- CLI skeleton with module bindings, Commander.js, and connection/output/git helpers
-- [ ] 02-02-PLAN.md -- Default command (get-state) and install script
+- [x] 02-02-PLAN.md -- Default command (get-state) and install script
 
 ### Phase 3: State & Query Commands
 **Goal**: Agents can read and mutate project state, query phases, read plans, and get roadmap overview through CLI commands
