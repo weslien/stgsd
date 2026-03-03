@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Gap Closure & Tech Debt
 status: unknown
-last_updated: "2026-03-03T09:45:56.272Z"
+last_updated: "2026-03-03T09:47:55.064Z"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -18,23 +18,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** GSD's planning state becomes structured, queryable data instead of flat files
-**Current focus:** Phase 6: v1.0 Gap Closure & Tech Debt -- IN PROGRESS (1 of 2 plans)
+**Current focus:** Phase 6: v1.0 Gap Closure & Tech Debt -- COMPLETE (2 of 2 plans)
 
 ## Current Position
 
-Phase: 6 of 6 (v1.0 Gap Closure & Tech Debt) -- IN PROGRESS
-Plan: 1 of 2 in current phase -- COMPLETE
-Status: Completed plan 06-01 (CLI-12 symlink and ROADMAP checkbox fix)
-Last activity: 2026-03-03 -- Completed plan 06-01 (CLI-12 symlink fix)
+Phase: 6 of 6 (v1.0 Gap Closure & Tech Debt) -- COMPLETE
+Plan: 2 of 2 in current phase -- COMPLETE
+Status: Completed plan 06-02 (shared helper extraction and deduplication)
+Last activity: 2026-03-03 -- Completed plan 06-02 (waitForStateUpdate extraction, status.ts refactor)
 
-Progress: [########--] 89%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 2.75min
-- Total execution time: 0.37 hours
+- Total plans completed: 9
+- Average duration: 2.67min
+- Total execution time: 0.40 hours
 
 **By Phase:**
 
@@ -43,13 +43,14 @@ Progress: [########--] 89%
 | 01 Schema & Module | 2 | 7min | 3.5min |
 | 02 CLI Foundation | 2 | 8min | 4min |
 | 03 State Query Commands | 3 | 6min | 2min |
-| 06 Gap Closure & Tech Debt | 1 | 1min | 1min |
+| 06 Gap Closure & Tech Debt | 2 | 3min | 1.5min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01(2min), 03-02(2min), 03-03(2min), 06-01(1min)
+- Last 5 plans: 03-01(2min), 03-02(2min), 03-03(2min), 06-01(1min), 06-02(2min)
 - Trend: Steady/improving
 
 *Updated after each plan completion*
+| Phase 06 P02 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -78,10 +79,12 @@ Recent decisions affecting current work:
 - Phase numbers compared as strings to support decimal phase numbering
 - Case-insensitive completion status matching for plan/requirement status checks
 - Nested Commander.js subcommand pattern for roadmap operations extensibility
-- waitForStateUpdate helper duplicated in each mutation command file (acceptable for 3 small files)
+- waitForStateUpdate consolidated into lib/project.ts as single shared export (was duplicated in 3 mutation files)
+- status.ts project/projectState lookups replaced with shared helpers; phase/plan iterations kept inline
 - Read-merge-upsert pattern for all mutation commands to preserve unchanged fields
 - 5-second timeout for reducer confirmation via subscription callbacks
 - [Phase 06]: Relative symlink target (stclaude.mjs not absolute path) for portability
+- [Phase 06]: waitForStateUpdate consolidated into lib/project.ts as single shared export
 
 ### Pending Todos
 
@@ -94,5 +97,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 06-01-PLAN.md (CLI-12 symlink and ROADMAP checkbox fix)
+Stopped at: Completed 06-02-PLAN.md (shared helper extraction and deduplication)
 Resume file: None
