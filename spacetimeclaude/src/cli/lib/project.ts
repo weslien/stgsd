@@ -54,3 +54,37 @@ export function findPhaseByNumber(
     `No phase found with number "${number}"`,
   );
 }
+
+/**
+ * Wait for a project state update via subscription callback.
+ * Registers onUpdate and onInsert listeners, resolves when matching projectId seen.
+ * Rejects after timeoutMs (default 5000ms).
+ */
+export function waitForStateUpdate(
+  conn: DbConnection,
+  projectId: bigint,
+  timeoutMs = 5000,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(
+        new CliError(
+          ErrorCodes.INTERNAL_ERROR,
+          'State update timed out after 5 seconds',
+        ),
+      );
+    }, timeoutMs);
+
+    const done = () => {
+      clearTimeout(timer);
+      resolve();
+    };
+
+    conn.db.projectState.onUpdate((_ctx, _oldRow, newRow) => {
+      if (newRow.projectId === projectId) done();
+    });
+    conn.db.projectState.onInsert((_ctx, newRow) => {
+      if (newRow.projectId === projectId) done();
+    });
+  });
+}

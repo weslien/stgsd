@@ -2,38 +2,9 @@ import type { Command } from 'commander';
 import type { DbConnection } from '../../module_bindings/index.js';
 import { withConnection } from '../lib/connection.js';
 import { getGitRemoteUrl } from '../lib/git.js';
-import { findProjectByGitRemote, findProjectState } from '../lib/project.js';
+import { findProjectByGitRemote, findProjectState, waitForStateUpdate } from '../lib/project.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
-
-function waitForStateUpdate(
-  conn: DbConnection,
-  projectId: bigint,
-  timeoutMs = 5000,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(
-        new CliError(
-          ErrorCodes.INTERNAL_ERROR,
-          'State update timed out after 5 seconds',
-        ),
-      );
-    }, timeoutMs);
-
-    const done = () => {
-      clearTimeout(timer);
-      resolve();
-    };
-
-    conn.db.projectState.onUpdate((_ctx, _oldRow, newRow) => {
-      if (newRow.projectId === projectId) done();
-    });
-    conn.db.projectState.onInsert((_ctx, newRow) => {
-      if (newRow.projectId === projectId) done();
-    });
-  });
-}
 
 interface UpdateProgressData {
   project: { id: bigint; name: string };
