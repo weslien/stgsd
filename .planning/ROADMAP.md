@@ -13,11 +13,11 @@ SpacetimeClaude replaces GSD's file-based `.planning/` state with a SpacetimeDB-
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Schema & Module** - All SpacetimeDB tables, reducers, and module deployed to maincloud
-- [ ] **Phase 2: CLI Foundation** - CLI skeleton with connection management, project identity, JSON output, and install
-- [ ] **Phase 3: State & Query Commands** - CLI commands for reading/writing project state, phases, plans, and roadmap overview
-- [ ] **Phase 4: Workflow Assembly** - CLI commands that assemble rich context for GSD workflow entry points
+- [x] **Phase 2: CLI Foundation** - CLI skeleton with connection management, project identity, JSON output, and install
+- [x] **Phase 3: State & Query Commands** - CLI commands for reading/writing project state, phases, plans, and roadmap overview
+- [ ] **Phase 4: Workflow Assembly** - CLI commands that assemble rich context for GSD workflow entry points + seed/init command (gap closure)
 - [ ] **Phase 5: Agent Patches** - GSD agent markdown files patched to call stclaude instead of file I/O
-- [ ] **Phase 6: v1.0 Gap Closure & Tech Debt** - Fix CLI-12 symlink, stale checkbox, and refactor duplicated helpers
+- [x] **Phase 6: v1.0 Gap Closure & Tech Debt** - Fix CLI-12 symlink, stale checkbox, and refactor duplicated helpers
 
 ## Phase Details
 
@@ -57,17 +57,22 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. `stclaude get-phase <number>` returns full phase details including goal, requirements, success criteria, and plan list
   4. `stclaude read-plan <phase> <plan>` returns the complete plan content for a given phase and plan number
   5. `stclaude roadmap analyze` returns a phase overview with statuses that matches the data in SpacetimeDB
-**Plans**: TBD
+**Plans**: 3 plans
+- [x] 03-01-PLAN.md -- get-state and get-phase query commands
+- [x] 03-02-PLAN.md -- read-plan and roadmap analyze commands
+- [x] 03-03-PLAN.md -- State mutation commands (advance-plan, update-progress, record-metric)
 
 ### Phase 4: Workflow Assembly
-**Goal**: CLI can assemble the rich context bundles that GSD workflow entry points need, and store artifacts produced by agents
+**Goal**: CLI can assemble the rich context bundles that GSD workflow entry points need, store artifacts produced by agents, and bootstrap new projects
 **Depends on**: Phase 3
 **Requirements**: CLI-03, CLI-04, CLI-05, CLI-07
+**Gap Closure:** Closes INT-01/FLOW-01 from v1.0 audit (seed_project has no CLI command)
 **Success Criteria** (what must be TRUE):
   1. `stclaude init progress` returns assembled context sufficient for the progress workflow (state, roadmap overview, recent activity)
   2. `stclaude init plan-phase <phase>` returns everything the planner needs (phase details, requirements, research, existing plans, project context)
   3. `stclaude init execute-phase <phase>` returns everything the executor needs (current plan, task list, must-haves, continue-here state)
   4. `stclaude write-summary`, `write-verification`, and `write-research` persist artifacts to SpacetimeDB and are retrievable by subsequent queries
+  5. `stclaude init` (or `stclaude seed`) calls `seed_project` reducer to bootstrap a new project from the current git repo, closing the PROJECT_NOT_FOUND dead-end
 **Plans**: TBD
 
 ### Phase 5: Agent Patches
@@ -92,7 +97,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. ROADMAP.md 02-02-PLAN.md checkbox reflects actual completion state
   3. `waitForStateUpdate` exists as a single shared helper imported by all mutation commands
   4. `status.ts` uses `findProjectByGitRemote` instead of inlining project lookup
-**Plans**: TBD
+**Plans**: 2 plans
+- [x] 06-01-PLAN.md -- CLI-12 symlink fix and ROADMAP checkbox update
+- [x] 06-02-PLAN.md -- Shared helper extraction (waitForStateUpdate, findProjectByGitRemote)
 
 ## Progress
 
@@ -102,8 +109,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Schema & Module | 2/2 | Complete | 2026-03-02 |
-| 2. CLI Foundation | 1/2 | In Progress | - |
-| 3. State & Query Commands | 0/? | Not started | - |
+| 2. CLI Foundation | 2/2 | Complete | 2026-03-02 |
+| 3. State & Query Commands | 3/3 | Complete | 2026-03-02 |
 | 4. Workflow Assembly | 0/? | Not started | - |
 | 5. Agent Patches | 0/? | Not started | - |
-| 6. v1.0 Gap Closure & Tech Debt | 1/2 | In Progress | - |
+| 6. v1.0 Gap Closure & Tech Debt | 2/2 | Complete | 2026-03-03 |
