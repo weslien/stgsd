@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Gap Closure & Tech Debt
-status: unknown
-last_updated: "2026-03-03T13:35:04.570Z"
+status: in-progress
+last_updated: "2026-03-03T13:36:28.000Z"
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 11
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -43,15 +43,17 @@ Progress: [##########] 100%
 | 01 Schema & Module | 2 | 7min | 3.5min |
 | 02 CLI Foundation | 2 | 8min | 4min |
 | 03 State Query Commands | 3 | 6min | 2min |
+| 04 Workflow Assembly | 2 | 7min | 3.5min |
 | 06 Gap Closure & Tech Debt | 2 | 3min | 1.5min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01(2min), 03-02(2min), 03-03(2min), 06-01(1min), 06-02(2min)
-- Trend: Steady/improving
+- Last 5 plans: 03-03(2min), 06-01(1min), 06-02(2min), 04-02(3min), 04-01(4min)
+- Trend: Steady
 
 *Updated after each plan completion*
 | Phase 06 P02 | 2 | 2 tasks | 5 files |
 | Phase 04 P02 | 3min | 2 tasks | 4 files |
+| Phase 04 P01 | 4min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -88,6 +90,9 @@ Recent decisions affecting current work:
 - [Phase 06]: waitForStateUpdate consolidated into lib/project.ts as single shared export
 - [Phase 04]: waitForInsert helper defined locally in each write command file (not shared) to keep pattern simple and self-contained
 - [Phase 04]: Score validated as Number then converted to BigInt for SpacetimeDB u64 compatibility
+- [Phase 04]: isCompletionStatus defined locally in init.ts (roadmap.ts does not export it)
+- [Phase 04]: Recent summaries sorted by planId descending as proxy for recency
+- [Phase 04]: Seed command uses 10s timeout for reducer confirmation (bulk inserts)
 
 ### Pending Todos
 
@@ -100,5 +105,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 04-02-PLAN.md (write-summary, write-verification, write-research commands)
+Stopped at: Completed 04-01-PLAN.md (init subcommands and seed command)
 Resume file: None

@@ -29,9 +29,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **CLI-01**: `stclaude get-state` returns current project state (position, metrics, last activity)
 - [x] **CLI-02**: `stclaude advance-plan` / `update-progress` / `record-metric` state mutations
-- [ ] **CLI-03**: `stclaude init progress` assembles context for progress workflow
-- [ ] **CLI-04**: `stclaude init execute-phase <phase>` assembles context for execution
-- [ ] **CLI-05**: `stclaude init plan-phase <phase>` assembles context for planning
+- [x] **CLI-03**: `stclaude init progress` assembles context for progress workflow
+- [x] **CLI-04**: `stclaude init execute-phase <phase>` assembles context for execution
+- [x] **CLI-05**: `stclaude init plan-phase <phase>` assembles context for planning
 - [x] **CLI-06**: `stclaude read-plan <phase> <plan>` returns plan content
 - [x] **CLI-07**: `stclaude write-summary` / `write-verification` / `write-research` stores artifacts
 - [x] **CLI-08**: `stclaude get-phase <number>` returns phase details
@@ -106,9 +106,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHM-15 | Phase 1 | Complete |
 | CLI-01 | Phase 3 | Complete |
 | CLI-02 | Phase 3 | Complete |
-| CLI-03 | Phase 4 | Pending |
-| CLI-04 | Phase 4 | Pending |
-| CLI-05 | Phase 4 | Pending |
+| CLI-03 | Phase 4 | Complete |
+| CLI-04 | Phase 4 | Complete |
+| CLI-05 | Phase 4 | Complete |
 | CLI-06 | Phase 3 | Complete |
 | CLI-07 | Phase 4 | Complete |
 | CLI-08 | Phase 3 | Complete |
