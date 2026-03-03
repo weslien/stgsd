@@ -38,7 +38,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CLI-09**: `stclaude roadmap analyze` returns phase overview with status
 - [x] **CLI-10**: Connection management (auto-connect to maincloud, project identity from git remote)
 - [x] **CLI-11**: JSON output mode for machine consumption by agents
-- [x] **CLI-12**: Installable to `~/.claude/bin/stclaude`
+- [ ] **CLI-12**: Installable to `~/.claude/bin/stclaude`
 
 ### Patches
 
@@ -115,7 +115,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLI-09 | Phase 3 | Complete |
 | CLI-10 | Phase 2 | Complete |
 | CLI-11 | Phase 2 | Complete |
-| CLI-12 | Phase 2 | Complete |
+| CLI-12 | Phase 6 | Pending |
 | PTCH-01 | Phase 5 | Pending |
 | PTCH-02 | Phase 5 | Pending |
 | PTCH-03 | Phase 5 | Pending |

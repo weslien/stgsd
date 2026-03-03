@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: State & Query Commands** - CLI commands for reading/writing project state, phases, plans, and roadmap overview
 - [ ] **Phase 4: Workflow Assembly** - CLI commands that assemble rich context for GSD workflow entry points
 - [ ] **Phase 5: Agent Patches** - GSD agent markdown files patched to call stclaude instead of file I/O
+- [ ] **Phase 6: v1.0 Gap Closure & Tech Debt** - Fix CLI-12 symlink, stale checkbox, and refactor duplicated helpers
 
 ## Phase Details
 
@@ -81,6 +82,18 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. All patches are minimal text replacements that do not restructure agent logic, and GSD's hash-based patch system detects and preserves them across `/gsd:update`
 **Plans**: TBD
 
+### Phase 6: v1.0 Gap Closure & Tech Debt
+**Goal**: Close the CLI-12 requirement gap, fix stale ROADMAP state, and eliminate code duplication identified by v1.0 audit
+**Depends on**: Phase 3
+**Requirements**: CLI-12
+**Gap Closure:** Closes gaps from v1.0 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. Running `stclaude` (without `.mjs` extension) from `~/.claude/bin/` resolves and executes the CLI
+  2. ROADMAP.md 02-02-PLAN.md checkbox reflects actual completion state
+  3. `waitForStateUpdate` exists as a single shared helper imported by all mutation commands
+  4. `status.ts` uses `findProjectByGitRemote` instead of inlining project lookup
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
@@ -93,3 +106,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 3. State & Query Commands | 0/? | Not started | - |
 | 4. Workflow Assembly | 0/? | Not started | - |
 | 5. Agent Patches | 0/? | Not started | - |
+| 6. v1.0 Gap Closure & Tech Debt | 0/? | Not started | - |
