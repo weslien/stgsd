@@ -34,6 +34,7 @@ const phase = table({
   status: t.string(),
   depends_on: t.string(),
   success_criteria: t.string(),
+  is_inserted: t.bool(),
   created_at: t.timestamp(),
   updated_at: t.timestamp(),
 });
@@ -236,6 +237,130 @@ const mustHave = table({
   updated_at: t.timestamp(),
 });
 
+const milestone = table({
+  name: 'milestone',
+  public: true,
+  indexes: [
+    { name: 'milestone_project_id', accessor: 'milestone_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'milestone_status', accessor: 'milestone_status', algorithm: 'btree', columns: ['status'] },
+  ],
+}, {
+  id: t.u64().primaryKey().autoInc(),
+  project_id: t.u64(),
+  version: t.string(),
+  name: t.string(),
+  shipped_date: t.string(),
+  phase_count: t.u64(),
+  plan_count: t.u64(),
+  requirement_count: t.u64(),
+  accomplishments: t.string(),
+  status: t.string(),
+  created_at: t.timestamp(),
+  updated_at: t.timestamp(),
+});
+
+const milestoneAudit = table({
+  name: 'milestone_audit',
+  public: true,
+  indexes: [
+    { name: 'milestone_audit_project_id', accessor: 'milestone_audit_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'milestone_audit_milestone_id', accessor: 'milestone_audit_milestone_id', algorithm: 'btree', columns: ['milestone_id'] },
+    { name: 'milestone_audit_status', accessor: 'milestone_audit_status', algorithm: 'btree', columns: ['audit_status'] },
+  ],
+}, {
+  id: t.u64().primaryKey().autoInc(),
+  project_id: t.u64(),
+  milestone_id: t.u64(),
+  audit_status: t.string(),
+  requirement_scores: t.string(),
+  integration_scores: t.string(),
+  flow_scores: t.string(),
+  tech_debt_items: t.string(),
+  roadmap_content: t.string(),
+  requirements_content: t.string(),
+  created_at: t.timestamp(),
+  updated_at: t.timestamp(),
+});
+
+const sessionCheckpoint = table({
+  name: 'session_checkpoint',
+  public: true,
+  indexes: [
+    { name: 'session_checkpoint_project_id', accessor: 'session_checkpoint_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'session_checkpoint_phase_id', accessor: 'session_checkpoint_phase_id', algorithm: 'btree', columns: ['phase_id'] },
+  ],
+}, {
+  id: t.u64().primaryKey().autoInc(),
+  project_id: t.u64(),
+  phase_id: t.u64(),
+  phase_context: t.string(),
+  completed_work: t.string(),
+  remaining_work: t.string(),
+  decisions: t.string(),
+  blockers: t.string(),
+  next_action: t.string(),
+  mental_context: t.string(),
+  created_at: t.timestamp(),
+  updated_at: t.timestamp(),
+});
+
+const todo = table({
+  name: 'todo',
+  public: true,
+  indexes: [
+    { name: 'todo_project_id', accessor: 'todo_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'todo_status', accessor: 'todo_status', algorithm: 'btree', columns: ['status'] },
+    { name: 'todo_area', accessor: 'todo_area', algorithm: 'btree', columns: ['area'] },
+  ],
+}, {
+  id: t.u64().primaryKey().autoInc(),
+  project_id: t.u64(),
+  title: t.string(),
+  area: t.string(),
+  problem: t.string(),
+  solution_hints: t.string(),
+  file_refs: t.string(),
+  status: t.string(),
+  created_at: t.timestamp(),
+  updated_at: t.timestamp(),
+});
+
+const debugSession = table({
+  name: 'debug_session',
+  public: true,
+  indexes: [
+    { name: 'debug_session_project_id', accessor: 'debug_session_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'debug_session_status', accessor: 'debug_session_status', algorithm: 'btree', columns: ['status'] },
+  ],
+}, {
+  id: t.u64().primaryKey().autoInc(),
+  project_id: t.u64(),
+  bug_description: t.string(),
+  hypotheses: t.string(),
+  checkpoints: t.string(),
+  timeline: t.string(),
+  status: t.string(),
+  resolution_notes: t.string().optional(),
+  created_at: t.timestamp(),
+  updated_at: t.timestamp(),
+});
+
+const codebases = table({
+  name: 'codebase_map',
+  public: true,
+  indexes: [
+    { name: 'codebase_map_project_id', accessor: 'codebase_map_project_id', algorithm: 'btree', columns: ['project_id'] },
+    { name: 'codebase_map_doc_type', accessor: 'codebase_map_doc_type', algorithm: 'btree', columns: ['doc_type'] },
+  ],
+}, {
+  id: t.u64().primaryKey().autoInc(),
+  project_id: t.u64(),
+  doc_type: t.string(),
+  content: t.string(),
+  created_at: t.timestamp(),
+  updated_at: t.timestamp(),
+});
+
 // --- Schema Export ---
 
 const spacetimedb = schema({
@@ -252,6 +377,12 @@ const spacetimedb = schema({
   phaseContext,
   config,
   mustHave,
+  milestone,
+  milestoneAudit,
+  sessionCheckpoint,
+  todo,
+  debugSession,
+  codebases,
 });
 
 export default spacetimedb;
