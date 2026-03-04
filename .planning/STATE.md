@@ -27,7 +27,7 @@ Plan: 3 of 3 in current phase -- COMPLETE
 Status: Completed plan 05-03 (agent file patches for stclaude)
 Last activity: 2026-03-04 -- Completed plan 05-03 (gsd-executor, gsd-planner, gsd-verifier patched to use stclaude)
 
-Progress: [#########-] 93%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
@@ -106,6 +106,10 @@ Recent decisions affecting current work:
 - [Phase 05]: Filesystem artifact/wiring verification preserved in verifier (grep on actual code)
 - [Phase 05]: Plan validation consolidated into stclaude write-plan (no separate validate step)
 - [Phase 05]: Git commit steps removed from planner/executor final_commit (state artifacts in SpacetimeDB)
+- [Phase 05]: config-get calls kept in workflows as local config reads (not migrated to stclaude)
+- [Phase 05]: UAT gap detection deferred to stclaude v2 (progress.md skips UAT checks)
+- [Phase 05]: Verification results flow from verifier agent output, not DB read-back
+- [Phase 05]: Plan content passed inline to executors via plan_content tag from stclaude JSON
 
 ### Pending Todos
 
@@ -118,5 +122,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-04
-Stopped at: Completed 05-03-PLAN.md (agent file patches for stclaude)
+Stopped at: Completed 05-02-PLAN.md (workflow patches for stclaude)
 Resume file: None

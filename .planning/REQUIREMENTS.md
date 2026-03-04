@@ -46,8 +46,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PTCH-02**: gsd-planner.md patched to read context from stclaude and write plans via stclaude
 - [x] **PTCH-03**: gsd-verifier.md patched to read plans/summaries from stclaude and write verification
 - [x] **PTCH-04**: execute-phase.md workflow patched to use stclaude init and phase queries
-- [ ] **PTCH-05**: plan-phase.md workflow patched to use stclaude init and context assembly
-- [ ] **PTCH-06**: progress.md workflow patched to use stclaude for state and roadmap queries
+- [x] **PTCH-05**: plan-phase.md workflow patched to use stclaude init and context assembly
+- [x] **PTCH-06**: progress.md workflow patched to use stclaude for state and roadmap queries
 - [x] **PTCH-07**: All patches are minimal, targeted text replacements that don't restructure agent logic
 
 ## v2 Requirements
@@ -120,8 +120,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PTCH-02 | Phase 5 | Complete |
 | PTCH-03 | Phase 5 | Complete |
 | PTCH-04 | Phase 5 | Complete |
-| PTCH-05 | Phase 5 | Pending |
-| PTCH-06 | Phase 5 | Pending |
+| PTCH-05 | Phase 5 | Complete |
+| PTCH-06 | Phase 5 | Complete |
 | PTCH-07 | Phase 5 | Complete |
 
 **Coverage:**
