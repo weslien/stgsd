@@ -8,6 +8,18 @@ A SpacetimeDB-backed replacement for GSD's file-based state management in Claude
 
 GSD's planning state becomes structured, queryable data instead of flat files â€” eliminating the parsing overhead, file I/O bottlenecks, and repo pollution that slow down GSD workflows.
 
+## Current Milestone: v1.1 Full Coverage
+
+**Goal:** Extend SpacetimeDB coverage from core loop to all remaining GSD workflows â€” milestones, sessions, phases, todos, debug, and codebase mapping.
+
+**Target features:**
+- Milestone lifecycle (new, complete, audit) fully on SpacetimeDB
+- Session management (pause/resume) with persistent handoff context
+- Phase management (add/insert/remove) with decimal numbering
+- Todo tracking with area classification and lifecycle
+- Debug session persistence across context resets
+- Codebase mapping storage (7 document types)
+
 ## Requirements
 
 ### Validated
@@ -23,12 +35,21 @@ GSD's planning state becomes structured, queryable data instead of flat files â€
 
 ### Active
 
-- Milestone lifecycle workflows (new, complete, audit) via stgsd
-- Session management (pause/resume) via stgsd
-- Phase management (add/insert/remove) via stgsd
-- Todo tracking via SpacetimeDB
-- Debug session persistence via SpacetimeDB
-- Codebase mapping storage via SpacetimeDB
+- Milestone table with version history, stats, and accomplishments
+- Milestone audit table with gap tracking and tech debt
+- Session checkpoint table for pause/resume handoff context
+- Todo table with area classification and file references
+- Debug session table for persistent state across context resets
+- Codebase map table for 7 document types (stack, integrations, architecture, structure, conventions, testing, concerns)
+- Phase table extension: decimal numbering, inserted flag
+- Requirement table extension: validated_version tracking
+- CLI commands for all new tables (milestone, todo, session, debug, codebase-map)
+- GSD workflow patches: milestone lifecycle (new, complete, audit)
+- GSD workflow patches: session management (pause, resume)
+- GSD workflow patches: phase management (add, insert, remove)
+- GSD workflow patches: todo tracking (add, check)
+- GSD workflow patches: codebase mapping (map-codebase)
+- GSD workflow patches: debug sessions
 
 ### Out of Scope
 
@@ -41,7 +62,7 @@ GSD's planning state becomes structured, queryable data instead of flat files â€
 
 ## Context
 
-**Current state:** v1.0 shipped. 4,771 lines of TypeScript across 13 SpacetimeDB tables, 17 CLI commands, and patches to 6 GSD files. Core loop (progress/plan/execute/verify) runs entirely on SpacetimeDB. Non-core workflows (milestones, todos, debug, codebase mapping) still use file-based `.planning/`.
+**Current state:** v1.0 shipped (2026-03-04). 4,771 lines of TypeScript across 13 SpacetimeDB tables, 17 CLI commands, and patches to 6 GSD files. Core loop (progress/plan/execute/verify) runs entirely on SpacetimeDB. v1.1 in progress â€” extending coverage to all remaining GSD workflows.
 
 **Tech stack:** SpacetimeDB v2 TypeScript SDK, Commander.js, esbuild, Node.js 22+.
 
@@ -71,4 +92,4 @@ GSD's planning state becomes structured, queryable data instead of flat files â€
 | Per-repo SpacetimeDB databases | Isolation between projects, independent lifecycle. | Good |
 
 ---
-*Last updated: 2026-03-04 after v1.0 milestone*
+*Last updated: 2026-03-04 after v1.1 milestone start*
