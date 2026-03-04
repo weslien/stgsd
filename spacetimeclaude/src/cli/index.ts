@@ -12,6 +12,10 @@ import { registerWriteVerificationCommand } from './commands/write-verification.
 import { registerWriteResearchCommand } from './commands/write-research.js';
 import { registerInitCommand } from './commands/init.js';
 import { registerSeedCommand } from './commands/seed.js';
+import { registerWritePlanCommand } from './commands/write-plan.js';
+import { registerWriteContextCommand } from './commands/write-context.js';
+import { registerCompletePhaseCommand } from './commands/complete-phase.js';
+import { registerMarkRequirementCommand } from './commands/mark-requirement.js';
 
 const program = new Command()
   .name('stclaude')
@@ -32,5 +36,9 @@ registerWriteVerificationCommand(program);
 registerWriteResearchCommand(program);
 registerInitCommand(program);
 registerSeedCommand(program);
+registerWritePlanCommand(program);
+registerWriteContextCommand(program);
+registerCompletePhaseCommand(program);
+registerMarkRequirementCommand(program);
 
 program.parseAsync();
