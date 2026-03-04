@@ -40,7 +40,9 @@
   2. Existing phase table rows accept decimal numbers (e.g., 3.1) and the is_inserted flag without data loss
   3. `stgsd list-projects` returns existing projects — confirming schema migration does not break v1.0 data
   4. New tables have correct indexes for querying by project and by type/status
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 07-01-PLAN.md — Verify schema extensions and publish module with re-seed round-trip
 
 ### Phase 8: Milestone Lifecycle
 **Goal**: GSD milestone workflows (complete, audit, new) run against SpacetimeDB instead of markdown files
@@ -99,7 +101,7 @@
 | 4. Workflow Assembly | v1.0 | 2/2 | Complete | 2026-03-03 |
 | 5. Agent Patches | v1.0 | 4/4 | Complete | 2026-03-04 |
 | 6. Gap Closure & Tech Debt | v1.0 | 2/2 | Complete | 2026-03-03 |
-| 7. Schema Extensions | v1.1 | 0/? | Not started | - |
+| 7. Schema Extensions | v1.1 | 0/1 | Not started | - |
 | 8. Milestone Lifecycle | v1.1 | 0/? | Not started | - |
 | 9. Phase & Session Management | v1.1 | 0/? | Not started | - |
 | 10. Todo & Debug Tracking | v1.1 | 0/? | Not started | - |
