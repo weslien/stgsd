@@ -92,13 +92,50 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| MILE-01 | Phase 7 | Pending |
+| MILE-02 | Phase 7 | Pending |
+| MILE-03 | Phase 7 | Pending |
+| MILE-04 | Phase 8 | Pending |
+| MILE-05 | Phase 8 | Pending |
+| MILE-06 | Phase 8 | Pending |
+| MILE-07 | Phase 8 | Pending |
+| MILE-08 | Phase 8 | Pending |
+| MILE-09 | Phase 8 | Pending |
+| SESS-01 | Phase 7 | Pending |
+| SESS-02 | Phase 9 | Pending |
+| SESS-03 | Phase 9 | Pending |
+| SESS-04 | Phase 9 | Pending |
+| SESS-05 | Phase 9 | Pending |
+| PHSE-01 | Phase 7 | Pending |
+| PHSE-02 | Phase 7 | Pending |
+| PHSE-03 | Phase 9 | Pending |
+| PHSE-04 | Phase 9 | Pending |
+| PHSE-05 | Phase 9 | Pending |
+| PHSE-06 | Phase 9 | Pending |
+| PHSE-07 | Phase 9 | Pending |
+| PHSE-08 | Phase 9 | Pending |
+| TODO-01 | Phase 7 | Pending |
+| TODO-02 | Phase 10 | Pending |
+| TODO-03 | Phase 10 | Pending |
+| TODO-04 | Phase 10 | Pending |
+| TODO-05 | Phase 10 | Pending |
+| TODO-06 | Phase 10 | Pending |
+| DBG-01 | Phase 7 | Pending |
+| DBG-02 | Phase 10 | Pending |
+| DBG-03 | Phase 10 | Pending |
+| DBG-04 | Phase 10 | Pending |
+| DBG-05 | Phase 10 | Pending |
+| CMAP-01 | Phase 7 | Pending |
+| CMAP-02 | Phase 11 | Pending |
+| CMAP-03 | Phase 11 | Pending |
+| CMAP-04 | Phase 11 | Pending |
+| CMAP-05 | Phase 11 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 38 total
-- Mapped to phases: 0
-- Unmapped: 38 ⚠️
+- Mapped to phases: 38
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-04 after initial definition*
+*Last updated: 2026-03-04 after roadmap creation (v1.1 phases 7-11)*
