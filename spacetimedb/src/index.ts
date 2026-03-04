@@ -66,6 +66,69 @@ export const delete_project = spacetimedb.reducer(
   (ctx, { project_id }) => {
     const existing = ctx.db.project.id.find(project_id);
     if (!existing) throw new SenderError(`Project ${project_id} not found`);
+
+    // 1. Delete all phases (each cascade deletes plans, tasks, summaries, etc.)
+    const phases = [...ctx.db.phase.phase_project_id.filter(project_id)];
+    for (const ph of phases) {
+      // Inline the phase cascade: plans and their children
+      const plans = [...ctx.db.plan.plan_phase_id.filter(ph.id)];
+      for (const pl of plans) {
+        const tasks = [...ctx.db.planTask.plan_task_plan_id.filter(pl.id)];
+        for (const task of tasks) { ctx.db.planTask.id.delete(task.id); }
+        const summaries = [...ctx.db.planSummary.plan_summary_plan_id.filter(pl.id)];
+        for (const summary of summaries) { ctx.db.planSummary.id.delete(summary.id); }
+        const mustHaves = [...ctx.db.mustHave.must_have_plan_id.filter(pl.id)];
+        for (const mh of mustHaves) { ctx.db.mustHave.id.delete(mh.id); }
+        ctx.db.plan.id.delete(pl.id);
+      }
+      const verifications = [...ctx.db.verification.verification_phase_id.filter(ph.id)];
+      for (const v of verifications) { ctx.db.verification.id.delete(v.id); }
+      const researchRecords = [...ctx.db.research.research_phase_id.filter(ph.id)];
+      for (const r of researchRecords) { ctx.db.research.id.delete(r.id); }
+      const phaseContexts = [...ctx.db.phaseContext.phase_context_phase_id.filter(ph.id)];
+      for (const pc of phaseContexts) { ctx.db.phaseContext.id.delete(pc.id); }
+      const sessionCheckpoints = [...ctx.db.sessionCheckpoint.session_checkpoint_phase_id.filter(ph.id)];
+      for (const sc of sessionCheckpoints) { ctx.db.sessionCheckpoint.id.delete(sc.id); }
+      ctx.db.phase.id.delete(ph.id);
+    }
+
+    // 2. Delete requirements
+    const requirements = [...ctx.db.requirement.requirement_project_id.filter(project_id)];
+    for (const req of requirements) { ctx.db.requirement.id.delete(req.id); }
+
+    // 3. Delete milestones and their audits
+    const milestones = [...ctx.db.milestone.milestone_project_id.filter(project_id)];
+    for (const m of milestones) {
+      const audits = [...ctx.db.milestoneAudit.milestone_audit_milestone_id.filter(m.id)];
+      for (const a of audits) { ctx.db.milestoneAudit.id.delete(a.id); }
+      ctx.db.milestone.id.delete(m.id);
+    }
+
+    // 4. Delete todos
+    const todos = [...ctx.db.todo.todo_project_id.filter(project_id)];
+    for (const td of todos) { ctx.db.todo.id.delete(td.id); }
+
+    // 5. Delete debug sessions
+    const debugSessions = [...ctx.db.debugSession.debug_session_project_id.filter(project_id)];
+    for (const ds of debugSessions) { ctx.db.debugSession.id.delete(ds.id); }
+
+    // 6. Delete codebase maps
+    const codebaseMaps = [...ctx.db.codebases.codebase_map_project_id.filter(project_id)];
+    for (const cm of codebaseMaps) { ctx.db.codebases.id.delete(cm.id); }
+
+    // 7. Delete project state
+    const states = [...ctx.db.projectState.project_state_project_id.filter(project_id)];
+    for (const s of states) { ctx.db.projectState.id.delete(s.id); }
+
+    // 8. Delete continue_here
+    const continueHeres = [...ctx.db.continueHere.continue_here_project_id.filter(project_id)];
+    for (const ch of continueHeres) { ctx.db.continueHere.id.delete(ch.id); }
+
+    // 9. Delete config
+    const configs = [...ctx.db.config.config_project_id.filter(project_id)];
+    for (const cfg of configs) { ctx.db.config.id.delete(cfg.id); }
+
+    // 10. Delete the project itself
     ctx.db.project.id.delete(project_id);
   }
 );
@@ -82,6 +145,7 @@ export const insert_phase = spacetimedb.reducer(
     status: t.string(),
     depends_on: t.string(),
     success_criteria: t.string(),
+    is_inserted: t.bool(),
   },
   (ctx, { project_id, ...fields }) => {
     const project = ctx.db.project.id.find(project_id);
@@ -106,6 +170,7 @@ export const update_phase = spacetimedb.reducer(
     status: t.string(),
     depends_on: t.string(),
     success_criteria: t.string(),
+    is_inserted: t.bool(),
   },
   (ctx, { phase_id, ...fields }) => {
     const existing = ctx.db.phase.id.find(phase_id);
@@ -166,7 +231,13 @@ export const delete_phase = spacetimedb.reducer(
       ctx.db.phaseContext.id.delete(pc.id);
     }
 
-    // 5. Delete requirements that belong to this phase's project and match phase number
+    // 5. Delete session_checkpoint records for this phase
+    const sessionCheckpoints = [...ctx.db.sessionCheckpoint.session_checkpoint_phase_id.filter(phase_id)];
+    for (const sc of sessionCheckpoints) {
+      ctx.db.sessionCheckpoint.id.delete(sc.id);
+    }
+
+    // 6. Delete requirements that belong to this phase's project and match phase number
     const requirements = [...ctx.db.requirement.requirement_project_id.filter(phase.project_id)];
     for (const req of requirements) {
       if (req.phase_number === phase.number) {
@@ -174,7 +245,7 @@ export const delete_phase = spacetimedb.reducer(
       }
     }
 
-    // 6. Delete the phase itself
+    // 7. Delete the phase itself
     ctx.db.phase.id.delete(phase_id);
   }
 );
@@ -755,6 +826,309 @@ export const delete_must_have = spacetimedb.reducer(
   }
 );
 
+// --- Milestone Reducers (MILE-01) ---
+
+export const insert_milestone = spacetimedb.reducer(
+  {
+    project_id: t.u64(),
+    version: t.string(),
+    name: t.string(),
+    shipped_date: t.string(),
+    phase_count: t.u64(),
+    plan_count: t.u64(),
+    requirement_count: t.u64(),
+    accomplishments: t.string(),
+    status: t.string(),
+  },
+  (ctx, { project_id, ...fields }) => {
+    const project = ctx.db.project.id.find(project_id);
+    if (!project) throw new SenderError(`Project ${project_id} not found`);
+    ctx.db.milestone.insert({
+      id: 0n,
+      project_id,
+      ...fields,
+      created_at: ctx.timestamp,
+      updated_at: ctx.timestamp,
+    });
+  }
+);
+
+export const update_milestone = spacetimedb.reducer(
+  {
+    milestone_id: t.u64(),
+    version: t.string(),
+    name: t.string(),
+    shipped_date: t.string(),
+    phase_count: t.u64(),
+    plan_count: t.u64(),
+    requirement_count: t.u64(),
+    accomplishments: t.string(),
+    status: t.string(),
+  },
+  (ctx, { milestone_id, ...fields }) => {
+    const existing = ctx.db.milestone.id.find(milestone_id);
+    if (!existing) throw new SenderError(`Milestone ${milestone_id} not found`);
+    ctx.db.milestone.id.update({ ...existing, ...fields, updated_at: ctx.timestamp });
+  }
+);
+
+export const delete_milestone = spacetimedb.reducer(
+  { milestone_id: t.u64() },
+  (ctx, { milestone_id }) => {
+    const existing = ctx.db.milestone.id.find(milestone_id);
+    if (!existing) throw new SenderError(`Milestone ${milestone_id} not found`);
+    const audits = [...ctx.db.milestoneAudit.milestone_audit_milestone_id.filter(milestone_id)];
+    for (const a of audits) { ctx.db.milestoneAudit.id.delete(a.id); }
+    ctx.db.milestone.id.delete(milestone_id);
+  }
+);
+
+// --- MilestoneAudit Reducers (MILE-02, MILE-03) ---
+
+export const insert_milestone_audit = spacetimedb.reducer(
+  {
+    project_id: t.u64(),
+    milestone_id: t.u64(),
+    audit_status: t.string(),
+    requirement_scores: t.string(),
+    integration_scores: t.string(),
+    flow_scores: t.string(),
+    tech_debt_items: t.string(),
+    roadmap_content: t.string(),
+    requirements_content: t.string(),
+  },
+  (ctx, { project_id, milestone_id, ...fields }) => {
+    const project = ctx.db.project.id.find(project_id);
+    if (!project) throw new SenderError(`Project ${project_id} not found`);
+    const milestone = ctx.db.milestone.id.find(milestone_id);
+    if (!milestone) throw new SenderError(`Milestone ${milestone_id} not found`);
+    ctx.db.milestoneAudit.insert({
+      id: 0n,
+      project_id,
+      milestone_id,
+      ...fields,
+      created_at: ctx.timestamp,
+      updated_at: ctx.timestamp,
+    });
+  }
+);
+
+export const update_milestone_audit = spacetimedb.reducer(
+  {
+    audit_id: t.u64(),
+    audit_status: t.string(),
+    requirement_scores: t.string(),
+    integration_scores: t.string(),
+    flow_scores: t.string(),
+    tech_debt_items: t.string(),
+    roadmap_content: t.string(),
+    requirements_content: t.string(),
+  },
+  (ctx, { audit_id, ...fields }) => {
+    const existing = ctx.db.milestoneAudit.id.find(audit_id);
+    if (!existing) throw new SenderError(`MilestoneAudit ${audit_id} not found`);
+    ctx.db.milestoneAudit.id.update({ ...existing, ...fields, updated_at: ctx.timestamp });
+  }
+);
+
+export const delete_milestone_audit = spacetimedb.reducer(
+  { audit_id: t.u64() },
+  (ctx, { audit_id }) => {
+    const existing = ctx.db.milestoneAudit.id.find(audit_id);
+    if (!existing) throw new SenderError(`MilestoneAudit ${audit_id} not found`);
+    ctx.db.milestoneAudit.id.delete(audit_id);
+  }
+);
+
+// --- SessionCheckpoint Reducers (SESS-01) ---
+
+export const upsert_session_checkpoint = spacetimedb.reducer(
+  {
+    project_id: t.u64(),
+    phase_id: t.u64(),
+    phase_context: t.string(),
+    completed_work: t.string(),
+    remaining_work: t.string(),
+    decisions: t.string(),
+    blockers: t.string(),
+    next_action: t.string(),
+    mental_context: t.string(),
+  },
+  (ctx, { project_id, phase_id, ...fields }) => {
+    const project = ctx.db.project.id.find(project_id);
+    if (!project) throw new SenderError(`Project ${project_id} not found`);
+    const phase = ctx.db.phase.id.find(phase_id);
+    if (!phase) throw new SenderError(`Phase ${phase_id} not found`);
+    const existing = [...ctx.db.sessionCheckpoint.session_checkpoint_phase_id.filter(phase_id)][0];
+    if (existing) {
+      ctx.db.sessionCheckpoint.id.update({ ...existing, ...fields, updated_at: ctx.timestamp });
+    } else {
+      ctx.db.sessionCheckpoint.insert({
+        id: 0n,
+        project_id,
+        phase_id,
+        ...fields,
+        created_at: ctx.timestamp,
+        updated_at: ctx.timestamp,
+      });
+    }
+  }
+);
+
+export const delete_session_checkpoint = spacetimedb.reducer(
+  { checkpoint_id: t.u64() },
+  (ctx, { checkpoint_id }) => {
+    const existing = ctx.db.sessionCheckpoint.id.find(checkpoint_id);
+    if (!existing) throw new SenderError(`SessionCheckpoint ${checkpoint_id} not found`);
+    ctx.db.sessionCheckpoint.id.delete(checkpoint_id);
+  }
+);
+
+// --- Todo Reducers (TODO-01) ---
+
+export const insert_todo = spacetimedb.reducer(
+  {
+    project_id: t.u64(),
+    title: t.string(),
+    area: t.string(),
+    problem: t.string(),
+    solution_hints: t.string(),
+    file_refs: t.string(),
+    status: t.string(),
+  },
+  (ctx, { project_id, ...fields }) => {
+    const project = ctx.db.project.id.find(project_id);
+    if (!project) throw new SenderError(`Project ${project_id} not found`);
+    ctx.db.todo.insert({
+      id: 0n,
+      project_id,
+      ...fields,
+      created_at: ctx.timestamp,
+      updated_at: ctx.timestamp,
+    });
+  }
+);
+
+export const update_todo = spacetimedb.reducer(
+  {
+    todo_id: t.u64(),
+    title: t.string(),
+    area: t.string(),
+    problem: t.string(),
+    solution_hints: t.string(),
+    file_refs: t.string(),
+    status: t.string(),
+  },
+  (ctx, { todo_id, ...fields }) => {
+    const existing = ctx.db.todo.id.find(todo_id);
+    if (!existing) throw new SenderError(`Todo ${todo_id} not found`);
+    ctx.db.todo.id.update({ ...existing, ...fields, updated_at: ctx.timestamp });
+  }
+);
+
+export const delete_todo = spacetimedb.reducer(
+  { todo_id: t.u64() },
+  (ctx, { todo_id }) => {
+    const existing = ctx.db.todo.id.find(todo_id);
+    if (!existing) throw new SenderError(`Todo ${todo_id} not found`);
+    ctx.db.todo.id.delete(todo_id);
+  }
+);
+
+// --- DebugSession Reducers (DBG-01) ---
+
+export const insert_debug_session = spacetimedb.reducer(
+  {
+    project_id: t.u64(),
+    bug_description: t.string(),
+    hypotheses: t.string(),
+    checkpoints: t.string(),
+    timeline: t.string(),
+    status: t.string(),
+    resolution_notes: t.string(),
+  },
+  (ctx, { project_id, resolution_notes, ...fields }) => {
+    const project = ctx.db.project.id.find(project_id);
+    if (!project) throw new SenderError(`Project ${project_id} not found`);
+    ctx.db.debugSession.insert({
+      id: 0n,
+      project_id,
+      ...fields,
+      resolution_notes: resolution_notes || undefined,
+      created_at: ctx.timestamp,
+      updated_at: ctx.timestamp,
+    });
+  }
+);
+
+export const update_debug_session = spacetimedb.reducer(
+  {
+    session_id: t.u64(),
+    bug_description: t.string(),
+    hypotheses: t.string(),
+    checkpoints: t.string(),
+    timeline: t.string(),
+    status: t.string(),
+    resolution_notes: t.string(),
+  },
+  (ctx, { session_id, resolution_notes, ...fields }) => {
+    const existing = ctx.db.debugSession.id.find(session_id);
+    if (!existing) throw new SenderError(`DebugSession ${session_id} not found`);
+    ctx.db.debugSession.id.update({
+      ...existing,
+      ...fields,
+      resolution_notes: resolution_notes || undefined,
+      updated_at: ctx.timestamp,
+    });
+  }
+);
+
+export const delete_debug_session = spacetimedb.reducer(
+  { session_id: t.u64() },
+  (ctx, { session_id }) => {
+    const existing = ctx.db.debugSession.id.find(session_id);
+    if (!existing) throw new SenderError(`DebugSession ${session_id} not found`);
+    ctx.db.debugSession.id.delete(session_id);
+  }
+);
+
+// --- CodebaseMap Reducers (CMAP-01) ---
+
+export const upsert_codebase_map = spacetimedb.reducer(
+  {
+    project_id: t.u64(),
+    doc_type: t.string(),
+    content: t.string(),
+  },
+  (ctx, { project_id, doc_type, content }) => {
+    const project = ctx.db.project.id.find(project_id);
+    if (!project) throw new SenderError(`Project ${project_id} not found`);
+    const existing = [...ctx.db.codebases.codebase_map_project_id.filter(project_id)]
+      .find(r => r.doc_type === doc_type);
+    if (existing) {
+      ctx.db.codebases.id.update({ ...existing, content, updated_at: ctx.timestamp });
+    } else {
+      ctx.db.codebases.insert({
+        id: 0n,
+        project_id,
+        doc_type,
+        content,
+        created_at: ctx.timestamp,
+        updated_at: ctx.timestamp,
+      });
+    }
+  }
+);
+
+export const delete_codebase_map = spacetimedb.reducer(
+  { codebase_map_id: t.u64() },
+  (ctx, { codebase_map_id }) => {
+    const existing = ctx.db.codebases.id.find(codebase_map_id);
+    if (!existing) throw new SenderError(`CodebaseMap ${codebase_map_id} not found`);
+    ctx.db.codebases.id.delete(codebase_map_id);
+  }
+);
+
 // --- Seed Project Reducer (Bulk Initialization) ---
 
 export const seed_project = spacetimedb.reducer(
@@ -793,6 +1167,7 @@ export const seed_project = spacetimedb.reducer(
       status: string;
       depends_on: string;
       success_criteria: string;
+      is_inserted?: boolean;
     }>;
     try {
       phases = JSON.parse(args.phases_json);
@@ -814,6 +1189,7 @@ export const seed_project = spacetimedb.reducer(
         status: p.status,
         depends_on: p.depends_on,
         success_criteria: p.success_criteria,
+        is_inserted: p.is_inserted ?? false,
         created_at: ctx.timestamp,
         updated_at: ctx.timestamp,
       });
