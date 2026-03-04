@@ -294,6 +294,82 @@ stgsd/
 └── .planning/                # GSD roadmap (for this project itself)
 ```
 
+## Roadmap: GSD Coverage
+
+stgsd v1 covers the **core loop** — the hot path that runs every session. The rest of GSD's workflows still use file-based `.planning/` state.
+
+### v1.0 — Core Loop (shipped)
+
+| GSD Command | Status | What stgsd handles |
+|---|---|---|
+| `/gsd:progress` | **Patched** | State, roadmap, and activity read from SpacetimeDB |
+| `/gsd:plan-phase` | **Patched** | Context assembly, research, plan writing all via stgsd |
+| `/gsd:execute-phase` | **Patched** | Plan loading, summary writing, phase completion |
+| `/gsd:verify-work` | **Patched** | Plan/summary reads, verification result writing |
+
+Patched agent files: `gsd-executor.md`, `gsd-planner.md`, `gsd-verifier.md`
+
+### Gaps — Not Yet Covered
+
+**Project & Milestone Lifecycle**
+| GSD Command | What it does | File-based today |
+|---|---|---|
+| `/gsd:new-project` | Initialize project with research and roadmap | Creates PROJECT.md, REQUIREMENTS.md, ROADMAP.md |
+| `/gsd:new-milestone` | Start next version cycle | Updates ROADMAP.md, creates requirements |
+| `/gsd:complete-milestone` | Archive shipped version | Creates milestone archives, tags git |
+| `/gsd:audit-milestone` | Pre-completion verification | Reads all summaries and verifications |
+| `/gsd:plan-milestone-gaps` | Create phases to close audit gaps | Reads audit, creates gap-closure phases |
+
+**Phase Management**
+| GSD Command | What it does | File-based today |
+|---|---|---|
+| `/gsd:discuss-phase` | Capture design decisions before planning | Creates CONTEXT.md |
+| `/gsd:research-phase` | Standalone research (usually via plan-phase) | Creates RESEARCH.md |
+| `/gsd:add-phase` | Append phase to roadmap | Edits ROADMAP.md |
+| `/gsd:insert-phase` | Insert urgent phase between existing ones | Edits ROADMAP.md, renumbers |
+| `/gsd:remove-phase` | Remove phase and update dependencies | Edits ROADMAP.md |
+| `/gsd:list-phase-assumptions` | Surface Claude's assumptions before planning | Reads CONTEXT.md |
+
+**Session Management**
+| GSD Command | What it does | File-based today |
+|---|---|---|
+| `/gsd:pause-work` | Save resume state when stopping mid-phase | Creates CONTINUE-HERE.md |
+| `/gsd:resume-work` | Restore context from previous session | Reads CONTINUE-HERE.md |
+| `/gsd:quick` | Fast task with GSD guarantees, skip optional agents | Minimal PLAN.md |
+
+**Auxiliary**
+| GSD Command | What it does | File-based today |
+|---|---|---|
+| `/gsd:add-todo` | Capture idea/task during session | Creates .planning/todos/ files |
+| `/gsd:check-todos` | List and manage pending todos | Reads .planning/todos/ |
+| `/gsd:debug` | Systematic debugging with persistent state | Creates .planning/debug/ sessions |
+| `/gsd:map-codebase` | Analyze repo structure with parallel agents | Creates .planning/codebase/ maps |
+| `/gsd:add-tests` | Generate tests for completed phase | Creates phase test files |
+| `/gsd:health` | Diagnose planning directory issues | Reads .planning/ structure |
+| `/gsd:cleanup` | Archive old phase directories | Moves .planning/phases/ |
+
+**Config & Meta** (no state migration needed)
+| GSD Command | Status |
+|---|---|
+| `/gsd:settings` | Config-only, no planning state |
+| `/gsd:set-profile` | Config-only |
+| `/gsd:update` | Updates GSD itself |
+| `/gsd:reapply-patches` | Reapplies stgsd patches after update |
+| `/gsd:help` | Informational |
+
+### v2 — Planned
+
+| Feature | Requirements | Priority |
+|---|---|---|
+| Milestone lifecycle (new, complete, audit) | EXT-05, EXT-06 | High — most impactful gap |
+| Session management (pause/resume) | EXT-04 | High — daily workflow |
+| Phase management (add/insert/remove) | EXT-04 | Medium |
+| Todo tracking | EXT-01 | Medium |
+| Debug session persistence | EXT-02 | Low |
+| Codebase mapping storage | EXT-03 | Low |
+| Cross-project memory and patterns | XPRJ-01, XPRJ-02, XPRJ-03 | Future |
+| Multi-agent coordination via subscriptions | MAGT-01, MAGT-02 | Future |
+
 ## Troubleshooting
 
 **`stgsd: command not found`**
