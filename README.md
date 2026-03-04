@@ -2,15 +2,15 @@
   <img src="assets/hero.png" alt="stgsd — Bleeding edge DB state management for Claude Code / Gemini CLI" width="700">
 </p>
 
-# SpacetimeClaude
+# stgsd
 
-A SpacetimeDB-backed replacement for [GSD](https://github.com/get-shit-done-ai/gsd)'s file-based state management in Claude Code. Instead of reading/writing markdown files in `.planning/` directories, GSD agents call a `stclaude` CLI that stores structured state in SpacetimeDB — giving Claude Code queryable, persistent memory that lives outside the repo.
+A SpacetimeDB-backed replacement for [GSD](https://github.com/get-shit-done-ai/gsd)'s file-based state management in Claude Code. Instead of reading/writing markdown files in `.planning/` directories, GSD agents call a `stgsd` CLI that stores structured state in SpacetimeDB — giving Claude Code queryable, persistent memory that lives outside the repo.
 
 ## Why Not Markdown?
 
 GSD stores all planning state as markdown files: `STATE.md`, `ROADMAP.md`, `PLAN.md`, phase directories, verification reports, research notes. This works, but creates friction:
 
-| Problem with Markdown Files | SpacetimeClaude Solution |
+| Problem with Markdown Files | stgsd Solution |
 |---|---|
 | **Parsing overhead** — Agents regex/grep through prose to extract state | **Typed schema** — Structured columns (u64, bool, timestamp) with JSON output |
 | **File I/O bottleneck** — Every state read/write is a filesystem operation | **Single query** — SpacetimeDB returns exactly what's needed |
@@ -23,7 +23,7 @@ GSD stores all planning state as markdown files: `STATE.md`, `ROADMAP.md`, `PLAN
 ## Prerequisites
 
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** — Anthropic's CLI for Claude
-- **[GSD](https://github.com/get-shit-done-ai/gsd)** — The planning/execution workflow that SpacetimeClaude enhances
+- **[GSD](https://github.com/get-shit-done-ai/gsd)** — The planning/execution workflow that stgsd enhances
 - **[SpacetimeDB CLI](https://spacetimedb.com/install)** — `spacetime` binary
 - **[Node.js 22+](https://nodejs.org/)** — Runtime for the CLI tool
 - **Git** — Working repository with an `origin` remote
@@ -38,16 +38,16 @@ There are two steps: **install** (once, in this repo) and **use** (in any projec
 Clone this repo, open Claude Code inside it, and run:
 
 ```
-/setup-stclaude
+/setup-stgsd
 ```
 
-This is the only command you run in the spacetimeclaude repo. It's idempotent and handles everything:
-- Builds and installs the `stclaude` CLI to `~/.claude/bin/`
-- Copies the `/stclaude:*` slash commands so they're available globally
+This is the only command you run in the stgsd repo. It's idempotent and handles everything:
+- Builds and installs the `stgsd` CLI to `~/.claude/bin/`
+- Copies the `/stgsd:*` slash commands so they're available globally
 - Ensures SpacetimeDB is running and the module is published
 - Verifies the connection works
 
-After this, you're done with the spacetimeclaude repo. Everything below happens in your **project repos**.
+After this, you're done with the stgsd repo. Everything below happens in your **project repos**.
 
 ### Step 2: Use — run in your project repo
 
@@ -56,16 +56,16 @@ Open Claude Code in any git repo where you want SpacetimeDB-backed planning.
 **For an existing GSD project** (has `.planning/` files):
 
 ```
-/stclaude:setup
-/stclaude:seed
+/stgsd:setup
+/stgsd:seed
 ```
 
-`/stclaude:setup` provisions a SpacetimeDB database for this repo. `/stclaude:seed` reads your existing `PROJECT.md` and `ROADMAP.md` and imports all project metadata, phases, and requirements into SpacetimeDB.
+`/stgsd:setup` provisions a SpacetimeDB database for this repo. `/stgsd:seed` reads your existing `PROJECT.md` and `ROADMAP.md` and imports all project metadata, phases, and requirements into SpacetimeDB.
 
 **For a new project** (no existing `.planning/` files):
 
 ```
-/stclaude:setup
+/stgsd:setup
 ```
 
 That's it. When you start planning with `/gsd:new-project` or `/gsd:plan-phase`, the patched GSD agents will write state directly to SpacetimeDB — no seed needed.
@@ -76,19 +76,19 @@ Once set up, you use GSD exactly as before. The patched agents handle SpacetimeD
 
 | GSD Command | What happens under the hood |
 |---|---|
-| `/gsd:progress` | Reads state from SpacetimeDB via `stclaude` |
-| `/gsd:plan-phase` | Planner gets context from `stclaude init plan-phase`, writes plans via `stclaude write-plan` |
-| `/gsd:execute-phase` | Executor loads plans from SpacetimeDB, writes summaries via `stclaude write-summary` |
-| `/gsd:verify-work` | Verifier reads plans/summaries from SpacetimeDB, writes results via `stclaude write-verification` |
+| `/gsd:progress` | Reads state from SpacetimeDB via `stgsd` |
+| `/gsd:plan-phase` | Planner gets context from `stgsd init plan-phase`, writes plans via `stgsd write-plan` |
+| `/gsd:execute-phase` | Executor loads plans from SpacetimeDB, writes summaries via `stgsd write-summary` |
+| `/gsd:verify-work` | Verifier reads plans/summaries from SpacetimeDB, writes results via `stgsd write-verification` |
 
-You can also query state directly with the `/stclaude:*` commands:
+You can also query state directly with the `/stgsd:*` commands:
 
 ```
-/stclaude:status                   # Current phase, plan, last activity
-/stclaude:get-state                # Full project state with velocity data
-/stclaude:roadmap                  # Phase overview with completion states
-/stclaude:get-phase 3              # Phase details with requirements and plans
-/stclaude:read-plan 3 1            # Read a specific plan's content
+/stgsd:status                   # Current phase, plan, last activity
+/stgsd:get-state                # Full project state with velocity data
+/stgsd:roadmap                  # Phase overview with completion states
+/stgsd:get-phase 3              # Phase details with requirements and plans
+/stgsd:read-plan 3 1            # Read a specific plan's content
 ```
 
 ## Manual Installation
@@ -117,10 +117,10 @@ spacetime start
 
 ```bash
 # To maincloud (uses default server)
-spacetime publish spacetimeclaude --module-path spacetimedb
+spacetime publish stgsd --module-path spacetimedb
 
 # Or to local server
-spacetime publish spacetimeclaude --module-path spacetimedb --server local
+spacetime publish stgsd --module-path spacetimedb --server local
 ```
 
 ### 4. Generate client bindings
@@ -135,12 +135,12 @@ npm run spacetime:generate
 npm run install:cli
 ```
 
-Installs `stclaude` to `~/.claude/bin/` (already on Claude Code's PATH) and copies the SpacetimeDB module source for per-repo database provisioning.
+Installs `stgsd` to `~/.claude/bin/` (already on Claude Code's PATH) and copies the SpacetimeDB module source for per-repo database provisioning.
 
 ### 6. Install slash commands
 
 ```bash
-cp -r .claude/global-commands/stclaude ~/.claude/global-commands/stclaude
+cp -r .claude/global-commands/stgsd ~/.claude/global-commands/stgsd
 ```
 
 ### 7. Set up a project repo
@@ -148,63 +148,63 @@ cp -r .claude/global-commands/stclaude ~/.claude/global-commands/stclaude
 From any git repo you want to manage:
 
 ```bash
-stclaude setup
-stclaude seed --name "My Project" --description "..." --core-value "..." \
+stgsd setup
+stgsd seed --name "My Project" --description "..." --core-value "..." \
   --phases-json '[...]' --requirements-json '[...]'
 ```
 
 ## Slash Command Reference
 
-All `/stclaude:*` commands are used in your **project repos**, not in this repo.
+All `/stgsd:*` commands are used in your **project repos**, not in this repo.
 
 **Status & Queries**
 | Command | Description |
 |---|---|
-| `/stclaude:status` | Show current project status (phase, plan, last activity) |
-| `/stclaude:get-state` | Full project state with velocity and session data |
-| `/stclaude:get-phase` | Phase details with linked plans and requirements |
-| `/stclaude:read-plan` | Read plan content and metadata |
-| `/stclaude:roadmap` | Phase overview with completion states |
+| `/stgsd:status` | Show current project status (phase, plan, last activity) |
+| `/stgsd:get-state` | Full project state with velocity and session data |
+| `/stgsd:get-phase` | Phase details with linked plans and requirements |
+| `/stgsd:read-plan` | Read plan content and metadata |
+| `/stgsd:roadmap` | Phase overview with completion states |
 
 **Workflow Assembly**
 | Command | Description |
 |---|---|
-| `/stclaude:init` | Assemble workflow context (progress, plan-phase, execute-phase) |
+| `/stgsd:init` | Assemble workflow context (progress, plan-phase, execute-phase) |
 
 **Write Operations**
 | Command | Description |
 |---|---|
-| `/stclaude:write-plan` | Persist a plan to SpacetimeDB |
-| `/stclaude:write-summary` | Persist plan execution summary |
-| `/stclaude:write-verification` | Persist phase verification result |
-| `/stclaude:write-research` | Persist phase research findings |
-| `/stclaude:write-context` | Persist phase context (user decisions) |
+| `/stgsd:write-plan` | Persist a plan to SpacetimeDB |
+| `/stgsd:write-summary` | Persist plan execution summary |
+| `/stgsd:write-verification` | Persist phase verification result |
+| `/stgsd:write-research` | Persist phase research findings |
+| `/stgsd:write-context` | Persist phase context (user decisions) |
 
 **State Mutations**
 | Command | Description |
 |---|---|
-| `/stclaude:update-progress` | Update current phase/plan/task position |
-| `/stclaude:advance-plan` | Advance to next plan in current phase |
-| `/stclaude:complete-phase` | Mark phase complete, advance project state |
-| `/stclaude:record-metric` | Record a velocity metric |
-| `/stclaude:mark-requirement` | Mark requirements as complete |
+| `/stgsd:update-progress` | Update current phase/plan/task position |
+| `/stgsd:advance-plan` | Advance to next plan in current phase |
+| `/stgsd:complete-phase` | Mark phase complete, advance project state |
+| `/stgsd:record-metric` | Record a velocity metric |
+| `/stgsd:mark-requirement` | Mark requirements as complete |
 
 **Setup** (run once per project repo)
 | Command | Description |
 |---|---|
-| `/stclaude:setup` | Provision a SpacetimeDB database for this repo |
-| `/stclaude:seed` | Bootstrap project data from existing `.planning/` files |
+| `/stgsd:setup` | Provision a SpacetimeDB database for this repo |
+| `/stgsd:seed` | Bootstrap project data from existing `.planning/` files |
 
 ### CLI Direct Usage
 
-The `stclaude` CLI can also be called directly from the terminal in any project repo:
+The `stgsd` CLI can also be called directly from the terminal in any project repo:
 
 ```bash
-stclaude status
-stclaude get-state --json
-stclaude roadmap
-stclaude get-phase 3
-stclaude read-plan 3 1
+stgsd status
+stgsd get-state --json
+stgsd roadmap
+stgsd get-phase 3
+stgsd read-plan 3 1
 ```
 
 All commands support `--json` for machine-readable output.
@@ -215,7 +215,7 @@ All commands support `--json` for machine-readable output.
 
 ```
 ┌─────────────────┐     ┌──────────────┐     ┌──────────────────┐
-│  GSD Agents     │     │  stclaude    │     │  SpacetimeDB     │
+│  GSD Agents     │     │  stgsd       │     │  SpacetimeDB     │
 │  (patched .md)  │────▶│  CLI         │────▶│  (maincloud)     │
 │                 │     │              │     │                  │
 │  - executor     │     │  17 commands │     │  13 tables       │
@@ -225,29 +225,29 @@ All commands support `--json` for machine-readable output.
 ```
 
 1. **SpacetimeDB module** defines 13 tables (project, phase, plan, task, requirement, state, verification, research, etc.) with CRUD reducers
-2. **`stclaude` CLI** auto-detects the current project via git remote URL, connects to SpacetimeDB, and executes queries/mutations
-3. **GSD agent patches** replace file I/O calls in `gsd-executor.md`, `gsd-planner.md`, and `gsd-verifier.md` with `stclaude` commands
+2. **`stgsd` CLI** auto-detects the current project via git remote URL, connects to SpacetimeDB, and executes queries/mutations
+3. **GSD agent patches** replace file I/O calls in `gsd-executor.md`, `gsd-planner.md`, and `gsd-verifier.md` with `stgsd` commands
 4. **Slash commands** provide the interface for Claude Code, calling the CLI with proper context
 
 ### Project Identity
 
-Projects are identified by git remote URL — no manual configuration needed. When you run `stclaude` in any git repo, it reads the `origin` remote and looks up (or creates) the matching project in SpacetimeDB.
+Projects are identified by git remote URL — no manual configuration needed. When you run `stgsd` in any git repo, it reads the `origin` remote and looks up (or creates) the matching project in SpacetimeDB.
 
 ### Per-Repo Configuration
 
-Each repo's config is stored at `~/.claude/stclaude/{repoId}/config.json`:
+Each repo's config is stored at `~/.claude/stgsd/{repoId}/config.json`:
 
 ```json
 {
   "uri": "wss://maincloud.spacetimedb.com",
-  "database": "spacetimeclaude-abc123",
-  "module-path": "~/.claude/stclaude/module"
+  "database": "stgsd-abc123",
+  "module-path": "~/.claude/stgsd/module"
 }
 ```
 
 ## Managing GSD Updates
 
-SpacetimeClaude patches three GSD agent files to use `stclaude` instead of file I/O. These patches are designed to survive GSD updates.
+stgsd patches three GSD agent files to use `stgsd` instead of file I/O. These patches are designed to survive GSD updates.
 
 ### How patches work
 
@@ -263,20 +263,20 @@ SpacetimeClaude patches three GSD agent files to use `stclaude` instead of file 
 
 GSD detects your patches and backs them up automatically. Run the above to reapply after updating.
 
-If a patch fails to merge cleanly (due to major GSD restructuring), you'll need to manually re-apply the changes. The patches are small — they replace specific `gsd-tools.cjs` calls with `stclaude` equivalents.
+If a patch fails to merge cleanly (due to major GSD restructuring), you'll need to manually re-apply the changes. The patches are small — they replace specific `gsd-tools.cjs` calls with `stgsd` equivalents.
 
 ### Patched files
 
 | File | What Changed |
 |---|---|
-| `gsd-executor.md` | State reads/writes and summary creation use `stclaude` |
-| `gsd-planner.md` | Context loaded from `stclaude init plan-phase`, plans written via `stclaude write-plan` |
-| `gsd-verifier.md` | Plans/summaries read from `stclaude`, verification results written back |
+| `gsd-executor.md` | State reads/writes and summary creation use `stgsd` |
+| `gsd-planner.md` | Context loaded from `stgsd init plan-phase`, plans written via `stgsd write-plan` |
+| `gsd-verifier.md` | Plans/summaries read from `stgsd`, verification results written back |
 
 ## Project Structure
 
 ```
-spacetimeclaude/
+stgsd/
 ├── spacetimedb/              # SpacetimeDB module (backend)
 │   └── src/
 │       ├── schema.ts         # 13 table definitions
@@ -288,32 +288,32 @@ spacetimeclaude/
 │       └── lib/              # Connection, git, output helpers
 ├── .claude/
 │   ├── commands/
-│   │   └── setup-stclaude.md # Bootstrap command (run in this repo)
+│   │   └── setup-stgsd.md   # Bootstrap command (run in this repo)
 │   └── global-commands/
-│       └── stclaude/         # 18 slash commands (installed globally)
+│       └── stgsd/            # 18 slash commands (installed globally)
 └── .planning/                # GSD roadmap (for this project itself)
 ```
 
 ## Troubleshooting
 
-**`stclaude: command not found`**
+**`stgsd: command not found`**
 - Run `npm run install:cli` to install to `~/.claude/bin/`
 - Ensure `~/.claude/bin` is on your PATH
 
 **`PROJECT_NOT_FOUND`**
-- Run `/stclaude:seed` or `stclaude seed` to bootstrap the project
+- Run `/stgsd:seed` or `stgsd seed` to bootstrap the project
 - Verify your repo has an `origin` remote: `git remote -v`
 
 **Connection timeout**
 - Check SpacetimeDB is running: `spacetime start` (local) or verify maincloud status
-- Check your config: `cat ~/.claude/stclaude/*/config.json`
+- Check your config: `cat ~/.claude/stgsd/*/config.json`
 
 **Slash commands not available**
-- Run `/setup-stclaude` in this repo, or manually copy: `cp -r .claude/global-commands/stclaude ~/.claude/global-commands/stclaude`
+- Run `/setup-stgsd` in this repo, or manually copy: `cp -r .claude/global-commands/stgsd ~/.claude/global-commands/stgsd`
 
 **SpacetimeDB module errors**
-- Check logs: `spacetime logs spacetimeclaude`
-- Republish: `spacetime publish spacetimeclaude --clear-database -y --module-path spacetimedb`
+- Check logs: `spacetime logs stgsd`
+- Republish: `spacetime publish stgsd --clear-database -y --module-path spacetimedb`
 
 ## License
 
