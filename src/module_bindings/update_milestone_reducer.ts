@@ -11,13 +11,13 @@ import {
 } from "spacetimedb";
 
 export default {
-  phaseId: __t.u64(),
-  number: __t.string(),
+  milestoneId: __t.u64(),
+  version: __t.string(),
   name: __t.string(),
-  slug: __t.string(),
-  goal: __t.string(),
+  shippedDate: __t.string(),
+  phaseCount: __t.u64(),
+  planCount: __t.u64(),
+  requirementCount: __t.u64(),
+  accomplishments: __t.string(),
   status: __t.string(),
-  dependsOn: __t.string(),
-  successCriteria: __t.string(),
-  isInserted: __t.bool(),
 };

@@ -10,6 +10,16 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
+export const CodebaseMap = __t.object("CodebaseMap", {
+  id: __t.u64(),
+  projectId: __t.u64(),
+  docType: __t.string(),
+  content: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type CodebaseMap = __Infer<typeof CodebaseMap>;
+
 export const Config = __t.object("Config", {
   id: __t.u64(),
   projectId: __t.u64(),
@@ -32,6 +42,52 @@ export const ContinueHere = __t.object("ContinueHere", {
 });
 export type ContinueHere = __Infer<typeof ContinueHere>;
 
+export const DebugSession = __t.object("DebugSession", {
+  id: __t.u64(),
+  projectId: __t.u64(),
+  bugDescription: __t.string(),
+  hypotheses: __t.string(),
+  checkpoints: __t.string(),
+  timeline: __t.string(),
+  status: __t.string(),
+  resolutionNotes: __t.option(__t.string()),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type DebugSession = __Infer<typeof DebugSession>;
+
+export const Milestone = __t.object("Milestone", {
+  id: __t.u64(),
+  projectId: __t.u64(),
+  version: __t.string(),
+  name: __t.string(),
+  shippedDate: __t.string(),
+  phaseCount: __t.u64(),
+  planCount: __t.u64(),
+  requirementCount: __t.u64(),
+  accomplishments: __t.string(),
+  status: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type Milestone = __Infer<typeof Milestone>;
+
+export const MilestoneAudit = __t.object("MilestoneAudit", {
+  id: __t.u64(),
+  projectId: __t.u64(),
+  milestoneId: __t.u64(),
+  auditStatus: __t.string(),
+  requirementScores: __t.string(),
+  integrationScores: __t.string(),
+  flowScores: __t.string(),
+  techDebtItems: __t.string(),
+  roadmapContent: __t.string(),
+  requirementsContent: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type MilestoneAudit = __Infer<typeof MilestoneAudit>;
+
 export const MustHave = __t.object("MustHave", {
   id: __t.u64(),
   planId: __t.u64(),
@@ -53,6 +109,7 @@ export const Phase = __t.object("Phase", {
   status: __t.string(),
   dependsOn: __t.string(),
   successCriteria: __t.string(),
+  isInserted: __t.bool(),
   createdAt: __t.timestamp(),
   updatedAt: __t.timestamp(),
 });
@@ -167,6 +224,36 @@ export const Research = __t.object("Research", {
   updatedAt: __t.timestamp(),
 });
 export type Research = __Infer<typeof Research>;
+
+export const SessionCheckpoint = __t.object("SessionCheckpoint", {
+  id: __t.u64(),
+  projectId: __t.u64(),
+  phaseId: __t.u64(),
+  phaseContext: __t.string(),
+  completedWork: __t.string(),
+  remainingWork: __t.string(),
+  decisions: __t.string(),
+  blockers: __t.string(),
+  nextAction: __t.string(),
+  mentalContext: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type SessionCheckpoint = __Infer<typeof SessionCheckpoint>;
+
+export const Todo = __t.object("Todo", {
+  id: __t.u64(),
+  projectId: __t.u64(),
+  title: __t.string(),
+  area: __t.string(),
+  problem: __t.string(),
+  solutionHints: __t.string(),
+  fileRefs: __t.string(),
+  status: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type Todo = __Infer<typeof Todo>;
 
 export const Verification = __t.object("Verification", {
   id: __t.u64(),

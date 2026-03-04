@@ -34,8 +34,12 @@ import {
 } from "spacetimedb";
 
 // Import all reducer arg schemas
+import DeleteCodebaseMapReducer from "./delete_codebase_map_reducer";
 import DeleteConfigReducer from "./delete_config_reducer";
 import DeleteContinueHereReducer from "./delete_continue_here_reducer";
+import DeleteDebugSessionReducer from "./delete_debug_session_reducer";
+import DeleteMilestoneReducer from "./delete_milestone_reducer";
+import DeleteMilestoneAuditReducer from "./delete_milestone_audit_reducer";
 import DeleteMustHaveReducer from "./delete_must_have_reducer";
 import DeletePhaseReducer from "./delete_phase_reducer";
 import DeletePhaseContextReducer from "./delete_phase_context_reducer";
@@ -46,7 +50,12 @@ import DeleteProjectReducer from "./delete_project_reducer";
 import DeleteProjectStateReducer from "./delete_project_state_reducer";
 import DeleteRequirementReducer from "./delete_requirement_reducer";
 import DeleteResearchReducer from "./delete_research_reducer";
+import DeleteSessionCheckpointReducer from "./delete_session_checkpoint_reducer";
+import DeleteTodoReducer from "./delete_todo_reducer";
 import DeleteVerificationReducer from "./delete_verification_reducer";
+import InsertDebugSessionReducer from "./insert_debug_session_reducer";
+import InsertMilestoneReducer from "./insert_milestone_reducer";
+import InsertMilestoneAuditReducer from "./insert_milestone_audit_reducer";
 import InsertMustHaveReducer from "./insert_must_have_reducer";
 import InsertPhaseReducer from "./insert_phase_reducer";
 import InsertPhaseContextReducer from "./insert_phase_context_reducer";
@@ -56,8 +65,12 @@ import InsertPlanTaskReducer from "./insert_plan_task_reducer";
 import InsertProjectReducer from "./insert_project_reducer";
 import InsertRequirementReducer from "./insert_requirement_reducer";
 import InsertResearchReducer from "./insert_research_reducer";
+import InsertTodoReducer from "./insert_todo_reducer";
 import InsertVerificationReducer from "./insert_verification_reducer";
 import SeedProjectReducer from "./seed_project_reducer";
+import UpdateDebugSessionReducer from "./update_debug_session_reducer";
+import UpdateMilestoneReducer from "./update_milestone_reducer";
+import UpdateMilestoneAuditReducer from "./update_milestone_audit_reducer";
 import UpdateMustHaveReducer from "./update_must_have_reducer";
 import UpdatePhaseReducer from "./update_phase_reducer";
 import UpdatePhaseContextReducer from "./update_phase_context_reducer";
@@ -67,16 +80,23 @@ import UpdatePlanTaskReducer from "./update_plan_task_reducer";
 import UpdateProjectReducer from "./update_project_reducer";
 import UpdateRequirementReducer from "./update_requirement_reducer";
 import UpdateResearchReducer from "./update_research_reducer";
+import UpdateTodoReducer from "./update_todo_reducer";
 import UpdateVerificationReducer from "./update_verification_reducer";
+import UpsertCodebaseMapReducer from "./upsert_codebase_map_reducer";
 import UpsertConfigReducer from "./upsert_config_reducer";
 import UpsertContinueHereReducer from "./upsert_continue_here_reducer";
 import UpsertProjectStateReducer from "./upsert_project_state_reducer";
+import UpsertSessionCheckpointReducer from "./upsert_session_checkpoint_reducer";
 
 // Import all procedure arg schemas
 
 // Import all table schema definitions
+import CodebasesRow from "./codebases_table";
 import ConfigRow from "./config_table";
 import ContinueHereRow from "./continue_here_table";
+import DebugSessionRow from "./debug_session_table";
+import MilestoneRow from "./milestone_table";
+import MilestoneAuditRow from "./milestone_audit_table";
 import MustHaveRow from "./must_have_table";
 import PhaseRow from "./phase_table";
 import PhaseContextRow from "./phase_context_table";
@@ -87,12 +107,31 @@ import ProjectRow from "./project_table";
 import ProjectStateRow from "./project_state_table";
 import RequirementRow from "./requirement_table";
 import ResearchRow from "./research_table";
+import SessionCheckpointRow from "./session_checkpoint_table";
+import TodoRow from "./todo_table";
 import VerificationRow from "./verification_table";
 
 /** Type-only namespace exports for generated type groups. */
 
 /** The schema information for all tables in this module. This is defined the same was as the tables would have been defined in the server. */
 const tablesSchema = __schema({
+  codebases: __table({
+    name: 'codebase_map',
+    indexes: [
+      { name: 'codebase_map_doc_type', algorithm: 'btree', columns: [
+        'docType',
+      ] },
+      { name: 'id', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { name: 'codebase_map_project_id', algorithm: 'btree', columns: [
+        'projectId',
+      ] },
+    ],
+    constraints: [
+      { name: 'codebase_map_id_key', constraint: 'unique', columns: ['id'] },
+    ],
+  }, CodebasesRow),
   config: __table({
     name: 'config',
     indexes: [
@@ -121,6 +160,60 @@ const tablesSchema = __schema({
       { name: 'continue_here_id_key', constraint: 'unique', columns: ['id'] },
     ],
   }, ContinueHereRow),
+  debugSession: __table({
+    name: 'debug_session',
+    indexes: [
+      { name: 'id', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { name: 'debug_session_project_id', algorithm: 'btree', columns: [
+        'projectId',
+      ] },
+      { name: 'debug_session_status', algorithm: 'btree', columns: [
+        'status',
+      ] },
+    ],
+    constraints: [
+      { name: 'debug_session_id_key', constraint: 'unique', columns: ['id'] },
+    ],
+  }, DebugSessionRow),
+  milestone: __table({
+    name: 'milestone',
+    indexes: [
+      { name: 'id', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { name: 'milestone_project_id', algorithm: 'btree', columns: [
+        'projectId',
+      ] },
+      { name: 'milestone_status', algorithm: 'btree', columns: [
+        'status',
+      ] },
+    ],
+    constraints: [
+      { name: 'milestone_id_key', constraint: 'unique', columns: ['id'] },
+    ],
+  }, MilestoneRow),
+  milestoneAudit: __table({
+    name: 'milestone_audit',
+    indexes: [
+      { name: 'milestone_audit_status', algorithm: 'btree', columns: [
+        'auditStatus',
+      ] },
+      { name: 'id', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { name: 'milestone_audit_milestone_id', algorithm: 'btree', columns: [
+        'milestoneId',
+      ] },
+      { name: 'milestone_audit_project_id', algorithm: 'btree', columns: [
+        'projectId',
+      ] },
+    ],
+    constraints: [
+      { name: 'milestone_audit_id_key', constraint: 'unique', columns: ['id'] },
+    ],
+  }, MilestoneAuditRow),
   mustHave: __table({
     name: 'must_have',
     indexes: [
@@ -262,6 +355,43 @@ const tablesSchema = __schema({
       { name: 'research_id_key', constraint: 'unique', columns: ['id'] },
     ],
   }, ResearchRow),
+  sessionCheckpoint: __table({
+    name: 'session_checkpoint',
+    indexes: [
+      { name: 'id', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { name: 'session_checkpoint_phase_id', algorithm: 'btree', columns: [
+        'phaseId',
+      ] },
+      { name: 'session_checkpoint_project_id', algorithm: 'btree', columns: [
+        'projectId',
+      ] },
+    ],
+    constraints: [
+      { name: 'session_checkpoint_id_key', constraint: 'unique', columns: ['id'] },
+    ],
+  }, SessionCheckpointRow),
+  todo: __table({
+    name: 'todo',
+    indexes: [
+      { name: 'todo_area', algorithm: 'btree', columns: [
+        'area',
+      ] },
+      { name: 'id', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { name: 'todo_project_id', algorithm: 'btree', columns: [
+        'projectId',
+      ] },
+      { name: 'todo_status', algorithm: 'btree', columns: [
+        'status',
+      ] },
+    ],
+    constraints: [
+      { name: 'todo_id_key', constraint: 'unique', columns: ['id'] },
+    ],
+  }, TodoRow),
   verification: __table({
     name: 'verification',
     indexes: [
@@ -280,8 +410,12 @@ const tablesSchema = __schema({
 
 /** The schema information for all reducers in this module. This is defined the same way as the reducers would have been defined in the server, except the body of the reducer is omitted in code generation. */
 const reducersSchema = __reducers(
+  __reducerSchema("delete_codebase_map", DeleteCodebaseMapReducer),
   __reducerSchema("delete_config", DeleteConfigReducer),
   __reducerSchema("delete_continue_here", DeleteContinueHereReducer),
+  __reducerSchema("delete_debug_session", DeleteDebugSessionReducer),
+  __reducerSchema("delete_milestone", DeleteMilestoneReducer),
+  __reducerSchema("delete_milestone_audit", DeleteMilestoneAuditReducer),
   __reducerSchema("delete_must_have", DeleteMustHaveReducer),
   __reducerSchema("delete_phase", DeletePhaseReducer),
   __reducerSchema("delete_phase_context", DeletePhaseContextReducer),
@@ -292,7 +426,12 @@ const reducersSchema = __reducers(
   __reducerSchema("delete_project_state", DeleteProjectStateReducer),
   __reducerSchema("delete_requirement", DeleteRequirementReducer),
   __reducerSchema("delete_research", DeleteResearchReducer),
+  __reducerSchema("delete_session_checkpoint", DeleteSessionCheckpointReducer),
+  __reducerSchema("delete_todo", DeleteTodoReducer),
   __reducerSchema("delete_verification", DeleteVerificationReducer),
+  __reducerSchema("insert_debug_session", InsertDebugSessionReducer),
+  __reducerSchema("insert_milestone", InsertMilestoneReducer),
+  __reducerSchema("insert_milestone_audit", InsertMilestoneAuditReducer),
   __reducerSchema("insert_must_have", InsertMustHaveReducer),
   __reducerSchema("insert_phase", InsertPhaseReducer),
   __reducerSchema("insert_phase_context", InsertPhaseContextReducer),
@@ -302,8 +441,12 @@ const reducersSchema = __reducers(
   __reducerSchema("insert_project", InsertProjectReducer),
   __reducerSchema("insert_requirement", InsertRequirementReducer),
   __reducerSchema("insert_research", InsertResearchReducer),
+  __reducerSchema("insert_todo", InsertTodoReducer),
   __reducerSchema("insert_verification", InsertVerificationReducer),
   __reducerSchema("seed_project", SeedProjectReducer),
+  __reducerSchema("update_debug_session", UpdateDebugSessionReducer),
+  __reducerSchema("update_milestone", UpdateMilestoneReducer),
+  __reducerSchema("update_milestone_audit", UpdateMilestoneAuditReducer),
   __reducerSchema("update_must_have", UpdateMustHaveReducer),
   __reducerSchema("update_phase", UpdatePhaseReducer),
   __reducerSchema("update_phase_context", UpdatePhaseContextReducer),
@@ -313,10 +456,13 @@ const reducersSchema = __reducers(
   __reducerSchema("update_project", UpdateProjectReducer),
   __reducerSchema("update_requirement", UpdateRequirementReducer),
   __reducerSchema("update_research", UpdateResearchReducer),
+  __reducerSchema("update_todo", UpdateTodoReducer),
   __reducerSchema("update_verification", UpdateVerificationReducer),
+  __reducerSchema("upsert_codebase_map", UpsertCodebaseMapReducer),
   __reducerSchema("upsert_config", UpsertConfigReducer),
   __reducerSchema("upsert_continue_here", UpsertContinueHereReducer),
   __reducerSchema("upsert_project_state", UpsertProjectStateReducer),
+  __reducerSchema("upsert_session_checkpoint", UpsertSessionCheckpointReducer),
 );
 
 /** The schema information for all procedures in this module. This is defined the same way as the procedures would have been defined in the server. */

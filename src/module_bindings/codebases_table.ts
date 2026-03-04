@@ -10,14 +10,11 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
-export default {
-  phaseId: __t.u64(),
-  number: __t.string(),
-  name: __t.string(),
-  slug: __t.string(),
-  goal: __t.string(),
-  status: __t.string(),
-  dependsOn: __t.string(),
-  successCriteria: __t.string(),
-  isInserted: __t.bool(),
-};
+export default __t.row({
+  id: __t.u64().primaryKey(),
+  projectId: __t.u64().name("project_id"),
+  docType: __t.string().name("doc_type"),
+  content: __t.string(),
+  createdAt: __t.timestamp().name("created_at"),
+  updatedAt: __t.timestamp().name("updated_at"),
+});

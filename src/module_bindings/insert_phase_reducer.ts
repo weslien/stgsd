@@ -19,4 +19,5 @@ export default {
   status: __t.string(),
   dependsOn: __t.string(),
   successCriteria: __t.string(),
+  isInserted: __t.bool(),
 };
