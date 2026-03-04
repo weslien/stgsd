@@ -25,6 +25,12 @@ import { registerGetSessionCommand } from './commands/get-session.js';
 import { registerAddPhaseCommand } from './commands/add-phase.js';
 import { registerInsertPhaseCommand } from './commands/insert-phase.js';
 import { registerRemovePhaseCommand } from './commands/remove-phase.js';
+import { registerAddTodoCommand } from './commands/add-todo.js';
+import { registerListTodosCommand } from './commands/list-todos.js';
+import { registerCompleteTodoCommand } from './commands/complete-todo.js';
+import { registerWriteDebugCommand } from './commands/write-debug.js';
+import { registerGetDebugCommand } from './commands/get-debug.js';
+import { registerCloseDebugCommand } from './commands/close-debug.js';
 
 const program = new Command()
   .name('stclaude')
@@ -58,5 +64,11 @@ registerGetSessionCommand(program);
 registerAddPhaseCommand(program);
 registerInsertPhaseCommand(program);
 registerRemovePhaseCommand(program);
+registerAddTodoCommand(program);
+registerListTodosCommand(program);
+registerCompleteTodoCommand(program);
+registerWriteDebugCommand(program);
+registerGetDebugCommand(program);
+registerCloseDebugCommand(program);
 
 program.parseAsync();
