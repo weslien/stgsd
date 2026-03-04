@@ -15,8 +15,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Schema & Module** - All SpacetimeDB tables, reducers, and module deployed to maincloud
 - [x] **Phase 2: CLI Foundation** - CLI skeleton with connection management, project identity, JSON output, and install
 - [x] **Phase 3: State & Query Commands** - CLI commands for reading/writing project state, phases, plans, and roadmap overview
-- [ ] **Phase 4: Workflow Assembly** - CLI commands that assemble rich context for GSD workflow entry points + seed/init command (gap closure)
-- [ ] **Phase 5: Agent Patches** - GSD agent markdown files patched to call stclaude instead of file I/O
+- [x] **Phase 4: Workflow Assembly** - CLI commands that assemble rich context for GSD workflow entry points + seed/init command (gap closure)
+- [x] **Phase 5: Agent Patches** - GSD agent markdown files patched to call stclaude instead of file I/O
 - [x] **Phase 6: v1.0 Gap Closure & Tech Debt** - Fix CLI-12 symlink, stale checkbox, and refactor duplicated helpers
 
 ## Phase Details
@@ -73,7 +73,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. `stclaude init execute-phase <phase>` returns everything the executor needs (current plan, task list, must-haves, continue-here state)
   4. `stclaude write-summary`, `write-verification`, and `write-research` persist artifacts to SpacetimeDB and are retrievable by subsequent queries
   5. `stclaude init` (or `stclaude seed`) calls `seed_project` reducer to bootstrap a new project from the current git repo, closing the PROJECT_NOT_FOUND dead-end
-**Plans**: TBD
+**Plans**: 2 plans
+- [x] 04-01-PLAN.md -- Init assembly commands (progress, plan-phase, execute-phase) + write commands (summary, verification, research)
+- [x] 04-02-PLAN.md -- Seed/init command for project bootstrapping
 
 ### Phase 5: Agent Patches
 **Goal**: GSD core loop workflows run end-to-end using stclaude instead of file I/O, with patches that survive GSD updates
@@ -85,7 +87,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Running `/gsd:execute-phase` picks up plans from SpacetimeDB, executes tasks, and writes summaries via stclaude
   4. Running `/gsd:verify-work` reads plans and summaries from SpacetimeDB and writes verification results back
   5. All patches are minimal text replacements that do not restructure agent logic, and GSD's hash-based patch system detects and preserves them across `/gsd:update`
-**Plans**: TBD
+**Plans**: 4 plans
+- [x] 05-01-PLAN.md -- CLI commands: write-plan, write-context, complete-phase, mark-requirement
+- [x] 05-02-PLAN.md -- Workflow patches: progress.md, plan-phase.md, execute-phase.md
+- [x] 05-03-PLAN.md -- Agent file patches: gsd-executor, gsd-planner, gsd-verifier
+- [x] 05-04-PLAN.md -- Gap closure: gsd-planner.md disk I/O contradictions
 
 ### Phase 6: v1.0 Gap Closure & Tech Debt
 **Goal**: Close the CLI-12 requirement gap, fix stale ROADMAP state, and eliminate code duplication identified by v1.0 audit
@@ -111,6 +117,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1. Schema & Module | 2/2 | Complete | 2026-03-02 |
 | 2. CLI Foundation | 2/2 | Complete | 2026-03-02 |
 | 3. State & Query Commands | 3/3 | Complete | 2026-03-02 |
-| 4. Workflow Assembly | 0/? | Not started | - |
-| 5. Agent Patches | 0/? | Not started | - |
+| 4. Workflow Assembly | 2/2 | Complete | 2026-03-03 |
+| 5. Agent Patches | 4/4 | Complete | 2026-03-04 |
 | 6. v1.0 Gap Closure & Tech Debt | 2/2 | Complete | 2026-03-03 |
