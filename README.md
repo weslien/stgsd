@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/hero.png" alt="stgsd — Bleeding edge DB state management for Claude Code / Gemini CLI" width="700">
+</p>
+
 # SpacetimeClaude
 
 A SpacetimeDB-backed replacement for [GSD](https://github.com/get-shit-done-ai/gsd)'s file-based state management in Claude Code. Instead of reading/writing markdown files in `.planning/` directories, GSD agents call a `stclaude` CLI that stores structured state in SpacetimeDB — giving Claude Code queryable, persistent memory that lives outside the repo.
