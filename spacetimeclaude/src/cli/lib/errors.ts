@@ -10,6 +10,7 @@ export class CliError extends Error {
 
 export const ErrorCodes = {
   NOT_GIT_REPO: 'NOT_GIT_REPO',
+  NOT_CONFIGURED: 'NOT_CONFIGURED',
   PROJECT_NOT_FOUND: 'PROJECT_NOT_FOUND',
   PHASE_NOT_FOUND: 'PHASE_NOT_FOUND',
   PLAN_NOT_FOUND: 'PLAN_NOT_FOUND',

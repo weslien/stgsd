@@ -4,13 +4,16 @@ import {
   type SubscriptionEventContext,
 } from '../../module_bindings/index.js';
 import { CliError, ErrorCodes } from './errors.js';
-
-const SPACETIMEDB_URI = 'https://maincloud.spacetimedb.com';
-const DATABASE_NAME = 'spacetimeclaude-gvhsi';
+import { requireConfig } from './config.js';
+import { getGitRemoteUrl } from './git.js';
 
 export async function withConnection<T>(
   fn: (conn: DbConnection) => T | Promise<T>,
 ): Promise<T> {
+  // Filesystem check — fails in <1ms for unconfigured repos (no network)
+  const gitRemoteUrl = getGitRemoteUrl();
+  const config = requireConfig(gitRemoteUrl);
+
   return new Promise<T>((resolve, reject) => {
     const timeout = setTimeout(() => {
       reject(
@@ -22,8 +25,8 @@ export async function withConnection<T>(
     }, 15_000);
 
     DbConnection.builder()
-      .withUri(SPACETIMEDB_URI)
-      .withDatabaseName(DATABASE_NAME)
+      .withUri(config.uri)
+      .withDatabaseName(config.database)
       .onConnect((conn: DbConnection, _identity, _token) => {
         conn
           .subscriptionBuilder()

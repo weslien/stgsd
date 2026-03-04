@@ -16,6 +16,7 @@ import { registerWritePlanCommand } from './commands/write-plan.js';
 import { registerWriteContextCommand } from './commands/write-context.js';
 import { registerCompletePhaseCommand } from './commands/complete-phase.js';
 import { registerMarkRequirementCommand } from './commands/mark-requirement.js';
+import { registerSetupCommand } from './commands/setup.js';
 
 const program = new Command()
   .name('stclaude')
@@ -40,5 +41,6 @@ registerWritePlanCommand(program);
 registerWriteContextCommand(program);
 registerCompletePhaseCommand(program);
 registerMarkRequirementCommand(program);
+registerSetupCommand(program);
 
 program.parseAsync();

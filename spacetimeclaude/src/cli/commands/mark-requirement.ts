@@ -70,7 +70,9 @@ export function registerMarkRequirementCommand(program: Command): void {
           const alreadyComplete: string[] = [];
 
           for (const reqId of ids) {
-            const req = allReqs.find((r) => r.number === reqId);
+            const req = allReqs.find(
+              (r) => `${r.category}-${r.number}` === reqId,
+            );
             if (!req) {
               notFound.push(reqId);
               continue;

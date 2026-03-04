@@ -1,8 +1,10 @@
 import type { Command } from 'commander';
 import type { DbConnection } from '../../module_bindings/index.js';
+import { execSync } from 'node:child_process';
 import { withConnection } from '../lib/connection.js';
 import { getGitRemoteUrl } from '../lib/git.js';
 import { findProjectByGitRemote } from '../lib/project.js';
+import { computeRepoId, databaseName, modulePath, loadConfig } from '../lib/config.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
 
@@ -21,10 +23,48 @@ function formatSeed(data: unknown): string {
   return lines.join('\n');
 }
 
+function wipeDatabase(gitRemoteUrl: string): void {
+  const repoId = computeRepoId(gitRemoteUrl);
+  const config = loadConfig(repoId);
+  if (!config) {
+    throw new CliError(
+      ErrorCodes.NOT_CONFIGURED,
+      'stclaude not configured for this repo. Run: stclaude setup',
+    );
+  }
+
+  let spacetimeBin: string;
+  try {
+    spacetimeBin = execSync('which spacetime', {
+      encoding: 'utf-8',
+      shell: '/bin/zsh',
+      timeout: 5000,
+    }).trim();
+  } catch {
+    throw new CliError(
+      ErrorCodes.INTERNAL_ERROR,
+      'spacetime CLI not found. Install SpacetimeDB: https://spacetimedb.com/install',
+    );
+  }
+
+  const dbName = databaseName(repoId);
+  const publishCmd = `${spacetimeBin} publish ${dbName} --delete-data=always -y --module-path ${modulePath()} --server local --no-config`;
+  try {
+    execSync(publishCmd, { stdio: 'pipe', timeout: 60_000 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new CliError(
+      ErrorCodes.INTERNAL_ERROR,
+      `Failed to wipe and republish module: ${msg}`,
+    );
+  }
+}
+
 export function registerSeedCommand(program: Command): void {
   program
     .command('seed')
     .description('Bootstrap a new project in SpacetimeDB from current git repo')
+    .option('--force', 'Delete existing project and re-seed', false)
     .requiredOption('--name <name>', 'Project name')
     .requiredOption('--description <text>', 'Project description')
     .requiredOption('--core-value <text>', 'Core value statement')
@@ -57,24 +97,33 @@ export function registerSeedCommand(program: Command): void {
 
         const gitRemoteUrl = getGitRemoteUrl();
 
-        const result = await withConnection(async (conn: DbConnection) => {
-          // Check if project already exists
-          try {
-            findProjectByGitRemote(conn, gitRemoteUrl);
-            // If we get here, the project exists -- error
-            throw new CliError(
-              ErrorCodes.INVALID_ARGUMENT,
-              'Project already exists for this git remote. Use update commands instead.',
-            );
-          } catch (err) {
-            if (err instanceof CliError && err.code === ErrorCodes.PROJECT_NOT_FOUND) {
-              // Good -- project doesn't exist yet, proceed
-            } else {
+        if (options.force) {
+          // Wipe database before connecting — republish with --delete-data
+          wipeDatabase(gitRemoteUrl);
+        } else {
+          // Check if project already exists (quick check via connection)
+          const exists = await withConnection((conn: DbConnection) => {
+            try {
+              findProjectByGitRemote(conn, gitRemoteUrl);
+              return true;
+            } catch (err) {
+              if (err instanceof CliError && err.code === ErrorCodes.PROJECT_NOT_FOUND) {
+                return false;
+              }
               throw err;
             }
-          }
+          });
 
-          // Set up onInsert listener for confirmation
+          if (exists) {
+            throw new CliError(
+              ErrorCodes.INVALID_ARGUMENT,
+              'Project already exists for this git remote. Use --force to delete and re-seed.',
+            );
+          }
+        }
+
+        // Seed into clean database
+        const result = await withConnection(async (conn: DbConnection) => {
           const insertPromise = new Promise<void>((resolve, reject) => {
             const timer = setTimeout(() => {
               reject(
@@ -92,7 +141,6 @@ export function registerSeedCommand(program: Command): void {
             });
           });
 
-          // Call the seed_project reducer
           conn.reducers.seedProject({
             gitRemoteUrl,
             name: options.name,
@@ -105,12 +153,9 @@ export function registerSeedCommand(program: Command): void {
             requirementsJson: options.requirementsJson,
           });
 
-          // Wait for confirmation
           await insertPromise;
 
-          // Read back the created project
           const project = findProjectByGitRemote(conn, gitRemoteUrl);
-
           return {
             project: {
               id: project.id,
