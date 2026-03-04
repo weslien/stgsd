@@ -1,8 +1,8 @@
-# SpacetimeClaude
+# stgsd
 
 ## What This Is
 
-A SpacetimeDB-backed replacement for GSD's file-based state management in Claude Code. Instead of reading/writing markdown files in `.planning/` directories, GSD agents call a `stclaude` CLI that stores structured state in SpacetimeDB — giving Claude Code queryable, cross-project, real-time persistent memory that lives outside the repo.
+A SpacetimeDB-backed replacement for GSD's file-based state management in Claude Code. GSD agents call a `stgsd` CLI that stores structured state in SpacetimeDB — giving Claude Code queryable, persistent memory that lives outside the repo.
 
 ## Core Value
 
@@ -12,63 +12,63 @@ GSD's planning state becomes structured, queryable data instead of flat files �
 
 ### Validated
 
-(None yet — ship to validate)
+- SpacetimeDB module with 13 tables covering GSD core loop state — v1.0
+- Hybrid schema: structured metadata as typed columns, prose content as text fields — v1.0
+- `stgsd` CLI tool with 17 commands backed by SpacetimeDB — v1.0
+- Project identity derived from git remote URL (automatic, no manual config) — v1.0
+- GSD agent local patches replacing file I/O with `stgsd` calls for core loop workflows — v1.0
+- Patches survive `/gsd:update` via GSD's hash-based local patch system — v1.0
+- Core loop coverage: progress, plan-phase, execute-phase, verify-work — v1.0
+- CLI installed to `~/.claude/bin/` alongside existing gsd-tools — v1.0
 
 ### Active
 
-- [ ] SpacetimeDB module with tables covering GSD core loop state (project, phase, plan, task, requirement, verification, state)
-- [ ] Hybrid schema: structured metadata as typed columns, prose content as text fields
-- [ ] `stclaude` CLI tool that provides gsd-tools-compatible commands backed by SpacetimeDB
-- [ ] Project identity derived from git remote URL (automatic, no manual config)
-- [ ] GSD agent local patches replacing file I/O with `stclaude` calls for core loop workflows
-- [ ] Patches survive `/gsd:update` via GSD's hash-based local patch system
-- [ ] Core loop coverage: progress, plan-phase, execute-phase, verify-work
-- [ ] CLI installed to `~/.claude/bin/` alongside existing gsd-tools
+- Milestone lifecycle workflows (new, complete, audit) via stgsd
+- Session management (pause/resume) via stgsd
+- Phase management (add/insert/remove) via stgsd
+- Todo tracking via SpacetimeDB
+- Debug session persistence via SpacetimeDB
+- Codebase mapping storage via SpacetimeDB
 
 ### Out of Scope
 
-- File-based fallback — going all-in on SpacetimeDB, no dual-mode
-- Non-core GSD workflows (new-project, milestones, audit, cleanup, todos, debug, codebase mapping) — defer to v2
-- React/web UI for viewing state — CLI only for v1
-- Multi-user collaboration — single-user (single Claude Code identity) for now
+- File-based fallback — clean break, dual-mode adds complexity
+- React/web UI — CLI only, SpacetimeDB dashboard available for debugging
 - Migration tool for existing .planning/ data — start fresh
+- Multi-user collaboration — single Claude Code identity per project
+- Cross-project intelligence — future v2+
+- Multi-agent coordination via subscriptions — future v2+
 
 ## Context
 
-**Existing codebase**: SpacetimeDB v2 starter template with a `person` table, TS client connecting to maincloud (`spacetimeclaude-gvhsi`). Generated module bindings already in place.
+**Current state:** v1.0 shipped. 4,771 lines of TypeScript across 13 SpacetimeDB tables, 17 CLI commands, and patches to 6 GSD files. Core loop (progress/plan/execute/verify) runs entirely on SpacetimeDB. Non-core workflows (milestones, todos, debug, codebase mapping) still use file-based `.planning/`.
 
-**GSD architecture**: Agents (gsd-executor, gsd-planner, gsd-verifier, gsd-phase-researcher) call `gsd-tools.cjs` for state operations and use Read/Write/Edit tools for .planning/ files. The `gsd-tools.cjs` binary wraps file I/O in `lib/*.cjs` modules (state.cjs, phase.cjs, roadmap.cjs, frontmatter.cjs, init.cjs, verify.cjs).
+**Tech stack:** SpacetimeDB v2 TypeScript SDK, Commander.js, esbuild, Node.js 22+.
 
-**Integration approach (Option B)**: Build separate `stclaude` CLI in this repo. Patch GSD agent `.md` files to call `stclaude` instead of `gsd-tools` for state operations, and replace `Read .planning/...` / `Write .planning/...` with `stclaude` commands. Patches are plain text diffs on markdown files — easy to merge when GSD updates.
-
-**Local patch system**: GSD tracks all its files via SHA256 hashes in `gsd-file-manifest.json`. Modified files are detected during `/gsd:update`, backed up to `~/.claude/gsd-local-patches/`, and reapplied via `/gsd:reapply-patches` with intelligent merge.
-
-**SpacetimeDB constraints**:
-- Reducers are transactional and deterministic (no filesystem, network, timers)
-- Tables use `t.u64().primaryKey().autoInc()` for IDs (BigInt, pass `0n` on insert)
-- Index names must be globally unique across all tables (use `{table}_{column}` convention)
-- Multi-column indexes are broken — use single-column + manual filter
-- Reducer calls use object syntax, not positional args
-- Server entry point must be `src/index.ts`, schema in `src/schema.ts`
+**Architecture:** `stgsd` CLI auto-detects project from git remote URL, connects to SpacetimeDB maincloud, executes query/mutation, returns JSON. GSD agent `.md` files patched with targeted text replacements to call `stgsd` instead of `gsd-tools.cjs`.
 
 ## Constraints
 
-- **Tech stack**: SpacetimeDB v2 TypeScript SDK, esbuild bundling, bun for package management
-- **Hosting**: SpacetimeDB maincloud (free tier, already configured)
+- **Tech stack**: SpacetimeDB v2 TypeScript SDK, esbuild bundling
+- **Hosting**: SpacetimeDB maincloud (free tier)
 - **CLI runtime**: Node.js (must work in Claude Code's shell environment)
-- **Patch compatibility**: Agent patches must be minimal, targeted text replacements that merge cleanly across GSD version updates
-- **No repo state**: All GSD state lives in SpacetimeDB — repos should have zero `.planning/` files for stclaude-managed projects
+- **Patch compatibility**: Agent patches must be minimal text replacements that merge across GSD updates
+- **No repo state**: All GSD state lives in SpacetimeDB for stgsd-managed projects
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
-|----------|-----------|---------|
-| Option B: patch at agent layer, not gsd-tools layer | Agent .md files are plain text, easy diff/merge for patch system. Patching compiled .cjs is fragile. | — Pending |
-| Hybrid schema (structured + prose) | Full normalization loses the value of rich prose. Pure blobs lose queryability. Hybrid gives both. | — Pending |
-| Git remote URL for project identity | Automatic, no config needed. Same project across machines if same remote. | — Pending |
-| No file-based fallback | Dual-mode adds complexity. Clean break forces commitment and simplifies implementation. | — Pending |
-| Core loop only for v1 | Focus on the hot path. progress/plan/execute/verify cover 90% of GSD usage. | — Pending |
-| CLI in ~/.claude/bin/ | Already on Claude's PATH, alongside gsd-tools.cjs. No global install needed. | — Pending |
+|---|---|---|
+| Option B: patch at agent layer | Agent .md files are plain text, easy diff/merge. Patching compiled .cjs is fragile. | Good — patches merge cleanly |
+| Hybrid schema (structured + prose) | Full normalization loses prose value. Pure blobs lose queryability. | Good — best of both |
+| Git remote URL for project identity | Automatic, no config needed. Same project across machines. | Good — zero friction |
+| No file-based fallback | Clean break forces commitment, simplifies implementation. | Good — no dual-mode bugs |
+| Core loop only for v1 | Hot path covers 90% of GSD usage. | Good — shipped in 3 days |
+| CLI in ~/.claude/bin/ | Already on Claude's PATH, alongside gsd-tools.cjs. | Good — no install friction |
+| snake_case table names | SpacetimeDB convention, auto-converted to camelCase for ctx.db. | Good |
+| JSON string params for seed_project | Avoids nested SpacetimeDB type definitions. | Good — pragmatic |
+| subscribeToAllTables() for CLI | Data volume is small per project. | Good — simple |
+| Per-repo SpacetimeDB databases | Isolation between projects, independent lifecycle. | Good |
 
 ---
-*Last updated: 2026-03-02 after initialization*
+*Last updated: 2026-03-04 after v1.0 milestone*
