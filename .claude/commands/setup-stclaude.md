@@ -4,10 +4,10 @@ Run these steps in order. For each step, check the precondition first and skip i
 
 ## Step 1: Build and install the CLI
 
-Run from the `spacetimeclaude/` subdirectory of this repo:
+Run from the repo root:
 
 ```bash
-cd spacetimeclaude && bun run install:cli
+bun run install:cli
 ```
 
 This builds `stclaude` and copies it to `~/.claude/bin/`, and also copies the SpacetimeDB module source to `~/.claude/stclaude/module/`.

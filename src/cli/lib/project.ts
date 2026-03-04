@@ -1,0 +1,90 @@
+import type { DbConnection } from '../../module_bindings/index.js';
+import { CliError, ErrorCodes } from './errors.js';
+
+/**
+ * Find a project by its git remote URL.
+ * Iterates all project rows and matches on gitRemoteUrl.
+ * Throws PROEJCT_NOT_FOUND if no match.
+ */
+export function findProjectByGitRemote(
+  conn: DbConnection,
+  gitRemoteUrl: string,
+) {
+  for (const row of conn.db.project.iter()) {
+    if (row.gitRemoteUrl === gitRemoteUrl) {
+      return row;
+    }
+  }
+  throw new CliError(
+    ErrorCodes.PROJECT_NOT_FOUND,
+    `No project found for git remote: ${gitRemoteUrl}`,
+  );
+}
+
+/**
+ * Find the project state row for a given project ID.
+ * Returns null if no state exists yet (fresh project).
+ */
+export function findProjectState(conn: DbConnection, projectId: bigint) {
+  for (const row of conn.db.projectState.iter()) {
+    if (row.projectId === projectId) {
+      return row;
+    }
+  }
+  return null;
+}
+
+/**
+ * Find a phase by project ID and phase number string.
+ * Phase numbers are strings (support decimals like "2.1").
+ * Throws PHASE_NOT_FOUND if no match.
+ */
+export function findPhaseByNumber(
+  conn: DbConnection,
+  projectId: bigint,
+  number: string,
+) {
+  for (const row of conn.db.phase.iter()) {
+    if (row.projectId === projectId && row.number === number) {
+      return row;
+    }
+  }
+  throw new CliError(
+    ErrorCodes.PHASE_NOT_FOUND,
+    `No phase found with number "${number}"`,
+  );
+}
+
+/**
+ * Wait for a project state update via subscription callback.
+ * Registers onUpdate and onInsert listeners, resolves when matching projectId seen.
+ * Rejects after timeoutMs (default 5000ms).
+ */
+export function waitForStateUpdate(
+  conn: DbConnection,
+  projectId: bigint,
+  timeoutMs = 5000,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(
+        new CliError(
+          ErrorCodes.INTERNAL_ERROR,
+          'State update timed out after 5 seconds',
+        ),
+      );
+    }, timeoutMs);
+
+    const done = () => {
+      clearTimeout(timer);
+      resolve();
+    };
+
+    conn.db.projectState.onUpdate((_ctx, _oldRow, newRow) => {
+      if (newRow.projectId === projectId) done();
+    });
+    conn.db.projectState.onInsert((_ctx, newRow) => {
+      if (newRow.projectId === projectId) done();
+    });
+  });
+}
