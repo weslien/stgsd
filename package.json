@@ -11,7 +11,7 @@
     "spacetime:publish:local": "spacetime publish --module-path spacetimedb --server local",
     "spacetime:publish": "spacetime publish --module-path spacetimedb --server maincloud",
     "build:cli": "esbuild src/cli/index.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/stclaude.mjs --banner:js='#!/usr/bin/env node\nimport { createRequire } from \"node:module\"; const require = createRequire(import.meta.url);' && chmod +x dist/stclaude.mjs",
-    "install:cli": "bun run build:cli && mkdir -p ~/.claude/bin && cp dist/stclaude.mjs ~/.claude/bin/stclaude.mjs && chmod +x ~/.claude/bin/stclaude.mjs && ln -sf stclaude.mjs ~/.claude/bin/stclaude && mkdir -p ~/.claude/stclaude/module && cp -r spacetimedb/src spacetimedb/package.json spacetimedb/tsconfig.json ~/.claude/stclaude/module/ && (cd ~/.claude/stclaude/module && npm install 2>/dev/null || bun install 2>/dev/null || true)"
+    "install:cli": "bun run build:cli && mkdir -p ~/.claude/bin && cp dist/stclaude.mjs ~/.claude/bin/stclaude.mjs && chmod +x ~/.claude/bin/stclaude.mjs && ln -sf stclaude.mjs ~/.claude/bin/stclaude && mkdir -p ~/.local/bin && ln -sf ~/.claude/bin/stclaude.mjs ~/.local/bin/stclaude && mkdir -p ~/.claude/stclaude/module && cp -r spacetimedb/src spacetimedb/package.json spacetimedb/tsconfig.json ~/.claude/stclaude/module/ && (cd ~/.claude/stclaude/module && npm install 2>/dev/null || bun install 2>/dev/null || true)"
   },
   "dependencies": {
     "commander": "^14.0.3",
