@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: stgsd v1.0
-status: shipped
+milestone: v1.1
+milestone_name: Full Coverage
+status: ready_to_plan
 last_updated: "2026-03-04"
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 15
-  completed_plans: 15
+  total_phases: 5
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # Project State
@@ -18,25 +18,41 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-04)
 
 **Core value:** GSD's planning state becomes structured, queryable data instead of flat files
-**Current focus:** v1.0 shipped, planning next milestone
+**Current focus:** Phase 7 — Schema Extensions
 
 ## Current Position
 
-Milestone v1.0 shipped 2026-03-04.
-All 6 phases, 15 plans, 34 requirements complete.
+Phase: 7 of 11 (Schema Extensions)
+Plan: — (not yet planned)
+Status: Ready to plan
+Last activity: 2026-03-04 — v1.1 roadmap created (phases 7-11)
+
+Progress: [░░░░░░░░░░] 0% (v1.1)
 
 ## Performance Metrics
 
-**Velocity:**
+**Velocity (from v1.0):**
 - Total plans completed: 15
-- Average duration: 2.93min
+- Average duration: 2.93 min
 - Total execution time: 0.68 hours
+
+**By Phase (v1.0):**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| 1-6 (v1.0) | 15 | ~44 min | 2.93 min |
+
+*Updated after each plan completion*
 
 ## Accumulated Context
 
 ### Decisions
 
 Full decision log in PROJECT.md Key Decisions table.
+
+- Architecture established in v1.0: schema first, then CLI commands, then agent patches
+- v1.1 groups by feature area (schema+CLI+patch per phase) — architecture already established
+- No file-based fallback — clean break (see PROJECT.md)
 
 ### Pending Todos
 
@@ -49,5 +65,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-04
-Status: v1.0 milestone completed
-Next: `/gsd:new-milestone` when ready for v2
+Stopped at: Roadmap created for v1.1 (phases 7-11)
+Resume file: None
