@@ -9,9 +9,9 @@ Requirements for full GSD workflow coverage. Each maps to roadmap phases.
 
 ### Milestone Lifecycle
 
-- [ ] **MILE-01**: Milestone table storing version, name, shipped date, phase/plan/requirement counts, accomplishments, and status
-- [ ] **MILE-02**: Milestone audit table storing audit status, requirement scores, integration scores, flow scores, and tech debt items
-- [ ] **MILE-03**: Milestone archive fields storing archived roadmap and requirements content per milestone version
+- [x] **MILE-01**: Milestone table storing version, name, shipped date, phase/plan/requirement counts, accomplishments, and status
+- [x] **MILE-02**: Milestone audit table storing audit status, requirement scores, integration scores, flow scores, and tech debt items
+- [x] **MILE-03**: Milestone archive fields storing archived roadmap and requirements content per milestone version
 - [ ] **MILE-04**: CLI command `stclaude write-milestone` persists milestone completion data
 - [ ] **MILE-05**: CLI command `stclaude get-milestones` returns milestone history for a project
 - [ ] **MILE-06**: CLI command `stclaude write-audit` persists audit report with gap details
@@ -21,7 +21,7 @@ Requirements for full GSD workflow coverage. Each maps to roadmap phases.
 
 ### Session Management
 
-- [ ] **SESS-01**: Session checkpoint table storing phase context, completed work, remaining work, decisions, blockers, next action, and mental context
+- [x] **SESS-01**: Session checkpoint table storing phase context, completed work, remaining work, decisions, blockers, next action, and mental context
 - [ ] **SESS-02**: CLI command `stclaude write-checkpoint` persists session handoff context
 - [ ] **SESS-03**: CLI command `stclaude get-checkpoint` retrieves latest checkpoint for current phase
 - [ ] **SESS-04**: GSD patch for pause-work workflow replacing .continue-here.md writes with stclaude calls
@@ -29,8 +29,8 @@ Requirements for full GSD workflow coverage. Each maps to roadmap phases.
 
 ### Phase Management
 
-- [ ] **PHSE-01**: Phase table supports decimal numbering for inserted phases (e.g., 3.1)
-- [ ] **PHSE-02**: Phase table supports is_inserted flag for urgent work distinction
+- [x] **PHSE-01**: Phase table supports decimal numbering for inserted phases (e.g., 3.1)
+- [x] **PHSE-02**: Phase table supports is_inserted flag for urgent work distinction
 - [ ] **PHSE-03**: CLI command `stclaude add-phase` appends a new phase with auto-incrementing number
 - [ ] **PHSE-04**: CLI command `stclaude insert-phase` creates a decimal-numbered phase after a target phase
 - [ ] **PHSE-05**: CLI command `stclaude remove-phase` soft-deletes a future phase and renumbers subsequent phases
@@ -40,7 +40,7 @@ Requirements for full GSD workflow coverage. Each maps to roadmap phases.
 
 ### Todo Tracking
 
-- [ ] **TODO-01**: Todo table storing title, area, problem description, solution hints, file references with line numbers, and done status
+- [x] **TODO-01**: Todo table storing title, area, problem description, solution hints, file references with line numbers, and done status
 - [ ] **TODO-02**: CLI command `stclaude add-todo` creates a new todo item
 - [ ] **TODO-03**: CLI command `stclaude list-todos` returns pending todos with relative timestamps
 - [ ] **TODO-04**: CLI command `stclaude complete-todo` marks a todo as done
@@ -49,7 +49,7 @@ Requirements for full GSD workflow coverage. Each maps to roadmap phases.
 
 ### Debug Sessions
 
-- [ ] **DBG-01**: Debug session table storing bug description, hypotheses with status and evidence, checkpoints, and session timeline
+- [x] **DBG-01**: Debug session table storing bug description, hypotheses with status and evidence, checkpoints, and session timeline
 - [ ] **DBG-02**: CLI command `stclaude write-debug` persists or updates a debug session
 - [ ] **DBG-03**: CLI command `stclaude get-debug` retrieves active debug session for current project
 - [ ] **DBG-04**: CLI command `stclaude close-debug` marks a debug session as resolved with resolution notes
@@ -57,7 +57,7 @@ Requirements for full GSD workflow coverage. Each maps to roadmap phases.
 
 ### Codebase Mapping
 
-- [ ] **CMAP-01**: Codebase map table storing document type (stack/integrations/architecture/structure/conventions/testing/concerns), content, and timestamps
+- [x] **CMAP-01**: Codebase map table storing document type (stack/integrations/architecture/structure/conventions/testing/concerns), content, and timestamps
 - [ ] **CMAP-02**: CLI command `stclaude write-codebase-map` persists a codebase mapping document by type
 - [ ] **CMAP-03**: CLI command `stclaude get-codebase-map` retrieves codebase mapping documents (all or by type)
 - [ ] **CMAP-04**: GSD patch for map-codebase workflow replacing .planning/codebase/ file writes with stclaude calls
@@ -92,40 +92,40 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MILE-01 | Phase 7 | Pending |
-| MILE-02 | Phase 7 | Pending |
-| MILE-03 | Phase 7 | Pending |
+| MILE-01 | Phase 7 | Complete |
+| MILE-02 | Phase 7 | Complete |
+| MILE-03 | Phase 7 | Complete |
 | MILE-04 | Phase 8 | Pending |
 | MILE-05 | Phase 8 | Pending |
 | MILE-06 | Phase 8 | Pending |
 | MILE-07 | Phase 8 | Pending |
 | MILE-08 | Phase 8 | Pending |
 | MILE-09 | Phase 8 | Pending |
-| SESS-01 | Phase 7 | Pending |
+| SESS-01 | Phase 7 | Complete |
 | SESS-02 | Phase 9 | Pending |
 | SESS-03 | Phase 9 | Pending |
 | SESS-04 | Phase 9 | Pending |
 | SESS-05 | Phase 9 | Pending |
-| PHSE-01 | Phase 7 | Pending |
-| PHSE-02 | Phase 7 | Pending |
+| PHSE-01 | Phase 7 | Complete |
+| PHSE-02 | Phase 7 | Complete |
 | PHSE-03 | Phase 9 | Pending |
 | PHSE-04 | Phase 9 | Pending |
 | PHSE-05 | Phase 9 | Pending |
 | PHSE-06 | Phase 9 | Pending |
 | PHSE-07 | Phase 9 | Pending |
 | PHSE-08 | Phase 9 | Pending |
-| TODO-01 | Phase 7 | Pending |
+| TODO-01 | Phase 7 | Complete |
 | TODO-02 | Phase 10 | Pending |
 | TODO-03 | Phase 10 | Pending |
 | TODO-04 | Phase 10 | Pending |
 | TODO-05 | Phase 10 | Pending |
 | TODO-06 | Phase 10 | Pending |
-| DBG-01 | Phase 7 | Pending |
+| DBG-01 | Phase 7 | Complete |
 | DBG-02 | Phase 10 | Pending |
 | DBG-03 | Phase 10 | Pending |
 | DBG-04 | Phase 10 | Pending |
 | DBG-05 | Phase 10 | Pending |
-| CMAP-01 | Phase 7 | Pending |
+| CMAP-01 | Phase 7 | Complete |
 | CMAP-02 | Phase 11 | Pending |
 | CMAP-03 | Phase 11 | Pending |
 | CMAP-04 | Phase 11 | Pending |
