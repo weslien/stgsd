@@ -17,6 +17,9 @@ import { registerWriteContextCommand } from './commands/write-context.js';
 import { registerCompletePhaseCommand } from './commands/complete-phase.js';
 import { registerMarkRequirementCommand } from './commands/mark-requirement.js';
 import { registerSetupCommand } from './commands/setup.js';
+import { registerWriteMilestoneCommand } from './commands/write-milestone.js';
+import { registerGetMilestonesCommand } from './commands/get-milestones.js';
+import { registerWriteAuditCommand } from './commands/write-audit.js';
 
 const program = new Command()
   .name('stclaude')
@@ -42,5 +45,8 @@ registerWriteContextCommand(program);
 registerCompletePhaseCommand(program);
 registerMarkRequirementCommand(program);
 registerSetupCommand(program);
+registerWriteMilestoneCommand(program);
+registerGetMilestonesCommand(program);
+registerWriteAuditCommand(program);
 
 program.parseAsync();
