@@ -20,6 +20,8 @@ import { registerSetupCommand } from './commands/setup.js';
 import { registerWriteMilestoneCommand } from './commands/write-milestone.js';
 import { registerGetMilestonesCommand } from './commands/get-milestones.js';
 import { registerWriteAuditCommand } from './commands/write-audit.js';
+import { registerWriteSessionCommand } from './commands/write-session.js';
+import { registerGetSessionCommand } from './commands/get-session.js';
 
 const program = new Command()
   .name('stclaude')
@@ -48,5 +50,7 @@ registerSetupCommand(program);
 registerWriteMilestoneCommand(program);
 registerGetMilestonesCommand(program);
 registerWriteAuditCommand(program);
+registerWriteSessionCommand(program);
+registerGetSessionCommand(program);
 
 program.parseAsync();
