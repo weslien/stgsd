@@ -164,6 +164,78 @@ stclaude read-plan 3 1
 
 All commands support `--json` for machine-readable output.
 
+## Using SpacetimeClaude from Inside Claude Code
+
+The fastest way to get started in a repo is the `/setup-stclaude` custom command. Open Claude Code in this repo and run:
+
+```
+/setup-stclaude
+```
+
+This is idempotent — it builds and installs the CLI, copies the global slash commands, ensures SpacetimeDB is running, publishes the module for the current repo, and verifies the connection. Safe to run repeatedly.
+
+Once set up, you interact with SpacetimeClaude entirely through slash commands in Claude Code. Here's a typical workflow:
+
+### Seeding a new project
+
+After `/setup-stclaude`, your database is empty. Seed it from your existing `.planning/` files:
+
+```
+/stclaude:seed
+```
+
+Claude reads your `PROJECT.md` and `ROADMAP.md`, extracts project metadata, phases, and requirements, and calls `stclaude seed` to bootstrap everything into SpacetimeDB.
+
+### Checking project status
+
+```
+/stclaude:status
+```
+
+Returns current phase, active plan, last activity, and a quick overview — all pulled from SpacetimeDB instead of parsing markdown files.
+
+### Planning a phase
+
+```
+/stclaude:init plan-phase 3
+```
+
+Assembles the full context bundle the planner agent needs: phase details, requirements, prior research, existing plans, and project-wide context. The patched `gsd-planner` agent calls this automatically when you run `/gsd:plan-phase`.
+
+### Executing work
+
+```
+/stclaude:init execute-phase 3
+```
+
+Loads the current plan, task list, must-haves, and resume state for the executor. The patched `gsd-executor` agent calls this automatically during `/gsd:execute-phase`.
+
+### Writing results back
+
+After execution, agents write artifacts back to SpacetimeDB:
+
+```
+/stclaude:write-summary 3 1      # Plan execution summary
+/stclaude:write-verification 3   # Phase verification result
+/stclaude:advance-plan 3 1       # Move to next plan
+/stclaude:complete-phase 3       # Mark phase done
+```
+
+These are called automatically by the patched GSD agents — you typically don't need to invoke them manually.
+
+### The GSD integration
+
+With the agent patches installed, the standard GSD commands work seamlessly with SpacetimeDB:
+
+| GSD Command | What happens under the hood |
+|---|---|
+| `/gsd:progress` | Reads state from SpacetimeDB via `stclaude` |
+| `/gsd:plan-phase` | Planner gets context from `stclaude init plan-phase`, writes plans via `stclaude write-plan` |
+| `/gsd:execute-phase` | Executor loads plans from SpacetimeDB, writes summaries via `stclaude write-summary` |
+| `/gsd:verify-work` | Verifier reads plans/summaries from SpacetimeDB, writes results via `stclaude write-verification` |
+
+You use GSD exactly as before — the storage backend is just SpacetimeDB instead of markdown files.
+
 ## How It Works
 
 ### Architecture
