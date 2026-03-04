@@ -35,11 +35,13 @@ function wipeDatabase(gitRemoteUrl: string): void {
 
   let spacetimeBin: string;
   try {
-    spacetimeBin = execSync('which spacetime', {
+    const whichCmd = process.platform === 'win32' ? 'where spacetime' : 'which spacetime';
+    const shellOpt = process.platform === 'win32' ? undefined : '/bin/zsh';
+    spacetimeBin = execSync(whichCmd, {
       encoding: 'utf-8',
-      shell: '/bin/zsh',
+      ...(shellOpt ? { shell: shellOpt } : {}),
       timeout: 5000,
-    }).trim();
+    }).trim().split('\n')[0].trim();
   } catch {
     throw new CliError(
       ErrorCodes.INTERNAL_ERROR,
