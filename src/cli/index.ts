@@ -31,6 +31,8 @@ import { registerCompleteTodoCommand } from './commands/complete-todo.js';
 import { registerWriteDebugCommand } from './commands/write-debug.js';
 import { registerGetDebugCommand } from './commands/get-debug.js';
 import { registerCloseDebugCommand } from './commands/close-debug.js';
+import { registerWriteCodebaseMapCommand } from './commands/write-codebase-map.js';
+import { registerGetCodebaseMapCommand } from './commands/get-codebase-map.js';
 
 const program = new Command()
   .name('stclaude')
@@ -70,5 +72,7 @@ registerCompleteTodoCommand(program);
 registerWriteDebugCommand(program);
 registerGetDebugCommand(program);
 registerCloseDebugCommand(program);
+registerWriteCodebaseMapCommand(program);
+registerGetCodebaseMapCommand(program);
 
 program.parseAsync();
