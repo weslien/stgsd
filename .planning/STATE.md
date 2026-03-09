@@ -2,32 +2,32 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Full Coverage
-status: ready_to_plan
-last_updated: "2026-03-04"
+status: complete
+last_updated: "2026-03-09"
 progress:
-  total_phases: 5
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 6
+  completed_phases: 6
+  total_plans: 14
+  completed_plans: 14
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-04)
+See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** GSD's planning state becomes structured, queryable data instead of flat files
-**Current focus:** Phase 7 — Schema Extensions
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 7 of 11 (Schema Extensions)
-Plan: — (not yet planned)
-Status: Ready to plan
-Last activity: 2026-03-04 — v1.1 roadmap created (phases 7-11)
+Phase: All complete (v1.1 shipped)
+Plan: —
+Status: Milestone complete
+Last activity: 2026-03-09 — v1.1 milestone archived
 
-Progress: [░░░░░░░░░░] 0% (v1.1)
+Progress: [██████████] 100% (v1.1)
 
 ## Performance Metrics
 
@@ -36,13 +36,9 @@ Progress: [░░░░░░░░░░] 0% (v1.1)
 - Average duration: 2.93 min
 - Total execution time: 0.68 hours
 
-**By Phase (v1.0):**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1-6 (v1.0) | 15 | ~44 min | 2.93 min |
-
-*Updated after each plan completion*
+**v1.1 (Phases 7-12):**
+- 6 phases, ~14 plans
+- Completed in 1 day (2026-03-04), patches through 2026-03-09
 
 ## Accumulated Context
 
@@ -50,9 +46,9 @@ Progress: [░░░░░░░░░░] 0% (v1.1)
 
 Full decision log in PROJECT.md Key Decisions table.
 
-- Architecture established in v1.0: schema first, then CLI commands, then agent patches
-- v1.1 groups by feature area (schema+CLI+patch per phase) — architecture already established
-- No file-based fallback — clean break (see PROJECT.md)
+- v1.1 grouped by feature area (schema+CLI+patch per phase)
+- Phase 12 added for cross-cutting workflow patches
+- Commander.js `-V` flag to avoid `--version` conflict
 
 ### Pending Todos
 
@@ -64,6 +60,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-04
-Stopped at: Roadmap created for v1.1 (phases 7-11)
+Last session: 2026-03-09
+Stopped at: v1.1 milestone completion
 Resume file: None
