@@ -1,0 +1,266 @@
+{
+  "version": "1.0.0",
+  "description": "Expected/forbidden patterns for stclaude-patched GSD files",
+  "gsdPaths": {
+    "workflows/plan-phase.md": {
+      "expected": [
+        "stclaude init plan-phase",
+        "stclaude get-phase",
+        "stclaude write-context",
+        "stclaude write-research",
+        "stclaude roadmap analyze"
+      ],
+      "forbidden": []
+    },
+    "workflows/execute-phase.md": {
+      "expected": [
+        "stclaude init execute-phase",
+        "stclaude get-phase",
+        "stclaude complete-phase",
+        "stclaude write-verification",
+        "stclaude read-plan"
+      ],
+      "forbidden": []
+    },
+    "workflows/transition.md": {
+      "expected": [
+        "stclaude get-state",
+        "stclaude roadmap analyze",
+        "stclaude init execute-phase",
+        "stclaude complete-phase",
+        "stclaude update-progress"
+      ],
+      "forbidden": []
+    },
+    "workflows/execute-plan.md": {
+      "expected": [
+        "stclaude init execute-phase",
+        "stclaude write-summary",
+        "stclaude advance-plan",
+        "stclaude record-metric",
+        "stclaude mark-requirement"
+      ],
+      "forbidden": []
+    },
+    "workflows/progress.md": {
+      "expected": [
+        "stclaude init progress",
+        "stclaude roadmap analyze",
+        "stclaude get-state"
+      ],
+      "forbidden": []
+    },
+    "workflows/map-codebase.md": {
+      "expected": [
+        "stclaude get-codebase-map",
+        "stclaude write-codebase-map"
+      ],
+      "forbidden": []
+    },
+    "workflows/verify-phase.md": {
+      "expected": [
+        "stclaude init execute-phase",
+        "stclaude write-verification"
+      ],
+      "forbidden": []
+    },
+    "workflows/remove-phase.md": {
+      "expected": [
+        "stclaude get-state",
+        "stclaude roadmap analyze",
+        "stclaude remove-phase"
+      ],
+      "forbidden": []
+    },
+    "workflows/discuss-phase.md": {
+      "expected": [
+        "stclaude init plan-phase",
+        "stclaude get-codebase-map",
+        "stclaude write-context"
+      ],
+      "forbidden": []
+    },
+    "workflows/add-todo.md": {
+      "expected": [
+        "stclaude list-todos",
+        "stclaude add-todo"
+      ],
+      "forbidden": []
+    },
+    "workflows/verify-work.md": {
+      "expected": [
+        "stclaude init execute-phase",
+        "stclaude get-state",
+        "stclaude roadmap analyze"
+      ],
+      "forbidden": []
+    },
+    "workflows/resume-project.md": {
+      "expected": [
+        "stclaude get-state",
+        "stclaude get-session"
+      ],
+      "forbidden": []
+    },
+    "workflows/check-todos.md": {
+      "expected": [
+        "stclaude list-todos",
+        "stclaude complete-todo"
+      ],
+      "forbidden": []
+    },
+    "workflows/audit-milestone.md": {
+      "expected": [
+        "stclaude write-audit",
+        "stclaude get-milestones"
+      ],
+      "forbidden": []
+    },
+    "workflows/quick.md": {
+      "expected": [
+        "stclaude get-state",
+        "stclaude roadmap analyze"
+      ],
+      "forbidden": []
+    },
+    "workflows/pause-work.md": {
+      "expected": [
+        "stclaude write-session",
+        "stclaude get-session"
+      ],
+      "forbidden": []
+    },
+    "workflows/list-phase-assumptions.md": {
+      "expected": [
+        "stclaude get-phase",
+        "stclaude roadmap analyze"
+      ],
+      "forbidden": []
+    },
+    "workflows/diagnose-issues.md": {
+      "expected": [
+        "stclaude write-debug",
+        "stclaude get-debug"
+      ],
+      "forbidden": []
+    },
+    "workflows/plan-milestone-gaps.md": {
+      "expected": [
+        "stclaude roadmap analyze",
+        "stclaude add-phase"
+      ],
+      "forbidden": []
+    },
+    "workflows/insert-phase.md": {
+      "expected": [
+        "stclaude get-state",
+        "stclaude insert-phase"
+      ],
+      "forbidden": []
+    },
+    "workflows/add-phase.md": {
+      "expected": [
+        "stclaude get-state",
+        "stclaude add-phase"
+      ],
+      "forbidden": []
+    },
+    "workflows/research-phase.md": {
+      "expected": [
+        "stclaude init plan-phase",
+        "stclaude write-research"
+      ],
+      "forbidden": []
+    },
+    "workflows/new-milestone.md": {
+      "expected": [
+        "stclaude get-milestones",
+        "stclaude get-milestones --json"
+      ],
+      "forbidden": []
+    },
+    "workflows/complete-milestone.md": {
+      "expected": [
+        "stclaude write-milestone",
+        "stclaude write-audit"
+      ],
+      "forbidden": []
+    },
+    "workflows/health.md": {
+      "expected": [
+        "stclaude health validation",
+        "stclaude health"
+      ],
+      "forbidden": []
+    },
+    "references/phase-argument-parsing.md": {
+      "expected": [
+        "stclaude get-phase",
+        "pass plain integer to stclaude",
+        "do not zero-pad for stclaude"
+      ],
+      "forbidden": []
+    },
+    "templates/debug-subagent-prompt.md": {
+      "expected": [
+        "stclaude write-debug",
+        "stclaude get-debug"
+      ],
+      "forbidden": []
+    }
+  },
+  "agentPaths": {
+    "gsd-executor.md": {
+      "expected": [
+        "stclaude init execute-phase",
+        "stclaude write-summary",
+        "stclaude advance-plan",
+        "stclaude update-progress",
+        "stclaude mark-requirement"
+      ],
+      "forbidden": []
+    },
+    "gsd-planner.md": {
+      "expected": [
+        "stclaude init plan-phase",
+        "stclaude write-plan",
+        "stclaude roadmap analyze",
+        "stclaude get-state",
+        "stclaude read-plan"
+      ],
+      "forbidden": []
+    },
+    "gsd-verifier.md": {
+      "expected": [
+        "stclaude get-phase",
+        "stclaude init execute-phase",
+        "stclaude write-verification"
+      ],
+      "forbidden": []
+    },
+    "gsd-phase-researcher.md": {
+      "expected": [
+        "stclaude init plan-phase",
+        "stclaude write-research"
+      ],
+      "forbidden": []
+    },
+    "gsd-codebase-mapper.md": {
+      "expected": [
+        "stclaude write-codebase-map",
+        "stclaude write-codebase-map --type"
+      ],
+      "forbidden": []
+    }
+  },
+  "commandPaths": {
+    "gsd/debug.md": {
+      "expected": [
+        "stclaude get-debug",
+        "stclaude get-state",
+        "stclaude write-debug"
+      ],
+      "forbidden": []
+    }
+  }
+}
