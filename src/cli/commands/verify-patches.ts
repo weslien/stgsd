@@ -12,12 +12,17 @@ interface ManifestEntry {
   forbidden: string[];
 }
 
+interface ManifestPathEntry {
+  expected: string[];
+  forbidden: string[];
+}
+
 interface PatchManifest {
   version: string;
-  generated: string;
-  gsdPaths: ManifestEntry[];
-  agentPaths: ManifestEntry[];
-  commandPaths: ManifestEntry[];
+  description?: string;
+  gsdPaths: Record<string, ManifestPathEntry>;
+  agentPaths: Record<string, ManifestPathEntry>;
+  commandPaths: Record<string, ManifestPathEntry>;
 }
 
 interface FileResult {
@@ -204,18 +209,28 @@ export function registerVerifyPatchesCommand(program: Command): void {
       const agentDir = path.join(os.homedir(), '.claude', 'agents');
       const commandDir = path.join(os.homedir(), '.claude', 'commands');
 
+      // Convert object-keyed manifest paths to ManifestEntry arrays
+      const toEntries = (paths: Record<string, ManifestPathEntry> | undefined): ManifestEntry[] =>
+        paths
+          ? Object.entries(paths).map(([file, entry]) => ({
+              file,
+              expected: entry.expected ?? [],
+              forbidden: entry.forbidden ?? [],
+            }))
+          : [];
+
       // Check all files
       const results: FileResult[] = [];
 
-      for (const entry of manifest.gsdPaths ?? []) {
+      for (const entry of toEntries(manifest.gsdPaths)) {
         results.push(checkFile(gsdDir, entry));
       }
 
-      for (const entry of manifest.agentPaths ?? []) {
+      for (const entry of toEntries(manifest.agentPaths)) {
         results.push(checkFile(agentDir, entry));
       }
 
-      for (const entry of manifest.commandPaths ?? []) {
+      for (const entry of toEntries(manifest.commandPaths)) {
         results.push(checkFile(commandDir, entry));
       }
 
