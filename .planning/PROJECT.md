@@ -8,9 +8,16 @@ A SpacetimeDB-backed replacement for GSD's file-based state management in Claude
 
 GSD's planning state becomes structured, queryable data instead of flat files — eliminating the parsing overhead, file I/O bottlenecks, and repo pollution that slow down GSD workflows.
 
-## Current Milestone: Planning Next
+## Current Milestone: v1.2 Patch Completion & Verification
 
-No active milestone. v1.1 shipped 2026-03-09.
+**Goal:** Ship the 4 remaining GSD workflow patches and build automated verification that all patches survive `/gsd:update`.
+
+**Target features:**
+- Patch pause-work/resume-work workflows to use stclaude session commands
+- Patch add-phase/insert-phase/remove-phase workflows to use stclaude phase commands
+- Patch add-todo/check-todos workflows to use stclaude todo commands
+- Patch debug workflow to use stclaude debug commands
+- Automated patch verification script (hash + content checks)
 
 ## Requirements
 
@@ -39,6 +46,7 @@ No active milestone. v1.1 shipped 2026-03-09.
 - GSD patch for add-phase/insert-phase/remove-phase workflows (PHSE-06, PHSE-07, PHSE-08)
 - GSD patch for add-todo/check-todos workflows (TODO-05, TODO-06)
 - GSD patch for debug workflow (DBG-05)
+- Automated patch verification script with hash + content checks
 
 ### Out of Scope
 
@@ -84,4 +92,4 @@ No active milestone. v1.1 shipped 2026-03-09.
 | Commander.js `-V` for CLI version flag | Avoids conflict with `--version` subcommand option | Good — write-milestone works |
 
 ---
-*Last updated: 2026-03-09 after v1.1 milestone*
+*Last updated: 2026-03-09 after v1.2 milestone start*
