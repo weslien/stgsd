@@ -4,7 +4,7 @@
 
 - v1.0 Core Loop — Phases 1-6 (shipped 2026-03-04)
 - v1.1 Full Coverage — Phases 7-12 (shipped 2026-03-09)
-- v1.2 Patch Completion & Verification — Phases 13-15 (in progress)
+- v1.2 Patch Completion & Verification — Phases 13, 15 (in progress)
 
 ## Phases
 
@@ -34,46 +34,32 @@
 
 ### v1.2 Patch Completion & Verification (In Progress)
 
-**Milestone Goal:** Ship the remaining 8 GSD workflow patches and build automated verification that all patches survive /gsd:update.
+**Milestone Goal:** Complete the final debug workflow patch, verify all stclaude patches (including upstream-adopted ones) are correctly applied, and build automated verification that patches survive /gsd:update.
 
-- [ ] **Phase 13: Session & Phase Workflow Patches** - Patch pause/resume-work and add/insert/remove-phase workflows to use stclaude
-- [ ] **Phase 14: Todo & Debug Workflow Patches** - Patch add-todo, check-todos, and debug workflows to use stclaude
+**Scope revision:** 7 of 8 original patch targets were adopted upstream by GSD. Only debug.md remains.
+
+- [ ] **Phase 13: Debug Patch & Upstream Verification** - Patch debug.md command, verify upstream adoptions, mark completed requirements
 - [ ] **Phase 15: Patch Verification Tooling** - Automated scripts to validate all stclaude patches are applied and survive updates
 
 ## Phase Details
 
-### Phase 13: Session & Phase Workflow Patches
-**Goal**: Users can pause/resume work sessions and manage phases entirely through stclaude-backed workflows
+### Phase 13: Debug Patch & Upstream Verification
+**Goal**: Patch the debug command to use stclaude, verify all upstream-adopted workflows are correct, and mark completed requirements
 **Depends on**: Phase 12
-**Requirements**: SESS-04, SESS-05, PHSE-06, PHSE-07, PHSE-08
+**Requirements**: SESS-04, SESS-05, PHSE-06, PHSE-07, PHSE-08, TODO-05, TODO-06, DBG-05
 **Success Criteria** (what must be TRUE):
-  1. Running /gsd:pause-work writes session checkpoint via stclaude write-checkpoint instead of creating .continue-here.md
-  2. Running /gsd:resume-work restores session state via stclaude get-checkpoint instead of reading .continue-here.md
-  3. Running /gsd:add-phase creates a new phase via stclaude add-phase instead of editing ROADMAP.md directly
-  4. Running /gsd:insert-phase inserts a decimal phase via stclaude insert-phase instead of editing ROADMAP.md directly
-  5. Running /gsd:remove-phase removes a phase via stclaude remove-phase instead of editing ROADMAP.md and renaming directories
+  1. /gsd:debug uses stclaude get-state instead of gsd-tools.cjs state load
+  2. /gsd:debug uses stclaude get-debug instead of reading .planning/debug/*.md files
+  3. Upstream-adopted workflows verified: pause-work, resume-work, add/insert/remove-phase, add-todo, check-todos all use stclaude
+  4. All 8 patch requirements (SESS-04/05, PHSE-06/07/08, TODO-05/06, DBG-05) marked complete
 **Plans**: TBD
 
 Plans:
 - [ ] 13-01: TBD
-- [ ] 13-02: TBD
-
-### Phase 14: Todo & Debug Workflow Patches
-**Goal**: Users can manage todos and debug sessions entirely through stclaude-backed workflows
-**Depends on**: Phase 12
-**Requirements**: TODO-05, TODO-06, DBG-05
-**Success Criteria** (what must be TRUE):
-  1. Running /gsd:add-todo creates a todo via stclaude add-todo instead of writing to .planning/todos/ files
-  2. Running /gsd:check-todos lists and completes todos via stclaude list-todos/complete-todo instead of reading/moving .planning/todos/ files
-  3. Running /gsd:debug starts, queries, and closes debug sessions via stclaude write-debug/get-debug/close-debug instead of .planning/debug/ file I/O
-**Plans**: TBD
-
-Plans:
-- [ ] 14-01: TBD
 
 ### Phase 15: Patch Verification Tooling
 **Goal**: Automated confidence that all stclaude patches are correctly applied and survive GSD updates
-**Depends on**: Phase 13, Phase 14
+**Depends on**: Phase 13
 **Requirements**: VRFY-01, VRFY-02, VRFY-03
 **Success Criteria** (what must be TRUE):
   1. A hash-check script reports pass/fail for each patched workflow file against known-good hashes
@@ -88,7 +74,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases 13 and 14 can execute in parallel (no dependency between them). Phase 15 depends on both.
+Phase 13 first (patch + verify upstream), then Phase 14 (verification tooling depends on knowing what to verify).
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -104,6 +90,5 @@ Phases 13 and 14 can execute in parallel (no dependency between them). Phase 15 
 | 10. Todo & Debug Tracking | v1.1 | 2/2 | Complete | 2026-03-04 |
 | 11. Codebase Mapping | v1.1 | 2/2 | Complete | 2026-03-04 |
 | 12. Workflow Patch Completion | v1.1 | 4/4 | Complete | 2026-03-05 |
-| 13. Session & Phase Workflow Patches | v1.2 | 0/? | Not started | - |
-| 14. Todo & Debug Workflow Patches | v1.2 | 0/? | Not started | - |
-| 15. Patch Verification Tooling | v1.2 | 0/? | Not started | - |
+| 13. Debug Patch & Upstream Verification | v1.2 | 0/? | Not started | - |
+| 14. Patch Verification Tooling | v1.2 | 0/? | Not started | - |

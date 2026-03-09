@@ -5,27 +5,29 @@
 
 ## v1.2 Requirements
 
-Requirements for Patch Completion & Verification milestone. Completes the 8 remaining GSD workflow patches from v1.1 and adds automated patch verification tooling.
+Requirements for Patch Completion & Verification milestone. Completes the last remaining GSD workflow patch and verifies all patches (including upstream-adopted) survive updates.
 
-### Session Patches
+**Scope note:** 7 of 8 original patch targets were adopted upstream by GSD v1.22.0. These are marked complete (adopted upstream) — only DBG-05 requires a local patch.
 
-- [ ] **SESS-04**: GSD patch for pause-work workflow replacing .continue-here.md writes with stclaude write-checkpoint calls
-- [ ] **SESS-05**: GSD patch for resume-work workflow replacing .continue-here.md reads with stclaude get-checkpoint calls
+### Session Patches (Adopted Upstream)
 
-### Phase Patches
+- [x] **SESS-04**: GSD patch for pause-work workflow replacing .continue-here.md writes with stclaude write-checkpoint calls *(adopted upstream)*
+- [x] **SESS-05**: GSD patch for resume-work workflow replacing .continue-here.md reads with stclaude get-checkpoint calls *(adopted upstream)*
 
-- [ ] **PHSE-06**: GSD patch for add-phase workflow replacing ROADMAP.md edits with stclaude add-phase calls
-- [ ] **PHSE-07**: GSD patch for insert-phase workflow replacing ROADMAP.md edits with stclaude insert-phase calls
-- [ ] **PHSE-08**: GSD patch for remove-phase workflow replacing ROADMAP.md edits and directory renames with stclaude remove-phase calls
+### Phase Patches (Adopted Upstream)
 
-### Todo Patches
+- [x] **PHSE-06**: GSD patch for add-phase workflow replacing ROADMAP.md edits with stclaude add-phase calls *(adopted upstream)*
+- [x] **PHSE-07**: GSD patch for insert-phase workflow replacing ROADMAP.md edits with stclaude insert-phase calls *(adopted upstream)*
+- [x] **PHSE-08**: GSD patch for remove-phase workflow replacing ROADMAP.md edits and directory renames with stclaude remove-phase calls *(adopted upstream)*
 
-- [ ] **TODO-05**: GSD patch for add-todo workflow replacing .planning/todos/ file writes with stclaude add-todo calls
-- [ ] **TODO-06**: GSD patch for check-todos workflow replacing .planning/todos/ file reads and moves with stclaude complete-todo calls
+### Todo Patches (Adopted Upstream)
+
+- [x] **TODO-05**: GSD patch for add-todo workflow replacing .planning/todos/ file writes with stclaude add-todo calls *(adopted upstream)*
+- [x] **TODO-06**: GSD patch for check-todos workflow replacing .planning/todos/ file reads and moves with stclaude complete-todo calls *(adopted upstream)*
 
 ### Debug Patch
 
-- [ ] **DBG-05**: GSD patch for debug workflow replacing .planning/debug/ file I/O with stclaude write-debug/get-debug/close-debug calls
+- [ ] **DBG-05**: GSD patch for debug workflow replacing gsd-tools.cjs state load and .planning/debug/ file reads with stclaude get-state/get-debug calls
 
 ### Patch Verification
 
@@ -47,14 +49,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SESS-04 | Phase 13 | Pending |
-| SESS-05 | Phase 13 | Pending |
-| PHSE-06 | Phase 13 | Pending |
-| PHSE-07 | Phase 13 | Pending |
-| PHSE-08 | Phase 13 | Pending |
-| TODO-05 | Phase 14 | Pending |
-| TODO-06 | Phase 14 | Pending |
-| DBG-05 | Phase 14 | Pending |
+| SESS-04 | Phase 13 | Complete (upstream) |
+| SESS-05 | Phase 13 | Complete (upstream) |
+| PHSE-06 | Phase 13 | Complete (upstream) |
+| PHSE-07 | Phase 13 | Complete (upstream) |
+| PHSE-08 | Phase 13 | Complete (upstream) |
+| TODO-05 | Phase 13 | Complete (upstream) |
+| TODO-06 | Phase 13 | Complete (upstream) |
+| DBG-05 | Phase 13 | Pending |
 | VRFY-01 | Phase 15 | Pending |
 | VRFY-02 | Phase 15 | Pending |
 | VRFY-03 | Phase 15 | Pending |
@@ -63,7 +65,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v1.2 requirements: 11 total
 - Mapped to phases: 11
 - Unmapped: 0
+- Complete (upstream): 7
+- Remaining: 4
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 after roadmap creation*
+*Last updated: 2026-03-09 after scope revision (7/8 patches adopted upstream)*
