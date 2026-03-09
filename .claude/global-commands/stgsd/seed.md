@@ -1,5 +1,5 @@
 ---
-name: stclaude:seed
+name: stgsd:seed
 description: Bootstrap project data into SpacetimeDB for the current repo. Reads .planning/PROJECT.md and ROADMAP.md to derive seed parameters.
 allowed-tools:
   - Read
@@ -8,18 +8,18 @@ allowed-tools:
   - Grep
 ---
 <objective>
-Seed a new project in SpacetimeDB for the current repo by reading the GSD planning files and calling `stclaude seed`. Requires `/stclaude:setup` to have been run first.
+Seed a new project in SpacetimeDB for the current repo by reading the GSD planning files and calling `stgsd seed`. Requires `/stgsd:setup` to have been run first.
 </objective>
 
 <process>
 
-## Step 1: Verify stclaude is configured for this repo
+## Step 1: Verify stgsd is configured for this repo
 
 ```bash
-~/.claude/bin/stclaude setup
+~/.claude/bin/stgsd setup
 ```
 
-If it reports `NOT_CONFIGURED`, tell the user to run `/stclaude:setup` first. If it reports `Already configured`, proceed.
+If it reports `NOT_CONFIGURED`, tell the user to run `/stgsd:setup` first. If it reports `Already configured`, proceed.
 
 ## Step 2: Gather project metadata
 
@@ -41,10 +41,10 @@ If `.planning/PROJECT.md` doesn't exist, ask the user for the project name, desc
 
 ## Step 3: Build and run the seed command
 
-Construct the `stclaude seed` command with the gathered data:
+Construct the `stgsd seed` command with the gathered data:
 
 ```bash
-~/.claude/bin/stclaude seed \
+~/.claude/bin/stgsd seed \
   --name "<project name>" \
   --description "<description>" \
   --core-value "<core value>" \
@@ -76,7 +76,7 @@ Other notes:
 
 ## Step 4: Verify
 
-Run `~/.claude/bin/stclaude` to confirm the project shows up with correct data.
+Run `~/.claude/bin/stgsd` to confirm the project shows up with correct data.
 
 Report the project name, ID, and number of phases/requirements seeded.
 </process>

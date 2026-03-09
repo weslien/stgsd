@@ -29,14 +29,14 @@ function wipeDatabase(gitRemoteUrl: string): void {
   if (!config) {
     throw new CliError(
       ErrorCodes.NOT_CONFIGURED,
-      'stclaude not configured for this repo. Run: stclaude setup',
+      'stgsd not configured for this repo. Run: stgsd setup',
     );
   }
 
   let spacetimeBin: string;
   try {
     const whichCmd = process.platform === 'win32' ? 'where spacetime' : 'which spacetime';
-    const shellOpt = process.platform === 'win32' ? undefined : '/bin/zsh';
+    const shellOpt = process.platform === 'win32' ? undefined : (process.env.SHELL || '/bin/sh');
     spacetimeBin = execSync(whichCmd, {
       encoding: 'utf-8',
       ...(shellOpt ? { shell: shellOpt } : {}),

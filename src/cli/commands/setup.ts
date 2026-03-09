@@ -22,13 +22,13 @@ interface SetupResult {
 function formatSetup(data: unknown): string {
   const { repoId, database, uri, gitRemoteUrl } = data as SetupResult;
   return [
-    'stclaude configured for this repo:',
+    'stgsd configured for this repo:',
     `  Repo ID:    ${repoId}`,
     `  Database:   ${database}`,
     `  Server:     ${uri}`,
     `  Git Remote: ${gitRemoteUrl}`,
     '',
-    'Next: run `stclaude seed --name <name> --description <desc> --core-value <value>` to bootstrap your project.',
+    'Next: run `stgsd seed --name <name> --description <desc> --core-value <value>` to bootstrap your project.',
   ].join('\n');
 }
 
@@ -75,7 +75,7 @@ export function registerSetupCommand(program: Command): void {
         if (!moduleExists()) {
           throw new CliError(
             ErrorCodes.NOT_CONFIGURED,
-            `Module source not found at ${modulePath()}/src/index.ts. Run: cd <spacetimeclaude> && bun run install:cli`,
+            `Module source not found at ${modulePath()}/src/index.ts. Run: cd <stgsd> && npm run install:cli`,
           );
         }
 
@@ -83,7 +83,7 @@ export function registerSetupCommand(program: Command): void {
         let spacetimeBin: string;
         try {
           const whichCmd = process.platform === 'win32' ? 'where spacetime' : 'which spacetime';
-          const shellOpt = process.platform === 'win32' ? undefined : '/bin/zsh';
+          const shellOpt = process.platform === 'win32' ? undefined : (process.env.SHELL || '/bin/sh');
           spacetimeBin = execSync(whichCmd, {
             encoding: 'utf-8',
             ...(shellOpt ? { shell: shellOpt } : {}),

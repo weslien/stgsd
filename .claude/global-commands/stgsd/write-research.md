@@ -1,5 +1,5 @@
 ---
-name: stclaude:write-research
+name: stgsd:write-research
 description: Persist phase research findings to SpacetimeDB
 allowed-tools:
   - Bash
@@ -13,7 +13,7 @@ Required options:
 - `--content <text>` — Research content (prose)
 
 ```bash
-~/.claude/bin/stclaude write-research [options]
+~/.claude/bin/stgsd write-research [options]
 ```
 
 If required arguments are missing, ask the user for them.

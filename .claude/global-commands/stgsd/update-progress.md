@@ -1,5 +1,5 @@
 ---
-name: stclaude:update-progress
+name: stgsd:update-progress
 description: Update project progress state (phase, plan, task, activity)
 allowed-tools:
   - Bash
@@ -15,7 +15,7 @@ Available options:
 - `--session-stopped <description>` — Set where session stopped
 
 ```bash
-~/.claude/bin/stclaude update-progress $ARGUMENTS
+~/.claude/bin/stgsd update-progress $ARGUMENTS
 ```
 
 If no arguments are provided, ask the user what they want to update.
