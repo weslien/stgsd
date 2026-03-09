@@ -47,23 +47,23 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SESS-04 | — | Pending |
-| SESS-05 | — | Pending |
-| PHSE-06 | — | Pending |
-| PHSE-07 | — | Pending |
-| PHSE-08 | — | Pending |
-| TODO-05 | — | Pending |
-| TODO-06 | — | Pending |
-| DBG-05 | — | Pending |
-| VRFY-01 | — | Pending |
-| VRFY-02 | — | Pending |
-| VRFY-03 | — | Pending |
+| SESS-04 | Phase 13 | Pending |
+| SESS-05 | Phase 13 | Pending |
+| PHSE-06 | Phase 13 | Pending |
+| PHSE-07 | Phase 13 | Pending |
+| PHSE-08 | Phase 13 | Pending |
+| TODO-05 | Phase 14 | Pending |
+| TODO-06 | Phase 14 | Pending |
+| DBG-05 | Phase 14 | Pending |
+| VRFY-01 | Phase 15 | Pending |
+| VRFY-02 | Phase 15 | Pending |
+| VRFY-03 | Phase 15 | Pending |
 
 **Coverage:**
 - v1.2 requirements: 11 total
-- Mapped to phases: 0
-- Unmapped: 11 ⚠️
+- Mapped to phases: 11
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 after initial definition*
+*Last updated: 2026-03-09 after roadmap creation*

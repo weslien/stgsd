@@ -5,7 +5,7 @@ milestone_name: Patch Completion & Verification
 status: active
 last_updated: "2026-03-09"
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,25 +18,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** GSD's planning state becomes structured, queryable data instead of flat files
-**Current focus:** Defining requirements for v1.2
+**Current focus:** Phase 13 — Session & Phase Workflow Patches
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-09 — Milestone v1.2 started
+Phase: 13 of 15 (Session & Phase Workflow Patches)
+Plan: — (not yet planned)
+Status: Ready to plan
+Last activity: 2026-03-09 — Roadmap created for v1.2
+
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
-**Velocity (from v1.0):**
-- Total plans completed: 15
-- Average duration: 2.93 min
-- Total execution time: 0.68 hours
-
-**v1.1 (Phases 7-12):**
-- 6 phases, ~14 plans
-- Completed in 1 day (2026-03-04), patches through 2026-03-09
+**Velocity (from v1.0 + v1.1):**
+- Total plans completed: 29
+- v1.0: 15 plans in 0.68 hours
+- v1.1: 14 plans in ~1 day
 
 ## Accumulated Context
 
@@ -44,9 +42,9 @@ Last activity: 2026-03-09 — Milestone v1.2 started
 
 Full decision log in PROJECT.md Key Decisions table.
 
-- v1.1 grouped by feature area (schema+CLI+patch per phase)
-- Phase 12 added for cross-cutting workflow patches
-- Commander.js `-V` flag to avoid `--version` conflict
+- v1.2 groups 8 remaining patches into 2 parallel phases (session+phase, todo+debug)
+- Verification tooling gets its own phase (depends on patches completing first)
+- Phases 13 and 14 can execute in parallel — no dependency between them
 
 ### Pending Todos
 
@@ -59,5 +57,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-09
-Stopped at: v1.2 milestone initialization
+Stopped at: Roadmap created for v1.2, ready to plan Phase 13
 Resume file: None
