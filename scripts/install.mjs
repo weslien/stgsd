@@ -8,7 +8,8 @@
  * 2. On Unix: chmod +x, create symlinks in ~/.claude/bin and ~/.local/bin
  * 3. On Windows: create .cmd wrapper and Git Bash wrapper
  * 4. Copies SpacetimeDB module source to ~/.stgsd/module/
- * 5. Runs npm/bun install in the module directory
+ * 5. Copies patch-manifest.json to ~/.stgsd/
+ * 6. Runs npm/bun install in the module directory
  */
 
 import { homedir } from 'node:os';
@@ -72,7 +73,14 @@ for (const file of ['package.json', 'tsconfig.json']) {
 }
 console.log(`  Installed to ${STGSD_MODULE}`);
 
-// Step 3: Install module dependencies
+// Step 3: Copy patch-manifest.json to ~/.stgsd/
+const STGSD_DIR = process.env.STGSD_HOME || join(HOME, '.stgsd');
+if (existsSync('patch-manifest.json')) {
+  cpSync('patch-manifest.json', join(STGSD_DIR, 'patch-manifest.json'));
+  console.log(`  Copied patch-manifest.json to ${STGSD_DIR}`);
+}
+
+// Step 4: Install module dependencies
 console.log('Installing module dependencies...');
 try {
   execSync('npm install', { cwd: STGSD_MODULE, stdio: 'pipe', timeout: 60_000 });

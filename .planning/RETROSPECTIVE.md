@@ -47,6 +47,49 @@
 
 ---
 
+## Milestone: v1.1 — Full Coverage
+
+**Shipped:** 2026-03-09
+**Phases:** 6 | **Plans:** ~14
+
+### What Was Built
+- 6 new SpacetimeDB tables (milestone, milestone_audit, session_checkpoint, todo, debug_session, codebase_map)
+- Milestone lifecycle CLI (write-milestone, get-milestones, write-audit) with GSD workflow patches
+- Phase management CLI (add-phase, insert-phase, remove-phase) with decimal numbering support
+- Session checkpoint CLI (write-session, get-session) for pause/resume context
+- Todo tracking CLI (add-todo, list-todos, complete-todo) and debug session CLI (write/get/close-debug)
+- Codebase mapping CLI (write/get-codebase-map) with GSD map-codebase workflow patches
+- All 10 remaining GSD workflow files patched to use stclaude instead of gsd-tools.cjs
+
+### What Worked
+- **Feature-area grouping**: Schema+CLI+patch per phase enabled parallel development and clear ownership
+- **Established architecture carried forward**: No architectural decisions needed in v1.1 — patterns from v1.0 applied directly
+- **Speed**: 6 phases completed primarily in 1 day (2026-03-04), with patch cleanup through 2026-03-05
+
+### What Was Inefficient
+- **Requirements tracking fell behind**: 0/38 requirements formally checked during execution. CLI commands exist but REQUIREMENTS.md wasn't maintained
+- **No SUMMARY.md files created for phases 7-11**: Phase summaries weren't written, reducing archival quality
+- **Plan counts in SpacetimeDB show 0**: Phase execution wasn't tracked through SpacetimeDB for most phases
+- **8 GSD workflow patches not created**: Session pause/resume, phase add/insert/remove, todo add/check, and debug workflows not patched
+
+### Patterns Established
+- `build:cli` vs `build` distinction in package.json for CLI bundling with shebang and createRequire
+- Commander.js `-V` for program version to avoid `--version` subcommand conflicts
+- Feature-area phase grouping works when architecture is already established
+
+### Key Lessons
+1. **Maintain requirements tracking during execution** — letting it slip to 0/38 means the milestone ships with unclear coverage
+2. **Write SUMMARY.md files as phases complete** — skipping summaries degrades archival and retrospective quality
+3. **Track plan execution in SpacetimeDB even for quick phases** — 0/0 plan counts make milestone stats unreliable
+4. **The shebang `#!/usr/bin/env node` gets escaped by zsh** — use heredocs or Python to write shebangs, never shell echo/printf
+
+### Cost Observations
+- Model mix: ~70% opus, ~30% sonnet
+- Sessions: ~4 sessions over 5 days
+- Notable: Bulk of implementation done in single day; remainder was patch refinement
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -54,8 +97,11 @@
 | Milestone | Phases | Plans | Key Change |
 |-----------|--------|-------|------------|
 | v1.0 | 6 | 15 | Schema-first approach with layered phases |
+| v1.1 | 6 | ~14 | Feature-area grouping (schema+CLI+patch per phase) |
 
 ### Top Lessons (Verified Across Milestones)
 
 1. Schema-first design prevents rework in downstream phases
 2. Agent patches via text replacement are a viable, low-friction integration strategy
+3. Established architecture accelerates subsequent milestones — v1.1 needed zero architectural decisions
+4. Requirements tracking must be maintained during execution, not deferred to completion
