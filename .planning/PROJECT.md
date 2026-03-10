@@ -13,10 +13,10 @@ GSD's planning state becomes structured, queryable data instead of flat files â€
 **Goal:** Ship the 4 remaining GSD workflow patches and build automated verification that all patches survive `/gsd:update`.
 
 **Target features:**
-- Patch pause-work/resume-work workflows to use stclaude session commands
-- Patch add-phase/insert-phase/remove-phase workflows to use stclaude phase commands
-- Patch add-todo/check-todos workflows to use stclaude todo commands
-- Patch debug workflow to use stclaude debug commands
+- Patch pause-work/resume-work workflows to use stgsd session commands
+- Patch add-phase/insert-phase/remove-phase workflows to use stgsd phase commands
+- Patch add-todo/check-todos workflows to use stgsd todo commands
+- Patch debug workflow to use stgsd debug commands
 - Automated patch verification script (hash + content checks)
 
 ## Requirements
@@ -38,7 +38,7 @@ GSD's planning state becomes structured, queryable data instead of flat files â€
 - Todo tracking CLI (add-todo, list-todos, complete-todo) â€” v1.1
 - Debug session CLI (write-debug, get-debug, close-debug) â€” v1.1
 - Codebase mapping CLI (write-codebase-map, get-codebase-map) and GSD patches â€” v1.1
-- All 10 remaining GSD workflow files patched to use stclaude instead of gsd-tools.cjs â€” v1.1
+- All 10 remaining GSD workflow files patched to use stgsd instead of gsd-tools.cjs â€” v1.1
 
 ### Active
 
@@ -63,7 +63,7 @@ GSD's planning state becomes structured, queryable data instead of flat files â€
 
 **Tech stack:** SpacetimeDB v2 TypeScript SDK, Commander.js, esbuild, Node.js 22+.
 
-**Architecture:** `stclaude` CLI auto-detects project from git remote URL, connects to SpacetimeDB (local or maincloud), executes query/mutation, returns JSON. GSD agent `.md` files patched with targeted text replacements to call `stclaude` instead of `gsd-tools.cjs`.
+**Architecture:** `stgsd` CLI auto-detects project from git remote URL, connects to SpacetimeDB (local or maincloud), executes query/mutation, returns JSON. GSD agent `.md` files patched with targeted text replacements to call `stgsd` instead of `gsd-tools.cjs`.
 
 ## Constraints
 
