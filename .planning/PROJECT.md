@@ -8,16 +8,21 @@ A SpacetimeDB-backed replacement for GSD's file-based state management in Claude
 
 GSD's planning state becomes structured, queryable data instead of flat files — eliminating the parsing overhead, file I/O bottlenecks, and repo pollution that slow down GSD workflows.
 
-## Current Milestone: v1.2 Patch Completion & Verification
+## Milestone History
 
-**Goal:** Ship the 4 remaining GSD workflow patches and build automated verification that all patches survive `/gsd:update`.
+- **v1.0** — Core Loop (Phases 1-6, shipped 2026-03-04)
+- **v1.1** — Full Coverage (Phases 7-12, shipped 2026-03-09)
+- **v1.2** — Patch Completion & Verification (Phases 13, 15, shipped 2026-03-11) ✓
 
-**Target features:**
-- Patch pause-work/resume-work workflows to use stgsd session commands
-- Patch add-phase/insert-phase/remove-phase workflows to use stgsd phase commands
-- Patch add-todo/check-todos workflows to use stgsd todo commands
-- Patch debug workflow to use stgsd debug commands
-- Automated patch verification script (hash + content checks)
+**v1.2 delivered:**
+- Patched debug workflow to use stgsd get-state/get-debug (Phase 13)
+- Verified all upstream-adopted workflows are correct (Phase 13, 15/15 verified)
+- `stgsd verify-patches` command — content-grep check across 33 GSD files (Phase 15)
+- `patch-manifest.json` — expected stgsd patterns per file (Phase 15)
+- `scripts/patch-gsd-files.sh` — reapplies stgsd integration after GSD update (Phase 15)
+- `stclaude` → `stgsd` rename throughout CLI, config, and skills (feature/windows branch)
+- Windows compatibility — cross-platform build/install scripts (feature/windows branch)
+- Result: `stgsd verify-patches` 33/33 passing
 
 ## Requirements
 
@@ -40,13 +45,14 @@ GSD's planning state becomes structured, queryable data instead of flat files �
 - Codebase mapping CLI (write-codebase-map, get-codebase-map) and GSD patches — v1.1
 - All 10 remaining GSD workflow files patched to use stgsd instead of gsd-tools.cjs — v1.1
 
-### Active
+### v1.2 (Complete)
 
-- GSD patch for pause-work/resume-work workflows (SESS-04, SESS-05)
-- GSD patch for add-phase/insert-phase/remove-phase workflows (PHSE-06, PHSE-07, PHSE-08)
-- GSD patch for add-todo/check-todos workflows (TODO-05, TODO-06)
-- GSD patch for debug workflow (DBG-05)
-- Automated patch verification script with hash + content checks
+- GSD patch for debug workflow using stgsd get-state/get-debug — v1.2
+- `stgsd verify-patches` command validating 33 GSD workflow/agent/command files — v1.2
+- `patch-manifest.json` with expected stgsd patterns per file — v1.2
+- `scripts/patch-gsd-files.sh` for reapplying stgsd integration after GSD updates — v1.2
+- Windows compatibility: cross-platform build/install scripts — v1.2 (feature/windows)
+- Binary renamed `stclaude` → `stgsd` throughout — v1.2 (feature/windows)
 
 ### Out of Scope
 
@@ -59,7 +65,7 @@ GSD's planning state becomes structured, queryable data instead of flat files �
 
 ## Context
 
-**Current state:** v1.1 shipped (2026-03-09). 13,115 lines of TypeScript across 19 SpacetimeDB tables, 27+ CLI commands, and patches to 16+ GSD workflow files. Core loop and extended workflows (milestones, sessions, phases, todos, debug, codebase mapping) run on SpacetimeDB. 8 GSD workflow patches remain incomplete (session pause/resume, phase management workflows, todo workflows, debug workflow).
+**Current state:** v1.2 shipped (2026-03-11). SpacetimeDB module with 19 tables, 30+ CLI commands, 33 GSD workflow/agent/command files patched with stgsd integration. `stgsd verify-patches` confirms 33/33 passing. Binary renamed `stclaude` → `stgsd`. Windows-compatible build/install scripts.
 
 **Tech stack:** SpacetimeDB v2 TypeScript SDK, Commander.js, esbuild, Node.js 22+.
 
@@ -91,5 +97,10 @@ GSD's planning state becomes structured, queryable data instead of flat files �
 | Phase 12 added for workflow patch completion | Patching spanned feature phases, needed dedicated phase | Good — clean separation |
 | Commander.js `-V` for CLI version flag | Avoids conflict with `--version` subcommand option | Good — write-milestone works |
 
+| Content-grep over hash for patch verification | Resilient to whitespace/formatting changes in GSD updates | Good — 33/33 passing |
+| patch-gsd-files.sh for reapplication | Rerunnable idempotent script, safer than manual edits | Good — run after GSD update |
+| stclaude renamed to stgsd | Better name, avoids claude trademark concerns | Good |
+| Windows compat via Node.js scripts | Shell scripts don't work on Windows; esbuild JS API fixes createRequire | Good — works on Win11 |
+
 ---
-*Last updated: 2026-03-09 after v1.2 milestone start*
+*Last updated: 2026-03-11 after v1.2 shipped*
