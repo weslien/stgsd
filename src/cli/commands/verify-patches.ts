@@ -42,9 +42,7 @@ interface VerifyResults {
 function resolveManifestPath(): string {
   // Check installed location first
   const installedManifest = path.join(
-    os.homedir(),
-    '.claude',
-    'stclaude',
+    process.env.STGSD_HOME || path.join(os.homedir(), '.stgsd'),
     'patch-manifest.json',
   );
   if (fs.existsSync(installedManifest)) {
@@ -185,7 +183,7 @@ export function registerVerifyPatchesCommand(program: Command): void {
       } catch {
         outputError(
           ErrorCodes.MANIFEST_NOT_FOUND,
-          'Could not find patch-manifest.json. Checked ~/.claude/stclaude/ and repo root.',
+          'Could not find patch-manifest.json. Checked ~/.stgsd/ and repo root.',
           opts,
         );
         return; // unreachable — outputError calls process.exit(1)

@@ -1,6 +1,6 @@
 {
   "dev": {
-    "run": "bun run dev"
+    "run": "npm run dev"
   },
   "server": "local",
   "database": "spacetimeclaude-gvhsi",
