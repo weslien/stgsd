@@ -1,5 +1,5 @@
 ---
-name: stclaude:write-summary
+name: stgsd:write-summary
 description: Persist a plan execution summary to SpacetimeDB
 allowed-tools:
   - Bash
@@ -21,7 +21,7 @@ Optional:
 - `--dependency-graph <text>` — Dependency graph metadata
 
 ```bash
-~/.claude/bin/stclaude write-summary [options]
+~/.claude/bin/stgsd write-summary [options]
 ```
 
 If required arguments are missing, ask the user for them.

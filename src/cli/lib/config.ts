@@ -11,9 +11,9 @@ export interface RepoConfig {
   createdAt: string;
 }
 
-const STCLAUDE_DIR = join(homedir(), '.claude', 'stclaude');
-const PROJECTS_DIR = join(STCLAUDE_DIR, 'projects');
-const MODULE_DIR = join(STCLAUDE_DIR, 'module');
+const STGSD_DIR = process.env.STGSD_HOME || join(homedir(), '.stgsd');
+const PROJECTS_DIR = join(STGSD_DIR, 'projects');
+const MODULE_DIR = join(STGSD_DIR, 'module');
 
 /**
  * Normalize a git remote URL for consistent hashing.
@@ -43,7 +43,7 @@ function configPath(repoId: string): string {
  * Generate a database name from a repo ID.
  */
 export function databaseName(repoId: string): string {
-  return `stclaude-${repoId}`;
+  return `stgsd-${repoId}`;
 }
 
 /**
@@ -65,7 +65,7 @@ export function requireConfig(gitRemoteUrl: string): RepoConfig {
   if (!config) {
     throw new CliError(
       ErrorCodes.NOT_CONFIGURED,
-      `stclaude not configured for this repo. Run: stclaude setup`,
+      `stgsd not configured for this repo. Run: stgsd setup`,
     );
   }
   return config;
@@ -82,7 +82,7 @@ export function writeConfig(config: RepoConfig): void {
 }
 
 /**
- * Path to the stclaude module source directory.
+ * Path to the stgsd module source directory.
  */
 export function modulePath(): string {
   return MODULE_DIR;

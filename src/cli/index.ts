@@ -36,8 +36,8 @@ import { registerGetCodebaseMapCommand } from './commands/get-codebase-map.js';
 import { registerVerifyPatchesCommand } from './commands/verify-patches.js';
 
 const program = new Command()
-  .name('stclaude')
-  .description('SpacetimeClaude - structured project state for Claude Code agents')
+  .name('stgsd')
+  .description('stgsd - structured project state for Claude Code agents')
   .version('0.0.1')
   .option('--json', 'Output machine-readable JSON envelope', false);
 

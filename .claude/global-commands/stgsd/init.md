@@ -1,5 +1,5 @@
 ---
-name: stclaude:init
+name: stgsd:init
 description: Assemble workflow context (progress, plan-phase, execute-phase)
 allowed-tools:
   - Bash
@@ -12,7 +12,7 @@ Subcommands:
 - `execute-phase <phase>` — Assemble execution workflow context for a phase
 
 ```bash
-~/.claude/bin/stclaude init $ARGUMENTS
+~/.claude/bin/stgsd init $ARGUMENTS
 ```
 
 If no subcommand was provided, ask the user which workflow context they need.

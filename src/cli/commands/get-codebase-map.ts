@@ -14,7 +14,7 @@ interface CodebaseMapItem {
 
 function formatGetCodebaseMap(data: unknown): string {
   const items = data as CodebaseMapItem[];
-  if (items.length === 0) return 'No codebase maps found. Run: stclaude write-codebase-map --type <type> --file <path>';
+  if (items.length === 0) return 'No codebase maps found. Run: stgsd write-codebase-map --type <type> --file <path>';
   return items.map(item =>
     `## ${item.docType}\n**Updated:** ${item.updatedAt}\n\n${item.content}`
   ).join('\n\n---\n\n');
@@ -41,7 +41,7 @@ export function registerGetCodebaseMapCommand(program: Command): void {
             if (rows.length === 0) {
               throw new CliError(
                 ErrorCodes.NOT_FOUND,
-                `No codebase map found for type "${options.type}". Run: stclaude write-codebase-map --type ${options.type} --file <path>`,
+                `No codebase map found for type "${options.type}". Run: stgsd write-codebase-map --type ${options.type} --file <path>`,
               );
             }
           }

@@ -1,5 +1,5 @@
 ---
-name: stclaude:write-context
+name: stgsd:write-context
 description: Persist phase context (user decisions) to SpacetimeDB
 allowed-tools:
   - Bash
@@ -12,7 +12,7 @@ Required options:
 - `--content <text>` or `--content-file <path>` — Context content (markdown)
 
 ```bash
-~/.claude/bin/stclaude write-context [options]
+~/.claude/bin/stgsd write-context [options]
 ```
 
 If required arguments are missing, ask the user for them.

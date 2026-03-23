@@ -1,5 +1,5 @@
 ---
-name: stclaude:write-verification
+name: stgsd:write-verification
 description: Persist a phase verification result to SpacetimeDB
 allowed-tools:
   - Bash
@@ -16,7 +16,7 @@ Optional:
 - `--recommended-fixes <text>` — Recommended fixes
 
 ```bash
-~/.claude/bin/stclaude write-verification [options]
+~/.claude/bin/stgsd write-verification [options]
 ```
 
 If required arguments are missing, ask the user for them.

@@ -1,5 +1,5 @@
 ---
-name: stclaude:write-plan
+name: stgsd:write-plan
 description: Persist a plan to SpacetimeDB
 allowed-tools:
   - Bash
@@ -25,7 +25,7 @@ Optional:
 - `--must-haves-json <json>` — Must-haves: `{truths, artifacts, keyLinks}`
 
 ```bash
-~/.claude/bin/stclaude write-plan [options]
+~/.claude/bin/stgsd write-plan [options]
 ```
 
 If required arguments are missing, ask the user for them.

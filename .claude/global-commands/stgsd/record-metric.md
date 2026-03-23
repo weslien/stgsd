@@ -1,5 +1,5 @@
 ---
-name: stclaude:record-metric
+name: stgsd:record-metric
 description: Record a velocity metric for a completed plan
 allowed-tools:
   - Bash
@@ -12,7 +12,7 @@ Required options:
 - `--phase <phase>` — Phase number
 
 ```bash
-~/.claude/bin/stclaude record-metric $ARGUMENTS
+~/.claude/bin/stgsd record-metric $ARGUMENTS
 ```
 
 If required arguments are missing, ask the user for them.
