@@ -31,7 +31,7 @@ GSD stores all planning state as markdown files: `STATE.md`, `ROADMAP.md`, `PLAN
 
 ## Quick Start (Inside Claude Code)
 
-There are two steps: **install** (once, in this repo) and **use** (in any project repo).
+Two steps: **install** (once, in this repo) and **use** (in any project repo).
 
 ### Step 1: Install — run in this repo
 
@@ -68,7 +68,7 @@ Open Claude Code in any git repo where you want SpacetimeDB-backed planning.
 /stgsd:setup
 ```
 
-That's it. When you start planning with `/gsd:new-project` or `/gsd:plan-phase`, the patched GSD agents will write state directly to SpacetimeDB — no seed needed.
+When you start planning with `/gsd:new-project` or `/gsd:plan-phase`, the patched GSD agents will write state directly to SpacetimeDB — no seed needed.
 
 ### Day-to-day workflow
 
@@ -81,7 +81,7 @@ Once set up, you use GSD exactly as before. The patched agents handle SpacetimeD
 | `/gsd:execute-phase` | Executor loads plans from SpacetimeDB, writes summaries via `stgsd write-summary` |
 | `/gsd:verify-work` | Verifier reads plans/summaries from SpacetimeDB, writes results via `stgsd write-verification` |
 
-You can also query state directly with the `/stgsd:*` commands:
+You can also query state directly:
 
 ```
 /stgsd:status                   # Current phase, plan, last activity
@@ -197,14 +197,42 @@ All `/stgsd:*` commands are used in your **project repos**, not in this repo.
 
 ### CLI Direct Usage
 
-The `stgsd` CLI can also be called directly from the terminal in any project repo:
+The `stgsd` CLI has 35 commands and can be called directly from the terminal. In addition to the slash commands above, the CLI includes commands for milestones, sessions, todos, debug sessions, codebase maps, and phase management:
 
 ```bash
-stgsd status
-stgsd get-state --json
-stgsd roadmap
-stgsd get-phase 3
-stgsd read-plan 3 1
+stgsd status                    # Current project status
+stgsd get-state --json          # Full state (JSON)
+stgsd roadmap                   # Phase overview
+stgsd get-phase 3               # Phase details
+stgsd read-plan 3 1             # Read a specific plan
+
+# Phase management
+stgsd add-phase                 # Append phase to roadmap
+stgsd insert-phase              # Insert phase between existing ones
+stgsd remove-phase              # Remove a phase
+
+# Milestones
+stgsd get-milestones            # List milestones
+stgsd write-milestone           # Create/update milestone
+stgsd write-audit               # Write milestone audit
+
+# Session management
+stgsd write-session             # Save session checkpoint
+stgsd get-session               # Restore session state
+
+# Todos
+stgsd add-todo                  # Capture a todo
+stgsd list-todos                # List pending todos
+stgsd complete-todo             # Mark todo done
+
+# Debug sessions
+stgsd write-debug               # Save debug session state
+stgsd get-debug                 # Restore debug session
+stgsd close-debug               # Close debug session
+
+# Codebase maps
+stgsd write-codebase-map        # Store codebase analysis
+stgsd get-codebase-map          # Retrieve codebase map
 ```
 
 All commands support `--json` for machine-readable output.
@@ -218,13 +246,13 @@ All commands support `--json` for machine-readable output.
 │  GSD Agents     │     │  stgsd       │     │  SpacetimeDB     │
 │  (patched .md)  │────▶│  CLI         │────▶│  (maincloud)     │
 │                 │     │              │     │                  │
-│  - executor     │     │  17 commands │     │  13 tables       │
-│  - planner      │     │  JSON output │     │  CRUD reducers   │
-│  - verifier     │     │  git identity│     │  seed_project    │
+│  - executor     │     │  35 commands │     │  19 tables       │
+│  - planner      │     │  JSON output │     │  53 reducers     │
+│  - verifier     │     │  git identity│     │                  │
 └─────────────────┘     └──────────────┘     └──────────────────┘
 ```
 
-1. **SpacetimeDB module** defines 13 tables (project, phase, plan, task, requirement, state, verification, research, etc.) with CRUD reducers
+1. **SpacetimeDB module** defines 19 tables (project, phase, plan, task, requirement, state, milestone, session, todo, debug, codebase, etc.) with 53 reducers
 2. **`stgsd` CLI** auto-detects the current project via git remote URL, connects to SpacetimeDB, and executes queries/mutations
 3. **GSD agent patches** replace file I/O calls in `gsd-executor.md`, `gsd-planner.md`, and `gsd-verifier.md` with `stgsd` commands
 4. **Slash commands** provide the interface for Claude Code, calling the CLI with proper context
@@ -279,12 +307,12 @@ If a patch fails to merge cleanly (due to major GSD restructuring), you'll need 
 stgsd/
 ├── spacetimedb/              # SpacetimeDB module (backend)
 │   └── src/
-│       ├── schema.ts         # 13 table definitions
-│       └── index.ts          # Reducers and lifecycle hooks
+│       ├── schema.ts         # 19 table definitions
+│       └── index.ts          # 53 reducers and lifecycle hooks
 ├── src/                      # CLI tool
 │   └── cli/
 │       ├── index.ts          # Commander.js entry point
-│       ├── commands/         # 17 command implementations
+│       ├── commands/         # 35 command implementations
 │       └── lib/              # Connection, git, output helpers
 ├── .claude/
 │   ├── commands/
@@ -296,9 +324,9 @@ stgsd/
 
 ## Roadmap: GSD Coverage
 
-stgsd v1 covers the **core loop** — the hot path that runs every session. The rest of GSD's workflows still use file-based `.planning/` state.
-
 ### v1.0 — Core Loop (shipped)
+
+The core planning/execution loop that runs every session:
 
 | GSD Command | Status | What stgsd handles |
 |---|---|---|
@@ -309,66 +337,40 @@ stgsd v1 covers the **core loop** — the hot path that runs every session. The 
 
 Patched agent files: `gsd-executor.md`, `gsd-planner.md`, `gsd-verifier.md`
 
-### Gaps — Not Yet Covered
+### v1.x — Extended Coverage (CLI-ready)
 
-**Project & Milestone Lifecycle**
-| GSD Command | What it does | File-based today |
+These features have CLI commands and backend tables but don't yet have slash commands or GSD agent patches:
+
+| Feature | CLI Commands | Status |
 |---|---|---|
-| `/gsd:new-project` | Initialize project with research and roadmap | Creates PROJECT.md, REQUIREMENTS.md, ROADMAP.md |
-| `/gsd:new-milestone` | Start next version cycle | Updates ROADMAP.md, creates requirements |
-| `/gsd:complete-milestone` | Archive shipped version | Creates milestone archives, tags git |
-| `/gsd:audit-milestone` | Pre-completion verification | Reads all summaries and verifications |
-| `/gsd:plan-milestone-gaps` | Create phases to close audit gaps | Reads audit, creates gap-closure phases |
+| Milestone lifecycle | `get-milestones`, `write-milestone`, `write-audit` | CLI only |
+| Session management | `write-session`, `get-session` | CLI only |
+| Phase management | `add-phase`, `insert-phase`, `remove-phase` | CLI only |
+| Todo tracking | `add-todo`, `list-todos`, `complete-todo` | CLI only |
+| Debug sessions | `write-debug`, `get-debug`, `close-debug` | CLI only |
+| Codebase maps | `write-codebase-map`, `get-codebase-map` | CLI only |
 
-**Phase Management**
-| GSD Command | What it does | File-based today |
-|---|---|---|
-| `/gsd:discuss-phase` | Capture design decisions before planning | Creates CONTEXT.md |
-| `/gsd:research-phase` | Standalone research (usually via plan-phase) | Creates RESEARCH.md |
-| `/gsd:add-phase` | Append phase to roadmap | Edits ROADMAP.md |
-| `/gsd:insert-phase` | Insert urgent phase between existing ones | Edits ROADMAP.md, renumbers |
-| `/gsd:remove-phase` | Remove phase and update dependencies | Edits ROADMAP.md |
-| `/gsd:list-phase-assumptions` | Surface Claude's assumptions before planning | Reads CONTEXT.md |
+### Not Yet Covered
 
-**Session Management**
-| GSD Command | What it does | File-based today |
-|---|---|---|
-| `/gsd:pause-work` | Save resume state when stopping mid-phase | Creates CONTINUE-HERE.md |
-| `/gsd:resume-work` | Restore context from previous session | Reads CONTINUE-HERE.md |
-| `/gsd:quick` | Fast task with GSD guarantees, skip optional agents | Minimal PLAN.md |
+These GSD workflows still use file-based `.planning/` state and have no stgsd equivalent yet:
 
-**Auxiliary**
-| GSD Command | What it does | File-based today |
-|---|---|---|
-| `/gsd:add-todo` | Capture idea/task during session | Creates .planning/todos/ files |
-| `/gsd:check-todos` | List and manage pending todos | Reads .planning/todos/ |
-| `/gsd:debug` | Systematic debugging with persistent state | Creates .planning/debug/ sessions |
-| `/gsd:map-codebase` | Analyze repo structure with parallel agents | Creates .planning/codebase/ maps |
-| `/gsd:add-tests` | Generate tests for completed phase | Creates phase test files |
-| `/gsd:health` | Diagnose planning directory issues | Reads .planning/ structure |
-| `/gsd:cleanup` | Archive old phase directories | Moves .planning/phases/ |
-
-**Config & Meta** (no state migration needed)
-| GSD Command | Status |
+| GSD Command | What it does |
 |---|---|
-| `/gsd:settings` | Config-only, no planning state |
-| `/gsd:set-profile` | Config-only |
-| `/gsd:update` | Updates GSD itself |
-| `/gsd:reapply-patches` | Reapplies stgsd patches after update |
-| `/gsd:help` | Informational |
+| `/gsd:new-project` | Initialize project with research and roadmap |
+| `/gsd:list-phase-assumptions` | Surface Claude's assumptions before planning |
+| `/gsd:add-tests` | Generate tests for completed phase |
+| `/gsd:health` | Diagnose planning directory issues |
+| `/gsd:cleanup` | Archive old phase directories |
+
+**Config & Meta** (no state migration needed): `/gsd:settings`, `/gsd:set-profile`, `/gsd:update`, `/gsd:reapply-patches`, `/gsd:help`
 
 ### v2 — Planned
 
-| Feature | Requirements | Priority |
-|---|---|---|
-| Milestone lifecycle (new, complete, audit) | EXT-05, EXT-06 | High — most impactful gap |
-| Session management (pause/resume) | EXT-04 | High — daily workflow |
-| Phase management (add/insert/remove) | EXT-04 | Medium |
-| Todo tracking | EXT-01 | Medium |
-| Debug session persistence | EXT-02 | Low |
-| Codebase mapping storage | EXT-03 | Low |
-| Cross-project memory and patterns | XPRJ-01, XPRJ-02, XPRJ-03 | Future |
-| Multi-agent coordination via subscriptions | MAGT-01, MAGT-02 | Future |
+| Feature | Priority |
+|---|---|
+| Slash commands + GSD patches for v1.x features | High |
+| Cross-project memory and patterns | Future |
+| Multi-agent coordination via subscriptions | Future |
 
 ## Troubleshooting
 
