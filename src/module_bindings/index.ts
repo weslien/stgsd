@@ -118,13 +118,13 @@ const tablesSchema = __schema({
   codebases: __table({
     name: 'codebase_map',
     indexes: [
-      { name: 'codebase_map_doc_type', algorithm: 'btree', columns: [
+      { name: 'codebase_map_doc_type', accessor: 'codebase_map_doc_type', algorithm: 'btree', columns: [
         'docType',
       ] },
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'codebase_map_project_id', algorithm: 'btree', columns: [
+      { name: 'codebase_map_project_id', accessor: 'codebase_map_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -135,10 +135,10 @@ const tablesSchema = __schema({
   config: __table({
     name: 'config',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'config_project_id', algorithm: 'btree', columns: [
+      { name: 'config_project_id', accessor: 'config_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -149,10 +149,10 @@ const tablesSchema = __schema({
   continueHere: __table({
     name: 'continue_here',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'continue_here_project_id', algorithm: 'btree', columns: [
+      { name: 'continue_here_project_id', accessor: 'continue_here_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -163,13 +163,13 @@ const tablesSchema = __schema({
   debugSession: __table({
     name: 'debug_session',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'debug_session_project_id', algorithm: 'btree', columns: [
+      { name: 'debug_session_project_id', accessor: 'debug_session_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
-      { name: 'debug_session_status', algorithm: 'btree', columns: [
+      { name: 'debug_session_status', accessor: 'debug_session_status', algorithm: 'btree', columns: [
         'status',
       ] },
     ],
@@ -180,13 +180,13 @@ const tablesSchema = __schema({
   milestone: __table({
     name: 'milestone',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'milestone_project_id', algorithm: 'btree', columns: [
+      { name: 'milestone_project_id', accessor: 'milestone_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
-      { name: 'milestone_status', algorithm: 'btree', columns: [
+      { name: 'milestone_status', accessor: 'milestone_status', algorithm: 'btree', columns: [
         'status',
       ] },
     ],
@@ -197,16 +197,16 @@ const tablesSchema = __schema({
   milestoneAudit: __table({
     name: 'milestone_audit',
     indexes: [
-      { name: 'milestone_audit_status', algorithm: 'btree', columns: [
+      { name: 'milestone_audit_status', accessor: 'milestone_audit_status', algorithm: 'btree', columns: [
         'auditStatus',
       ] },
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'milestone_audit_milestone_id', algorithm: 'btree', columns: [
+      { name: 'milestone_audit_milestone_id', accessor: 'milestone_audit_milestone_id', algorithm: 'btree', columns: [
         'milestoneId',
       ] },
-      { name: 'milestone_audit_project_id', algorithm: 'btree', columns: [
+      { name: 'milestone_audit_project_id', accessor: 'milestone_audit_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -217,10 +217,10 @@ const tablesSchema = __schema({
   mustHave: __table({
     name: 'must_have',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'must_have_plan_id', algorithm: 'btree', columns: [
+      { name: 'must_have_plan_id', accessor: 'must_have_plan_id', algorithm: 'btree', columns: [
         'planId',
       ] },
     ],
@@ -231,10 +231,10 @@ const tablesSchema = __schema({
   phase: __table({
     name: 'phase',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'phase_project_id', algorithm: 'btree', columns: [
+      { name: 'phase_project_id', accessor: 'phase_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -245,10 +245,10 @@ const tablesSchema = __schema({
   phaseContext: __table({
     name: 'phase_context',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'phase_context_phase_id', algorithm: 'btree', columns: [
+      { name: 'phase_context_phase_id', accessor: 'phase_context_phase_id', algorithm: 'btree', columns: [
         'phaseId',
       ] },
     ],
@@ -259,10 +259,10 @@ const tablesSchema = __schema({
   plan: __table({
     name: 'plan',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'plan_phase_id', algorithm: 'btree', columns: [
+      { name: 'plan_phase_id', accessor: 'plan_phase_id', algorithm: 'btree', columns: [
         'phaseId',
       ] },
     ],
@@ -273,10 +273,10 @@ const tablesSchema = __schema({
   planSummary: __table({
     name: 'plan_summary',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'plan_summary_plan_id', algorithm: 'btree', columns: [
+      { name: 'plan_summary_plan_id', accessor: 'plan_summary_plan_id', algorithm: 'btree', columns: [
         'planId',
       ] },
     ],
@@ -287,10 +287,10 @@ const tablesSchema = __schema({
   planTask: __table({
     name: 'plan_task',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'plan_task_plan_id', algorithm: 'btree', columns: [
+      { name: 'plan_task_plan_id', accessor: 'plan_task_plan_id', algorithm: 'btree', columns: [
         'planId',
       ] },
     ],
@@ -301,10 +301,10 @@ const tablesSchema = __schema({
   project: __table({
     name: 'project',
     indexes: [
-      { name: 'git_remote_url', algorithm: 'btree', columns: [
+      { name: 'git_remote_url', accessor: 'git_remote_url', algorithm: 'btree', columns: [
         'gitRemoteUrl',
       ] },
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
     ],
@@ -316,10 +316,10 @@ const tablesSchema = __schema({
   projectState: __table({
     name: 'project_state',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'project_state_project_id', algorithm: 'btree', columns: [
+      { name: 'project_state_project_id', accessor: 'project_state_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -330,10 +330,10 @@ const tablesSchema = __schema({
   requirement: __table({
     name: 'requirement',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'requirement_project_id', algorithm: 'btree', columns: [
+      { name: 'requirement_project_id', accessor: 'requirement_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -344,10 +344,10 @@ const tablesSchema = __schema({
   research: __table({
     name: 'research',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'research_phase_id', algorithm: 'btree', columns: [
+      { name: 'research_phase_id', accessor: 'research_phase_id', algorithm: 'btree', columns: [
         'phaseId',
       ] },
     ],
@@ -358,13 +358,13 @@ const tablesSchema = __schema({
   sessionCheckpoint: __table({
     name: 'session_checkpoint',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'session_checkpoint_phase_id', algorithm: 'btree', columns: [
+      { name: 'session_checkpoint_phase_id', accessor: 'session_checkpoint_phase_id', algorithm: 'btree', columns: [
         'phaseId',
       ] },
-      { name: 'session_checkpoint_project_id', algorithm: 'btree', columns: [
+      { name: 'session_checkpoint_project_id', accessor: 'session_checkpoint_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
     ],
@@ -375,16 +375,16 @@ const tablesSchema = __schema({
   todo: __table({
     name: 'todo',
     indexes: [
-      { name: 'todo_area', algorithm: 'btree', columns: [
+      { name: 'todo_area', accessor: 'todo_area', algorithm: 'btree', columns: [
         'area',
       ] },
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'todo_project_id', algorithm: 'btree', columns: [
+      { name: 'todo_project_id', accessor: 'todo_project_id', algorithm: 'btree', columns: [
         'projectId',
       ] },
-      { name: 'todo_status', algorithm: 'btree', columns: [
+      { name: 'todo_status', accessor: 'todo_status', algorithm: 'btree', columns: [
         'status',
       ] },
     ],
@@ -395,10 +395,10 @@ const tablesSchema = __schema({
   verification: __table({
     name: 'verification',
     indexes: [
-      { name: 'id', algorithm: 'btree', columns: [
+      { name: 'id', accessor: 'id', algorithm: 'btree', columns: [
         'id',
       ] },
-      { name: 'verification_phase_id', algorithm: 'btree', columns: [
+      { name: 'verification_phase_id', accessor: 'verification_phase_id', algorithm: 'btree', columns: [
         'phaseId',
       ] },
     ],

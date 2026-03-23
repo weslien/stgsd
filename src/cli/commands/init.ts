@@ -297,21 +297,24 @@ export function registerInitCommand(program: Command): void {
             (a, b) => parseFloat(a.number) - parseFloat(b.number),
           );
 
-          // Build phase-to-plans map
+          // Build phase-to-plans map, deduplicated by planNumber (keep latest id)
           const plansByPhase = new Map<
             bigint,
-            Array<{ planNumber: bigint; status: string }>
+            Map<bigint, { planNumber: bigint; status: string; id: bigint }>
           >();
           for (const row of conn.db.plan.iter()) {
-            const existing = plansByPhase.get(row.phaseId);
-            const entry = {
-              planNumber: row.planNumber,
-              status: row.status,
-            };
-            if (existing) {
-              existing.push(entry);
-            } else {
-              plansByPhase.set(row.phaseId, [entry]);
+            let phaseMap = plansByPhase.get(row.phaseId);
+            if (!phaseMap) {
+              phaseMap = new Map();
+              plansByPhase.set(row.phaseId, phaseMap);
+            }
+            const existing = phaseMap.get(row.planNumber);
+            if (!existing || row.id > existing.id) {
+              phaseMap.set(row.planNumber, {
+                planNumber: row.planNumber,
+                status: row.status,
+                id: row.id,
+              });
             }
           }
 
@@ -335,7 +338,7 @@ export function registerInitCommand(program: Command): void {
           // Build phases result with computed counts
           const phases: InitProgressData['phases'] = projectPhases.map(
             (phase) => {
-              const plans = plansByPhase.get(phase.id) || [];
+              const plans = [...(plansByPhase.get(phase.id)?.values() || [])];
               const reqs = reqsByPhaseNumber.get(phase.number) || [];
 
               return {
@@ -493,18 +496,22 @@ export function registerInitCommand(program: Command): void {
             }
           }
 
-          // Collect existing plans for this phase
-          const existingPlans: InitPlanPhaseData['existingPlans'] = [];
+          // Collect existing plans for this phase, deduplicated by planNumber (keep latest id)
+          const existingPlanMap = new Map<bigint, InitPlanPhaseData['existingPlans'][0]>();
           for (const row of conn.db.plan.iter()) {
             if (row.phaseId === phase.id) {
-              existingPlans.push({
-                id: row.id,
-                planNumber: row.planNumber,
-                objective: row.objective,
-                status: row.status,
-              });
+              const existing = existingPlanMap.get(row.planNumber);
+              if (!existing || row.id > existing.id) {
+                existingPlanMap.set(row.planNumber, {
+                  id: row.id,
+                  planNumber: row.planNumber,
+                  objective: row.objective,
+                  status: row.status,
+                });
+              }
             }
           }
+          const existingPlans = [...existingPlanMap.values()];
 
           return {
             phase: {
@@ -544,7 +551,8 @@ export function registerInitCommand(program: Command): void {
   initCmd
     .command('execute-phase <phase>')
     .description('Assemble execution workflow context for a phase')
-    .action(async (phaseNumber: string) => {
+    .option('--slim', 'Omit plan content from output', false)
+    .action(async (phaseNumber: string, cmdOpts: { slim: boolean }) => {
       const opts = program.opts<{ json: boolean }>();
 
       try {
@@ -554,8 +562,8 @@ export function registerInitCommand(program: Command): void {
           const project = findProjectByGitRemote(conn, gitRemoteUrl);
           const phase = findPhaseByNumber(conn, project.id, phaseNumber);
 
-          // Collect all plans for this phase, sorted by planNumber
-          const phasePlans: Array<{
+          // Collect all plans for this phase, deduplicated by planNumber (keep latest id)
+          const planByNumber = new Map<bigint, {
             id: bigint;
             planNumber: bigint;
             type: string;
@@ -566,23 +574,27 @@ export function registerInitCommand(program: Command): void {
             dependsOn: string;
             status: string;
             content: string;
-          }> = [];
+          }>();
           for (const row of conn.db.plan.iter()) {
             if (row.phaseId === phase.id) {
-              phasePlans.push({
-                id: row.id,
-                planNumber: row.planNumber,
-                type: row.type,
-                wave: row.wave,
-                objective: row.objective,
-                autonomous: row.autonomous,
-                requirements: row.requirements,
-                dependsOn: row.dependsOn,
-                status: row.status,
-                content: row.content,
-              });
+              const existing = planByNumber.get(row.planNumber);
+              if (!existing || row.id > existing.id) {
+                planByNumber.set(row.planNumber, {
+                  id: row.id,
+                  planNumber: row.planNumber,
+                  type: row.type,
+                  wave: row.wave,
+                  objective: row.objective,
+                  autonomous: row.autonomous,
+                  requirements: row.requirements,
+                  dependsOn: row.dependsOn,
+                  status: row.status,
+                  content: row.content,
+                });
+              }
             }
           }
+          const phasePlans = [...planByNumber.values()];
           phasePlans.sort((a, b) =>
             a.planNumber < b.planNumber ? -1 : a.planNumber > b.planNumber ? 1 : 0,
           );
@@ -660,7 +672,7 @@ export function registerInitCommand(program: Command): void {
               requirements: p.requirements,
               dependsOn: p.dependsOn,
               status: p.status,
-              content: p.content,
+              content: cmdOpts.slim ? '' : p.content,
               tasks,
               hasSummary: summaryByPlan.has(p.id),
               mustHaves: mustHavesByPlan.get(p.id) || [],

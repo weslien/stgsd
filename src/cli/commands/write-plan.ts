@@ -146,36 +146,86 @@ export function registerWritePlanCommand(program: Command): void {
             options.phase,
           );
 
-          // Set up listener BEFORE calling reducer
-          const insertPromise = waitForInsert(
-            conn,
-            conn.db.plan,
-            (row) =>
+          const planNumberBigInt = BigInt(options.plan);
+
+          // Check if plan already exists for this (phase, planNumber)
+          let existingPlan = null;
+          for (const row of conn.db.plan.iter()) {
+            if (
               row.phaseId === phase.id &&
-              row.planNumber === BigInt(options.plan),
-          );
+              row.planNumber === planNumberBigInt
+            ) {
+              existingPlan = row;
+              break;
+            }
+          }
 
-          conn.reducers.insertPlan({
-            phaseId: phase.id,
-            planNumber: BigInt(options.plan),
-            type: options.type,
-            wave: BigInt(options.wave),
-            dependsOn: options.dependsOn,
-            objective: options.objective,
-            autonomous: options.autonomous,
-            requirements: options.requirements,
-            status: options.status,
-            content: planContent,
-          });
+          if (existingPlan) {
+            // Update existing plan
+            const updatePromise = new Promise<void>((resolve, reject) => {
+              const timer = setTimeout(() => {
+                reject(
+                  new CliError(
+                    ErrorCodes.INTERNAL_ERROR,
+                    'Update confirmation timed out after 5 seconds',
+                  ),
+                );
+              }, 5000);
 
-          await insertPromise;
+              conn.db.plan.onUpdate((_ctx: any, _oldRow: any, newRow: any) => {
+                if (newRow.id === existingPlan!.id) {
+                  clearTimeout(timer);
+                  resolve();
+                }
+              });
+            });
 
-          // Find the inserted plan to get its ID
+            conn.reducers.updatePlan({
+              planId: existingPlan.id,
+              planNumber: planNumberBigInt,
+              type: options.type,
+              wave: BigInt(options.wave),
+              dependsOn: options.dependsOn,
+              objective: options.objective,
+              autonomous: options.autonomous,
+              requirements: options.requirements,
+              status: options.status,
+              content: planContent,
+            });
+
+            await updatePromise;
+          } else {
+            // Insert new plan
+            const insertPromise = waitForInsert(
+              conn,
+              conn.db.plan,
+              (row) =>
+                row.phaseId === phase.id &&
+                row.planNumber === planNumberBigInt,
+            );
+
+            conn.reducers.insertPlan({
+              phaseId: phase.id,
+              planNumber: planNumberBigInt,
+              type: options.type,
+              wave: BigInt(options.wave),
+              dependsOn: options.dependsOn,
+              objective: options.objective,
+              autonomous: options.autonomous,
+              requirements: options.requirements,
+              status: options.status,
+              content: planContent,
+            });
+
+            await insertPromise;
+          }
+
+          // Find the plan to get its ID
           let insertedPlan = null;
           for (const row of conn.db.plan.iter()) {
             if (
               row.phaseId === phase.id &&
-              row.planNumber === BigInt(options.plan)
+              row.planNumber === planNumberBigInt
             ) {
               insertedPlan = row;
               break;
@@ -185,8 +235,24 @@ export function registerWritePlanCommand(program: Command): void {
           if (!insertedPlan) {
             throw new CliError(
               ErrorCodes.INTERNAL_ERROR,
-              'Plan insert confirmed but row not found',
+              'Plan write confirmed but row not found',
             );
+          }
+
+          // On update, delete existing tasks and must-haves before re-inserting
+          if (existingPlan) {
+            for (const row of conn.db.planTask.iter()) {
+              if (row.planId === insertedPlan.id) {
+                conn.reducers.deletePlanTask({ taskId: row.id });
+              }
+            }
+            for (const row of conn.db.mustHave.iter()) {
+              if (row.planId === insertedPlan.id) {
+                conn.reducers.deleteMustHave({ mustHaveId: row.id });
+              }
+            }
+            // Brief wait for deletes to propagate
+            await new Promise((resolve) => setTimeout(resolve, 500));
           }
 
           // Insert tasks if provided
