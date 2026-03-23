@@ -3,9 +3,13 @@ import {
   type ErrorContext,
   type SubscriptionEventContext,
 } from '../../module_bindings/index.js';
+import { setGlobalLogLevel } from 'spacetimedb';
 import { CliError, ErrorCodes } from './errors.js';
 import { requireConfig } from './config.js';
 import { getGitRemoteUrl } from './git.js';
+
+// Suppress SDK info logs (they go to stdout and pollute JSON output)
+setGlobalLogLevel('error');
 
 export async function withConnection<T>(
   fn: (conn: DbConnection) => T | Promise<T>,
