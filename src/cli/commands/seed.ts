@@ -1,13 +1,13 @@
 import type { Command } from 'commander';
 import type { DbConnection } from '../../module_bindings/index.js';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { withConnection } from '../lib/connection.js';
 import { getGitRemoteUrl } from '../lib/git.js';
 import { findProjectByGitRemote } from '../lib/project.js';
 import { computeRepoId, databaseName, modulePath, loadConfig } from '../lib/config.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
-import { resolveSpacetimeBin, shellQuote } from '../lib/spacetime.js';
+import { resolveSpacetimeBin } from '../lib/spacetime.js';
 
 interface SeedData {
   project: { id: bigint; name: string; gitRemoteUrl: string };
@@ -37,9 +37,22 @@ function wipeDatabase(gitRemoteUrl: string): void {
   const spacetimeBin = resolveSpacetimeBin();
 
   const dbName = databaseName(repoId);
-  const publishCmd = `${shellQuote(spacetimeBin)} publish ${dbName} --delete-data=always -y --module-path ${shellQuote(modulePath())} --server local --no-config`;
   try {
-    execSync(publishCmd, { stdio: 'pipe', timeout: 60_000 });
+    execFileSync(
+      spacetimeBin,
+      [
+        'publish',
+        dbName,
+        '--delete-data=always',
+        '-y',
+        '--module-path',
+        modulePath(),
+        '--server',
+        'local',
+        '--no-config',
+      ],
+      { stdio: 'pipe', timeout: 60_000 },
+    );
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     throw new CliError(

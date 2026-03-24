@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { getGitRemoteUrl } from '../lib/git.js';
 import {
   computeRepoId,
@@ -11,7 +11,7 @@ import {
 } from '../lib/config.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
-import { resolveSpacetimeBin, shellQuote } from '../lib/spacetime.js';
+import { resolveSpacetimeBin } from '../lib/spacetime.js';
 
 interface SetupResult {
   repoId: string;
@@ -85,7 +85,7 @@ export function registerSetupCommand(program: Command): void {
 
         // Verify local SpacetimeDB is running
         try {
-          execSync(`${shellQuote(spacetimeBin)} server ping local`, {
+          execFileSync(spacetimeBin, ['server', 'ping', 'local'], {
             stdio: 'pipe',
             timeout: 5000,
           });
@@ -97,9 +97,12 @@ export function registerSetupCommand(program: Command): void {
         }
 
         // Publish module (--no-config avoids picking up spacetime.json from cwd)
-        const publishCmd = `${shellQuote(spacetimeBin)} publish ${dbName} --module-path ${shellQuote(modulePath())} --server local --no-config`;
         try {
-          execSync(publishCmd, { stdio: 'pipe', timeout: 60_000 });
+          execFileSync(
+            spacetimeBin,
+            ['publish', dbName, '--module-path', modulePath(), '--server', 'local', '--no-config'],
+            { stdio: 'pipe', timeout: 60_000 },
+          );
         } catch (err) {
           const msg =
             err instanceof Error ? err.message : String(err);
