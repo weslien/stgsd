@@ -11,7 +11,8 @@
     "spacetime:publish:local": "spacetime publish --module-path spacetimedb --server local",
     "spacetime:publish": "spacetime publish --module-path spacetimedb --server maincloud",
     "build:cli": "node scripts/build.mjs",
-    "install:cli": "npm run build:cli && node scripts/install.mjs"
+    "install:cli": "npm run build:cli && node scripts/install.mjs",
+    "patch-gsd": "node scripts/patch-gsd-files.mjs"
   },
   "dependencies": {
     "commander": "^14.0.3",
