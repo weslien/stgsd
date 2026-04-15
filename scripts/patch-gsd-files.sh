@@ -186,6 +186,7 @@ patch_file "$GSD/workflows/diagnose-issues.md" \
 patch_file "$GSD/workflows/plan-milestone-gaps.md" \
 '<stgsd-sync>
 ```bash
+~/.claude/bin/stgsd get-milestones --json 2>/dev/null || true
 ~/.claude/bin/stgsd roadmap analyze --json 2>/dev/null || true
 ~/.claude/bin/stgsd add-phase 2>/dev/null || true
 ```

@@ -112,7 +112,9 @@
     "workflows/audit-milestone.md": {
       "expected": [
         "stgsd write-audit",
-        "stgsd get-milestones"
+        "stgsd get-milestones",
+        "stclaude write-audit",
+        "stclaude get-milestones"
       ],
       "forbidden": []
     },
@@ -147,9 +149,13 @@
     "workflows/plan-milestone-gaps.md": {
       "expected": [
         "stgsd roadmap analyze",
-        "stgsd add-phase"
+        "stgsd add-phase",
+        "stgsd get-milestones",
+        "stclaude get-milestones"
       ],
-      "forbidden": []
+      "forbidden": [
+        "v*-MILESTONE-AUDIT.md"
+      ]
     },
     "workflows/insert-phase.md": {
       "expected": [
