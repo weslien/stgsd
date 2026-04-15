@@ -11,6 +11,7 @@ import {
 } from '../lib/config.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
+import { resolveSpacetimeBin, shellQuote } from '../lib/spacetime.js';
 
 interface SetupResult {
   repoId: string;
@@ -80,25 +81,11 @@ export function registerSetupCommand(program: Command): void {
         }
 
         // Resolve spacetime binary — execSync doesn't inherit full shell PATH
-        let spacetimeBin: string;
-        try {
-          const whichCmd = process.platform === 'win32' ? 'where spacetime' : 'which spacetime';
-          const shellOpt = process.platform === 'win32' ? undefined : (process.env.SHELL || '/bin/sh');
-          spacetimeBin = execSync(whichCmd, {
-            encoding: 'utf-8',
-            ...(shellOpt ? { shell: shellOpt } : {}),
-            timeout: 5000,
-          }).trim().split('\n')[0].trim();
-        } catch {
-          throw new CliError(
-            ErrorCodes.INTERNAL_ERROR,
-            'spacetime CLI not found. Install SpacetimeDB: https://spacetimedb.com/install',
-          );
-        }
+        const spacetimeBin = resolveSpacetimeBin();
 
         // Verify local SpacetimeDB is running
         try {
-          execSync(`${spacetimeBin} server ping local`, {
+          execSync(`${shellQuote(spacetimeBin)} server ping local`, {
             stdio: 'pipe',
             timeout: 5000,
           });
@@ -110,7 +97,7 @@ export function registerSetupCommand(program: Command): void {
         }
 
         // Publish module (--no-config avoids picking up spacetime.json from cwd)
-        const publishCmd = `${spacetimeBin} publish ${dbName} --module-path ${modulePath()} --server local --no-config`;
+        const publishCmd = `${shellQuote(spacetimeBin)} publish ${dbName} --module-path ${shellQuote(modulePath())} --server local --no-config`;
         try {
           execSync(publishCmd, { stdio: 'pipe', timeout: 60_000 });
         } catch (err) {

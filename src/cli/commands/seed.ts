@@ -7,6 +7,7 @@ import { findProjectByGitRemote } from '../lib/project.js';
 import { computeRepoId, databaseName, modulePath, loadConfig } from '../lib/config.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
+import { resolveSpacetimeBin, shellQuote } from '../lib/spacetime.js';
 
 interface SeedData {
   project: { id: bigint; name: string; gitRemoteUrl: string };
@@ -33,24 +34,10 @@ function wipeDatabase(gitRemoteUrl: string): void {
     );
   }
 
-  let spacetimeBin: string;
-  try {
-    const whichCmd = process.platform === 'win32' ? 'where spacetime' : 'which spacetime';
-    const shellOpt = process.platform === 'win32' ? undefined : (process.env.SHELL || '/bin/sh');
-    spacetimeBin = execSync(whichCmd, {
-      encoding: 'utf-8',
-      ...(shellOpt ? { shell: shellOpt } : {}),
-      timeout: 5000,
-    }).trim().split('\n')[0].trim();
-  } catch {
-    throw new CliError(
-      ErrorCodes.INTERNAL_ERROR,
-      'spacetime CLI not found. Install SpacetimeDB: https://spacetimedb.com/install',
-    );
-  }
+  const spacetimeBin = resolveSpacetimeBin();
 
   const dbName = databaseName(repoId);
-  const publishCmd = `${spacetimeBin} publish ${dbName} --delete-data=always -y --module-path ${modulePath()} --server local --no-config`;
+  const publishCmd = `${shellQuote(spacetimeBin)} publish ${dbName} --delete-data=always -y --module-path ${shellQuote(modulePath())} --server local --no-config`;
   try {
     execSync(publishCmd, { stdio: 'pipe', timeout: 60_000 });
   } catch (err) {
