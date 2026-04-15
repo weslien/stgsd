@@ -38,7 +38,7 @@ import { registerVerifyPatchesCommand } from './commands/verify-patches.js';
 const program = new Command()
   .name('stgsd')
   .description('stgsd - structured project state for Claude Code agents')
-  .version('0.0.1')
+  .version('0.0.1', '-V')
   .option('--json', 'Output machine-readable JSON envelope', false);
 
 registerStatusCommand(program);
