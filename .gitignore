@@ -2,3 +2,5 @@ node_modules/
 dist/
 *.local.json
 .windsurfrules
+package-lock.json
+.claude/
