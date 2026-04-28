@@ -5,6 +5,7 @@ import { getGitRemoteUrl } from '../lib/git.js';
 import { findProjectByGitRemote, findProjectState, waitForStateUpdate } from '../lib/project.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
+import { comparePhaseNumber } from '../lib/disk-artifacts.js';
 
 interface UpdateProgressData {
   project: { id: bigint; name: string };
@@ -43,6 +44,11 @@ export function registerUpdateProgressCommand(program: Command): void {
       '--session-stopped <description>',
       'Set where session stopped',
     )
+    .option(
+      '--force',
+      'Skip the gate that prevents advancing past an un-Complete phase',
+      false,
+    )
     .action(
       async (options: {
         phase?: string;
@@ -51,6 +57,7 @@ export function registerUpdateProgressCommand(program: Command): void {
         activity?: string;
         sessionLast?: string;
         sessionStopped?: string;
+        force?: boolean;
       }) => {
         const opts = program.opts<{ json: boolean }>();
 
@@ -104,6 +111,39 @@ export function registerUpdateProgressCommand(program: Command): void {
                 ErrorCodes.INTERNAL_ERROR,
                 'No project state exists. Run a seed_project reducer first.',
               );
+            }
+
+            // Gate: when --phase advances forward, every prior phase must be Complete.
+            if (
+              options.phase !== undefined &&
+              !options.force &&
+              comparePhaseNumber(options.phase, state.currentPhase) > 0
+            ) {
+              const unfinished: Array<{ number: string; status: string }> = [];
+              for (const row of conn.db.phase.iter()) {
+                if (row.projectId !== project.id) continue;
+                if (
+                  comparePhaseNumber(row.number, options.phase) < 0 &&
+                  row.status !== 'Complete'
+                ) {
+                  unfinished.push({
+                    number: row.number,
+                    status: row.status,
+                  });
+                }
+              }
+              if (unfinished.length > 0) {
+                unfinished.sort((a, b) =>
+                  comparePhaseNumber(a.number, b.number),
+                );
+                const detail = unfinished
+                  .map((p) => `  - phase ${p.number}: ${p.status}`)
+                  .join('\n');
+                throw new CliError(
+                  ErrorCodes.PHASE_NOT_COMPLETE,
+                  `Cannot advance currentPhase to ${options.phase} — earlier phases are not Complete:\n${detail}\nRun complete-phase on each, or pass --force.`,
+                );
+              }
             }
 
             // Merge: use provided option or existing value
