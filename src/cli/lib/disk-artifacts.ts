@@ -133,10 +133,10 @@ function findArtifact(phaseDir: string, kind: string): string | null {
     return null;
   }
   const upper = kind.toUpperCase();
-  const tail = `-${upper}.md`;
-  const exact = `${upper}.md`;
+  const tail = `-${upper}.MD`;
+  const exact = `${upper}.MD`;
   const match =
-    entries.find((e) => e === exact) ??
+    entries.find((e) => e.toUpperCase() === exact) ??
     entries.find((e) => e.toUpperCase().endsWith(tail));
   return match ? join(phaseDir, match) : null;
 }
