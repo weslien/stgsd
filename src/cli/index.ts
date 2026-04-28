@@ -34,6 +34,7 @@ import { registerCloseDebugCommand } from './commands/close-debug.js';
 import { registerWriteCodebaseMapCommand } from './commands/write-codebase-map.js';
 import { registerGetCodebaseMapCommand } from './commands/get-codebase-map.js';
 import { registerVerifyPatchesCommand } from './commands/verify-patches.js';
+import { registerDoctorCommand } from './commands/doctor.js';
 
 const program = new Command()
   .name('stgsd')
@@ -76,5 +77,6 @@ registerCloseDebugCommand(program);
 registerWriteCodebaseMapCommand(program);
 registerGetCodebaseMapCommand(program);
 registerVerifyPatchesCommand(program);
+registerDoctorCommand(program);
 
 program.parseAsync();

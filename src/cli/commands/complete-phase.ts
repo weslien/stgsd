@@ -10,15 +10,21 @@ import {
 } from '../lib/project.js';
 import { outputSuccess, outputError } from '../lib/output.js';
 import { CliError, ErrorCodes } from '../lib/errors.js';
+import {
+  validatePhaseCompletion,
+  type PhaseGateIssue,
+} from '../lib/disk-artifacts.js';
 
 interface CompletePhaseData {
   completedPhase: { number: string; name: string };
   nextPhase: { number: string; name: string } | null;
   isLastPhase: boolean;
+  forced?: boolean;
+  warnings?: PhaseGateIssue[];
 }
 
 function formatCompletePhase(data: unknown): string {
-  const { completedPhase, nextPhase, isLastPhase } =
+  const { completedPhase, nextPhase, isLastPhase, forced, warnings } =
     data as CompletePhaseData;
   const lines = [
     'Phase completed:',
@@ -29,6 +35,10 @@ function formatCompletePhase(data: unknown): string {
   } else if (nextPhase) {
     lines.push(`  Next: ${nextPhase.number} - ${nextPhase.name}`);
   }
+  if (forced && warnings && warnings.length > 0) {
+    lines.push('  Forced past gate; unmet checks:');
+    for (const w of warnings) lines.push(`    - ${w.code}: ${w.message}`);
+  }
   return lines.join('\n');
 }
 
@@ -36,11 +46,27 @@ export function registerCompletePhaseCommand(program: Command): void {
   program
     .command('complete-phase <phase>')
     .description('Mark a phase as complete and advance project state')
-    .action(async (phaseArg: string) => {
+    .option(
+      '--force',
+      'Skip on-disk artifact gate (SUMMARY/VERIFICATION/VALIDATION)',
+      false,
+    )
+    .action(async (phaseArg: string, cmdOpts: { force: boolean }) => {
       const opts = program.opts<{ json: boolean }>();
 
       try {
         const gitRemoteUrl = getGitRemoteUrl();
+
+        const gate = validatePhaseCompletion(process.cwd(), phaseArg);
+        if (gate.issues.length > 0 && !cmdOpts.force) {
+          const detail = gate.issues
+            .map((i) => `  - ${i.code}: ${i.message}`)
+            .join('\n');
+          throw new CliError(
+            ErrorCodes.PHASE_NOT_VERIFIED,
+            `Phase ${phaseArg} cannot be marked Complete — missing required artifacts:\n${detail}\nRe-run with --force to override.`,
+          );
+        }
 
         const result = await withConnection(async (conn: DbConnection) => {
           const project = findProjectByGitRemote(conn, gitRemoteUrl);
@@ -119,6 +145,8 @@ export function registerCompletePhaseCommand(program: Command): void {
               ? { number: nextPhase.number, name: nextPhase.name }
               : null,
             isLastPhase: !nextPhase,
+            forced: cmdOpts.force && gate.issues.length > 0,
+            warnings: gate.issues,
           };
         });
 
