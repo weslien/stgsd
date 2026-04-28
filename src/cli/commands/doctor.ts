@@ -17,6 +17,7 @@ interface PhaseFinding {
   phase: string;
   name?: string;
   source: 'stdb' | 'disk';
+  severity: 'error' | 'info';
   issue: string;
   remediation: string;
 }
@@ -28,6 +29,7 @@ interface DoctorData {
   summary: {
     stdbPhases: number;
     diskPhases: number;
+    archivedPhases: number;
     findings: number;
   };
 }
@@ -36,20 +38,29 @@ function formatDoctor(data: unknown): string {
   const { project, ok, findings, summary } = data as DoctorData;
   const lines = [
     `Doctor: ${project.name}`,
-    `  STDB phases: ${summary.stdbPhases}`,
-    `  Disk phases: ${summary.diskPhases}`,
-    `  Findings:    ${summary.findings}`,
+    `  STDB phases:     ${summary.stdbPhases}`,
+    `  Disk phases:     ${summary.diskPhases}`,
+    `  Archived phases: ${summary.archivedPhases}`,
+    `  Findings:        ${summary.findings}`,
     '',
   ];
+  const errors = findings.filter((f) => f.severity === 'error');
+  const infos = findings.filter((f) => f.severity === 'info');
   if (ok) {
     lines.push('No divergences detected.');
-    return lines.join('\n');
   }
-  for (const f of findings) {
+  for (const f of errors) {
     lines.push(`[${f.source.toUpperCase()}] phase ${f.phase}${f.name ? ` (${f.name})` : ''}`);
     lines.push(`  Issue:   ${f.issue}`);
     lines.push(`  Suggest: ${f.remediation}`);
     lines.push('');
+  }
+  if (infos.length > 0) {
+    if (!ok || errors.length === 0) lines.push('');
+    lines.push('Info:');
+    for (const f of infos) {
+      lines.push(`  - phase ${f.phase}${f.name ? ` (${f.name})` : ''}: ${f.issue}`);
+    }
   }
   return lines.join('\n').trimEnd();
 }
@@ -98,16 +109,31 @@ export function registerDoctorCommand(program: Command): void {
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
+                severity: 'error',
                 issue: 'Marked Complete in SpacetimeDB but phase directory missing on disk',
                 remediation: `Run /gsd:verify-work to retroactively produce artifacts, or stclaude remove-phase ${p.number} to roll STDB back`,
               });
               continue;
+            }
+            if (artifacts.location === 'archived') {
+              const versionLabel = artifacts.milestoneVersion
+                ? `milestone v${artifacts.milestoneVersion}`
+                : 'an archived milestone';
+              findings.push({
+                phase: p.number,
+                name: p.name,
+                source: 'disk',
+                severity: 'info',
+                issue: `Resolved from ${versionLabel} archive at ${artifacts.phaseDir}`,
+                remediation: 'No action required — archived phases are tracked under .planning/milestones/',
+              });
             }
             if (!artifacts.summaryFile) {
               findings.push({
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
+                severity: 'error',
                 issue: `Complete in STDB but SUMMARY.md missing in ${artifacts.phaseDir}`,
                 remediation: 'Run /gsd:verify-work to generate SUMMARY.md retroactively',
               });
@@ -117,6 +143,7 @@ export function registerDoctorCommand(program: Command): void {
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
+                severity: 'error',
                 issue: `Complete in STDB but VERIFICATION.md missing in ${artifacts.phaseDir}`,
                 remediation: 'Run /gsd:verify-work to generate VERIFICATION.md retroactively',
               });
@@ -127,6 +154,7 @@ export function registerDoctorCommand(program: Command): void {
                   phase: p.number,
                   name: p.name,
                   source: 'stdb',
+                  severity: 'error',
                   issue: `Complete in STDB but VERIFICATION.md status: gaps_found at ${artifacts.verificationFile}`,
                   remediation: 'Resolve gaps then re-run write-verification, or roll back with remove-phase',
                 });
@@ -137,6 +165,7 @@ export function registerDoctorCommand(program: Command): void {
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
+                severity: 'error',
                 issue: `Complete in STDB but VALIDATION.md missing (nyquist_validation enabled) in ${artifacts.phaseDir}`,
                 remediation: 'Run /gsd:validate-phase to fill the Nyquist validation gap',
               });
@@ -163,23 +192,33 @@ export function registerDoctorCommand(program: Command): void {
               findings.push({
                 phase: d.number,
                 source: 'disk',
+                severity: 'error',
                 issue: `Phase directory ${d.path} has no matching phase row in SpacetimeDB`,
                 remediation: 'Run stclaude add-phase / insert-phase to register it, or delete the orphan directory',
               });
             }
           }
 
+          const activeDiskPhases = diskDirs.filter(
+            (d) => d.location === 'active',
+          ).length;
+          const archivedDiskPhases = diskDirs.length - activeDiskPhases;
+          const errorCount = findings.filter(
+            (f) => f.severity === 'error',
+          ).length;
+
           return {
             project: {
               id: project.id.toString(),
               name: project.name,
             },
-            ok: findings.length === 0,
+            ok: errorCount === 0,
             findings,
             summary: {
               stdbPhases: stdbPhases.length,
-              diskPhases: diskDirs.length,
-              findings: findings.length,
+              diskPhases: activeDiskPhases,
+              archivedPhases: archivedDiskPhases,
+              findings: errorCount,
             },
           };
         });
