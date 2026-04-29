@@ -7,6 +7,7 @@ export interface PhaseArtifacts {
   summaryFile: string | null;
   verificationFile: string | null;
   validationFile: string | null;
+  archivedMilestone: string | null;
 }
 
 export interface PhaseGateIssue {
@@ -63,59 +64,142 @@ export function comparePhaseNumber(a: string, b: string): number {
 }
 
 /**
- * Locate a phase directory under <cwd>/.planning/phases/ matching
- * the normalized phase number prefix (e.g. "04-" or exactly "04").
- * Returns null if .planning/phases is missing or no match.
+ * List milestone-archive phase roots under <cwd>/.planning/milestones/.
+ * Returned entries are subdirectories whose name ends in "-phases", e.g.
+ * "v1.0-phases" → { name: "v1.0-phases", version: "v1.0", path: ... }.
+ * Order is deterministic (descending by name) so newer milestones win
+ * when the same phase number is archived under multiple versions.
  */
-export function findPhaseDir(cwd: string, phaseNumber: string): string | null {
-  const phasesDir = join(cwd, '.planning', 'phases');
-  if (!existsSync(phasesDir)) return null;
-  const normalized = normalizePhaseNumber(phaseNumber);
+export function listMilestoneArchives(
+  cwd: string,
+): Array<{ name: string; version: string; path: string }> {
+  const root = join(cwd, '.planning', 'milestones');
+  if (!existsSync(root)) return [];
   let entries: string[];
   try {
-    entries = readdirSync(phasesDir);
+    entries = readdirSync(root);
+  } catch {
+    return [];
+  }
+  const out: Array<{ name: string; version: string; path: string }> = [];
+  for (const name of entries) {
+    if (!name.endsWith('-phases')) continue;
+    const full = join(root, name);
+    try {
+      if (!statSync(full).isDirectory()) continue;
+    } catch {
+      continue;
+    }
+    out.push({ name, version: name.slice(0, -'-phases'.length), path: full });
+  }
+  out.sort((a, b) => (a.version === b.version ? 0 : a.version < b.version ? 1 : -1));
+  return out;
+}
+
+function findPhaseDirIn(parentDir: string, normalized: string): string | null {
+  let entries: string[];
+  try {
+    entries = readdirSync(parentDir);
   } catch {
     return null;
   }
-  // Prefer exact "<N>-..." match; fall back to bare "<N>" dir.
   const withSlug = entries.find((e) => e.startsWith(normalized + '-'));
   if (withSlug) {
-    const full = join(phasesDir, withSlug);
+    const full = join(parentDir, withSlug);
     if (statSync(full).isDirectory()) return full;
   }
   const exact = entries.find((e) => e === normalized);
   if (exact) {
-    const full = join(phasesDir, exact);
+    const full = join(parentDir, exact);
     if (statSync(full).isDirectory()) return full;
   }
   return null;
 }
 
 /**
- * List all phase directories under .planning/phases/ with parsed numbers.
+ * Locate a phase directory matching the normalized phase number prefix
+ * (e.g. "04-" or exactly "04"). Searches `.planning/phases/` first, then
+ * falls back to archived locations under `.planning/milestones/<version>-phases/`
+ * to support post-`complete-milestone` layouts.
+ *
+ * Returns the directory path and, if found in an archive, the milestone
+ * version it was archived under (e.g. "v1.0"). Returns null if no match.
+ */
+export function findPhaseDirWithArchive(
+  cwd: string,
+  phaseNumber: string,
+): { path: string; archivedMilestone: string | null } | null {
+  const normalized = normalizePhaseNumber(phaseNumber);
+
+  const phasesDir = join(cwd, '.planning', 'phases');
+  if (existsSync(phasesDir)) {
+    const direct = findPhaseDirIn(phasesDir, normalized);
+    if (direct) return { path: direct, archivedMilestone: null };
+  }
+
+  for (const archive of listMilestoneArchives(cwd)) {
+    const found = findPhaseDirIn(archive.path, normalized);
+    if (found) return { path: found, archivedMilestone: archive.version };
+  }
+
+  return null;
+}
+
+/**
+ * Locate a phase directory matching the normalized phase number prefix.
+ * Searches active phases under `.planning/phases/` first, then archived
+ * phases under `.planning/milestones/<version>-phases/`. Returns null if
+ * no match. See `findPhaseDirWithArchive` for archival metadata.
+ */
+export function findPhaseDir(cwd: string, phaseNumber: string): string | null {
+  return findPhaseDirWithArchive(cwd, phaseNumber)?.path ?? null;
+}
+
+/**
+ * List all phase directories under `.planning/phases/` and any archived
+ * milestone roots under `.planning/milestones/<version>-phases/`. Each entry
+ * is tagged with `archivedMilestone` (null for active phases, version string
+ * like "v1.0" for archived ones).
  */
 export function listPhaseDirs(
   cwd: string,
-): Array<{ name: string; path: string; number: string }> {
-  const phasesDir = join(cwd, '.planning', 'phases');
-  if (!existsSync(phasesDir)) return [];
-  let entries: string[];
-  try {
-    entries = readdirSync(phasesDir);
-  } catch {
-    return [];
-  }
-  const out: Array<{ name: string; path: string; number: string }> = [];
-  for (const name of entries) {
-    const full = join(phasesDir, name);
+): Array<{
+  name: string;
+  path: string;
+  number: string;
+  archivedMilestone: string | null;
+}> {
+  const out: Array<{
+    name: string;
+    path: string;
+    number: string;
+    archivedMilestone: string | null;
+  }> = [];
+
+  const collect = (parent: string, archivedMilestone: string | null) => {
+    if (!existsSync(parent)) return;
+    let entries: string[];
     try {
-      if (!statSync(full).isDirectory()) continue;
+      entries = readdirSync(parent);
     } catch {
-      continue;
+      return;
     }
-    const m = name.match(/^(\d+[A-Z]?(?:\.\d+)*)/i);
-    if (!m) continue;
-    out.push({ name, path: full, number: m[1] });
+    for (const name of entries) {
+      const full = join(parent, name);
+      try {
+        if (!statSync(full).isDirectory()) continue;
+      } catch {
+        continue;
+      }
+      const m = name.match(/^(\d+[A-Z]?(?:\.\d+)*)/i);
+      if (!m) continue;
+      out.push({ name, path: full, number: m[1], archivedMilestone });
+    }
+  };
+
+  collect(join(cwd, '.planning', 'phases'), null);
+  for (const archive of listMilestoneArchives(cwd)) {
+    collect(archive.path, archive.version);
   }
   return out;
 }
@@ -145,22 +229,24 @@ export function collectPhaseArtifacts(
   cwd: string,
   phaseNumber: string,
 ): PhaseArtifacts {
-  const phaseDir = findPhaseDir(cwd, phaseNumber);
-  if (!phaseDir) {
+  const located = findPhaseDirWithArchive(cwd, phaseNumber);
+  if (!located) {
     return {
       phaseDir: null,
       planFile: null,
       summaryFile: null,
       verificationFile: null,
       validationFile: null,
+      archivedMilestone: null,
     };
   }
   return {
-    phaseDir,
-    planFile: findArtifact(phaseDir, 'PLAN'),
-    summaryFile: findArtifact(phaseDir, 'SUMMARY'),
-    verificationFile: findArtifact(phaseDir, 'VERIFICATION'),
-    validationFile: findArtifact(phaseDir, 'VALIDATION'),
+    phaseDir: located.path,
+    planFile: findArtifact(located.path, 'PLAN'),
+    summaryFile: findArtifact(located.path, 'SUMMARY'),
+    verificationFile: findArtifact(located.path, 'VERIFICATION'),
+    validationFile: findArtifact(located.path, 'VALIDATION'),
+    archivedMilestone: located.archivedMilestone,
   };
 }
 
@@ -228,7 +314,7 @@ export function validatePhaseCompletion(
   if (!artifacts.phaseDir) {
     issues.push({
       code: 'PHASE_DIR_MISSING',
-      message: `Phase directory not found under .planning/phases/ for phase ${phaseNumber}`,
+      message: `Phase directory not found under .planning/phases/ or .planning/milestones/<version>-phases/ for phase ${phaseNumber}`,
     });
     return { issues, artifacts };
   }

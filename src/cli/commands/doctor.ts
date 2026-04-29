@@ -19,6 +19,7 @@ interface PhaseFinding {
   source: 'stdb' | 'disk';
   issue: string;
   remediation: string;
+  archivedMilestone?: string;
 }
 
 interface DoctorData {
@@ -46,7 +47,8 @@ function formatDoctor(data: unknown): string {
     return lines.join('\n');
   }
   for (const f of findings) {
-    lines.push(`[${f.source.toUpperCase()}] phase ${f.phase}${f.name ? ` (${f.name})` : ''}`);
+    const archived = f.archivedMilestone ? ` [archived under ${f.archivedMilestone}]` : '';
+    lines.push(`[${f.source.toUpperCase()}] phase ${f.phase}${f.name ? ` (${f.name})` : ''}${archived}`);
     lines.push(`  Issue:   ${f.issue}`);
     lines.push(`  Suggest: ${f.remediation}`);
     lines.push('');
@@ -93,12 +95,17 @@ export function registerDoctorCommand(program: Command): void {
           for (const p of stdbPhases) {
             if (p.status !== 'Complete') continue;
             const artifacts = collectPhaseArtifacts(cwd, p.number);
+            const archived = artifacts.archivedMilestone ?? undefined;
+            const archivedNote = archived
+              ? ` (archived under milestone ${archived})`
+              : '';
             if (!artifacts.phaseDir) {
               findings.push({
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
-                issue: 'Marked Complete in SpacetimeDB but phase directory missing on disk',
+                issue:
+                  'Marked Complete in SpacetimeDB but phase directory missing on disk (checked .planning/phases/ and .planning/milestones/<version>-phases/)',
                 remediation: `Run /gsd:verify-work to retroactively produce artifacts, or stclaude remove-phase ${p.number} to roll STDB back`,
               });
               continue;
@@ -108,8 +115,11 @@ export function registerDoctorCommand(program: Command): void {
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
-                issue: `Complete in STDB but SUMMARY.md missing in ${artifacts.phaseDir}`,
-                remediation: 'Run /gsd:verify-work to generate SUMMARY.md retroactively',
+                archivedMilestone: archived,
+                issue: `Complete in STDB but SUMMARY.md missing in ${artifacts.phaseDir}${archivedNote}`,
+                remediation: archived
+                  ? `Restore SUMMARY.md in the milestone ${archived} archive, or roll STDB back with remove-phase`
+                  : 'Run /gsd:verify-work to generate SUMMARY.md retroactively',
               });
             }
             if (!artifacts.verificationFile) {
@@ -117,8 +127,11 @@ export function registerDoctorCommand(program: Command): void {
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
-                issue: `Complete in STDB but VERIFICATION.md missing in ${artifacts.phaseDir}`,
-                remediation: 'Run /gsd:verify-work to generate VERIFICATION.md retroactively',
+                archivedMilestone: archived,
+                issue: `Complete in STDB but VERIFICATION.md missing in ${artifacts.phaseDir}${archivedNote}`,
+                remediation: archived
+                  ? `Restore VERIFICATION.md in the milestone ${archived} archive, or roll STDB back with remove-phase`
+                  : 'Run /gsd:verify-work to generate VERIFICATION.md retroactively',
               });
             } else {
               const fm = parseFrontmatter(artifacts.verificationFile);
@@ -127,7 +140,8 @@ export function registerDoctorCommand(program: Command): void {
                   phase: p.number,
                   name: p.name,
                   source: 'stdb',
-                  issue: `Complete in STDB but VERIFICATION.md status: gaps_found at ${artifacts.verificationFile}`,
+                  archivedMilestone: archived,
+                  issue: `Complete in STDB but VERIFICATION.md status: gaps_found at ${artifacts.verificationFile}${archivedNote}`,
                   remediation: 'Resolve gaps then re-run write-verification, or roll back with remove-phase',
                 });
               }
@@ -137,8 +151,11 @@ export function registerDoctorCommand(program: Command): void {
                 phase: p.number,
                 name: p.name,
                 source: 'stdb',
-                issue: `Complete in STDB but VALIDATION.md missing (nyquist_validation enabled) in ${artifacts.phaseDir}`,
-                remediation: 'Run /gsd:validate-phase to fill the Nyquist validation gap',
+                archivedMilestone: archived,
+                issue: `Complete in STDB but VALIDATION.md missing (nyquist_validation enabled) in ${artifacts.phaseDir}${archivedNote}`,
+                remediation: archived
+                  ? `Restore VALIDATION.md in the milestone ${archived} archive, or roll STDB back with remove-phase`
+                  : 'Run /gsd:validate-phase to fill the Nyquist validation gap',
               });
             }
           }
@@ -163,8 +180,11 @@ export function registerDoctorCommand(program: Command): void {
               findings.push({
                 phase: d.number,
                 source: 'disk',
+                archivedMilestone: d.archivedMilestone ?? undefined,
                 issue: `Phase directory ${d.path} has no matching phase row in SpacetimeDB`,
-                remediation: 'Run stclaude add-phase / insert-phase to register it, or delete the orphan directory',
+                remediation: d.archivedMilestone
+                  ? `Re-register with stclaude add-phase / insert-phase, or delete the orphan directory under .planning/milestones/${d.archivedMilestone}-phases/`
+                  : 'Run stclaude add-phase / insert-phase to register it, or delete the orphan directory',
               });
             }
           }
